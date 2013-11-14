@@ -1,0 +1,78 @@
+
+                                /*if(!enemies_on_screen[killed[j]].isSpecial()){
+                                enemies_on_screen[killed[j]].kill();
+                                //be sure to remove from array so it won't be updated.
+                                enemies_on_screen.splice(killed[j], 1);
+                                gone.push(j);
+                                console.log("gone!");
+                                console.log(gone);
+                                //console.log("gL: "+gone.length);
+                                }else{                                    
+                                    if(enemies_on_screen[killed[j]].type() === "red"){
+                                        enemies_on_screen[killed[j]].kill();
+                                        if(enemies_on_screen[killed[j]].finalKill()){
+                                            enemies_on_screen.splice(killed[j], 1);
+                                            gone.push(j);
+                                        }
+                                    }else if(enemies_on_screen[killed[j]].type() === "purple"){
+                                            ret = enemies_on_screen[killed[j]].killSurrounding(enemies_on_screen);
+                                            //removal from the array has to take place out of here to preserve indexes.
+                                            for(var k = 0 ; k < ret.length ; k++){
+                                                enemies_on_screen[ret[k]].kill();
+                                            }
+                                            gone.push(j);     
+                                    }else if(enemies_on_screen[killed[j]].type() === "yellow"){
+                                            slow = enemies_on_screen[killed[j]].slowSurrounding(enemies_on_screen);
+                                            //removal from the array has to take place out of here to preserve indexes.
+                                            for(var k = 0 ; k < slow.length ; k++){
+                                                enemies_on_screen[slow[k]].slow();
+                                            }
+                                            enemies_on_screen[killed[j]].kill();
+                                            enemies_on_screen.splice(killed[j], 1);
+                                            gone.push(j);                                             
+                                    }
+                                }*/
+
+
+//            if (killed.length > 0) {
+//                var ret = [];
+//                var bullets_gone = [];
+//                Hero.updateBullets();
+//                    bulls = Hero.getBullets();
+//                    for(var j = 0 ; j < killed.length ; j++){ // cycle through killed, an array of indexes for enemies_on_screen
+//                        for(var i = 0 ; i < bulls.length ; i++){// cycle throught the bullts
+//                            if(enemies_on_screen[killed[j]].isShot(bulls[i].getCoords())){
+//                                gone.push(j);
+//                                bullets_gone.push(i);
+//                            }                        
+//                        }
+//                    }
+//                    for( var i = 0 ; i < bullets_gone.length ; i++){
+//                        Hero.bulletReset(bullets_gone[i]);
+//                    }
+//                
+//                for(var i = 0 ; i < gone.length ; i++){
+//                    var new_i = killed[gone[i]];
+//                    for(var j = 0 ; j < killed.length ; j++){
+//                        if(killed[j] > new_i){
+//                            killed[j]--;
+//                        }
+//                    }
+//                    var new_j = gone[i];
+//                    for(var j = 0; j < gone.length ; j++){
+//                        if(gone[j] > new_j){
+//                            gone[j]--;
+//                        }
+//                    }
+//                    enemies_on_screen[new_i].kill();
+//                    enemies_on_screen.splice(new_i, 1);
+//                    killed.splice(gone[i], 1);
+//                    gone.splice(i, 1);
+//                }
+//                //have to remove here to preserve all indexes
+//                //splice ruins the index of a for loop so it must be done like this.
+////                enemies_on_screen = $.grep(enemies_on_screen, function(n, i) {
+////                                                return $.inArray(i, ret) ===-1;
+////                                            });
+//                gone = [];
+//            }

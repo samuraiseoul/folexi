@@ -1,0 +1,247 @@
+body{
+    width: 100%;
+    margin: 0;
+    
+    float: left;
+}
+div{
+    margin: 0;
+    padding: 0;
+}
+a{
+    margin: 0;
+}
+.header{
+    width: 100%;
+    border-bottom: solid;
+    height: 50px;
+    border-radius: 20px;
+}
+
+.header .logo{
+    width: 15%;
+    height: 100%;
+    float: left; 
+    position: relative;
+}
+
+.header .logo a{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -15% 0 0 -25%;
+    font-size: 40px;
+    text-decoration:none;
+    color: black;
+    float: left;
+    font-family: Arial Black;
+}
+
+.header .nav{
+    margin-right: 1%;
+    width: 69%;
+    height: 100%;
+    float: left;
+}
+
+.header .nav .game{
+    width: 10%;
+    height: 100%;
+    float: right; 
+    position: relative;    
+}
+
+.header .nav a{
+    position: absolute;
+    top: 50%;
+    margin: -20% 0 0 0;
+    font-size: 30px;    
+    text-decoration:none;
+    color: black;
+    float: left;
+    font-family: Arial Black;
+}
+
+.header .user_info{
+    top: 13%;
+    display: block;
+    width: 15%;
+    height: 100%;
+    float: right;
+    position: relative;
+    font-family: Arial Black;
+    font-size: .75em;
+    text-align: center;
+}
+
+.header .user_info .center{
+    margin-top: 10px;
+}
+
+.header .user_info .center span{
+}
+
+.header .user_info a{
+    text-decoration:none;
+    color: black;
+    float: left;    
+}
+.wrapper{
+    width: 100%;
+    height : 1000px;
+}
+.content{
+    margin: 1em auto 0;
+    width: 80%;
+    min-height: 1000px;
+}
+
+.login{
+    width: 400px;
+    height: 300px;
+    margin: auto;
+    border-radius: 15px;
+    border: solid;
+}
+
+.login .form_wrapper{
+    margin: 110px auto;
+    top: 0; left: 0; bottom: 0; right: 0;
+    width: 350px;
+    height: 100px;
+}
+
+.login .form_wrapper .top{
+    top: 0; left: 0; bottom: 0; right: 0;
+    width: 315px;
+    margin: 0 auto;    
+    height: 55px;
+    font-family: Arial Black;
+}
+
+.login .form_wrapper .top .labels{
+    float: left;
+}
+.login .form_wrapper .top .labels .seperator{
+    height: 10px;
+    width: 100%;
+}
+
+.login .form_wrapper .top .inputs{
+    float: right;    
+}
+
+.login .form_wrapper .top .inputs .seperator{
+    width: 100px;
+    height: 10px;
+}
+
+.login .form_wrapper .top .inputs input{
+    border-radius: 5px;    
+    width: 200px;
+    height: 20px;
+}
+
+.login .form_wrapper .bottom{
+    top: 0; left: 0; bottom: 0; right: 0;
+    font-family: Arial Black;
+    width: 315px;
+    margin: 0 auto;
+    height: 30px;
+}
+
+.login .form_wrapper .bottom input{
+    font-family: Arial Black;
+    float: right;
+}
+
+.login .form_wrapper .bottom a{
+    text-decoration: none;
+    font-family: Arial Black;
+    float: left;
+}
+
+#game{
+    border : black;
+    border-style: solid;
+    width: 100%;
+    float: left;
+}
+.left{
+    float: left;
+    width: 80%;
+}
+.right{
+    float: left;
+    width: 18%;
+    font-family: Arial Black;
+    margin-left: 2%;
+}
+.input_area{
+    float: left;
+    height: 25px;
+    width: 325px;
+    font-family: Arial Black;
+}
+.ui_top{
+    width: 100%;
+    height: 25px;
+    float: left;
+}
+.input_area .label{
+    float: left;
+    margin-bottom: 50%;
+    font-family: Arial Black;
+}
+#defense-code{
+    margin-left: .5em;
+    float: left;
+    resize: none;
+    border-radius: 5px;
+}
+.word_area{
+    margin-left: 6px;
+    height: 25px;
+    float: right;
+}
+.word_area .label{
+    float: left;
+    margin-bottom: 50%;    
+    font-family: Arial Black;
+}
+.new_word_list{
+    margin-left: .5em;
+    float: left;
+    height: 25px;
+    font-family: Arial Black;
+}
+.old_word_list{
+    float: left;
+    width: 100%;
+    margin-left: .5em;
+}
+.old_word_list .ghost{
+    float: left;
+    height: 1px;
+    width: 15%;
+}
+.old_word_list .label{
+    margin: 1.5em auto 0;
+    margin-left: auto;
+    border-bottom: solid;
+    border-radius: 5px;
+    float: left;
+    width: 70%;
+    text-align: center;
+}
+.right .cols{
+    width: 100%;
+    float: left;
+    margin: .5em 0 0;
+}
+.right .cols .word_col{
+    width: 45%;
+    margin: 0 2.5%;
+    float: left;
+    text-align: center;
+}
