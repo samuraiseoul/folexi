@@ -5,6 +5,7 @@ function text(paper){
     var x = 0;
     var y = 0;
     var length = 0;
+    var set = false;
     if(!$('#text-ruler').length){
         $('body').append("<span id='text-ruler' style='font-size:14px'></span>");
         $('#text-ruler').hide();
@@ -22,9 +23,11 @@ function text(paper){
 
     this.setText = function(word1) {
         word = word1;
-
-        xSize = lengthX();
-        ySize = lengthY();
+        if(!set){
+            xSize = lengthX();
+            ySize = lengthY();
+            set = true;
+        }
     };
 
     this.set = function(x1, y1) {

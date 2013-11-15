@@ -10,13 +10,22 @@ purpleSpecial.prototype.inRange = function(coords){
     var distX = Math.abs((coords.x - this.x));
     var distY = Math.abs((coords.y - this.y));
     var dist = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
-    var collDist = coords.r + (this.r*2);
+    var collDist = coords.r + (this.r*2.5);
     if(collDist >= dist){
         return true;
     }else{
         return false;
     }
 };
+
+purpleSpecial.prototype.kill = function() {
+        this.circ.animate({ r : (this.r * 2.5)}, 400, "linear", function(){
+            this.attr({stroke : "rgb(255,0,0)"}).animate({ r : 0}, 400, "linear", function(){
+                this.remove();
+                });
+            });
+        this.tex.remove();
+    };
 
 purpleSpecial.prototype.killSurrounding = function(enemies){
     var kills = [];

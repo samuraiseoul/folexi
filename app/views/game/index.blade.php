@@ -15,6 +15,7 @@
 <script type="text/javascript" src="{{URL::asset('js/redSpecial.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/purpleSpecial.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/yellowSpecial.js')}}"></script>
+<script type="text/javascript" src="{{URL::asset('js/textButton.js')}}"></script>
 <script type="application/javascript" src="{{URL::asset('js/en_ko.dic')}}"></script>
 <script>
     var levels = [];
@@ -31,17 +32,14 @@
         var w = canvas.width();
         var h = (canvas.width()*.6);
         var paper = new Raphael($('#game')[0], w, h);
-        Hero = new hero(paper);
-        Hero.set((w*.055), (h*.47), ((w*.055)*.73));
-        Hero.setSize(2);
-        Hero.draw();
         enemies_on_screen = [];
+        killed = [];
         enemies = [];
         level = 0;
         extraWords = 0;
         speedMult = 0;
         var enemiesPerSec = 1;
-        var killed = [];
+        var mainmenu = true;
         var killedWords = 0;
         
         var thisLevel = [];
@@ -52,6 +50,10 @@
         var lost = false;
                        
         function initiate() {
+            Hero = new hero(paper);
+            Hero.set((w*.055), (h*.47), ((w*.055)*.73));
+            Hero.setSize(2);
+            Hero.draw();
             thisLevel = levels[level].concat();
             if(knownWords.length > 0){
                 var used = [];
@@ -120,9 +122,6 @@
                 }
             }
         };
-        //First initialization
-        initiate();
-        startTime = new Date().getTime();
          /*
           * If the words match(lowercase check)
           * then kill the enemy.
@@ -197,30 +196,46 @@
                 enemies_on_screen = Hero.updateBullets(enemies_on_screen);
             }
         };
-        //Auto Focus to input
-        $('#defense-code').focus();
-        //Prevent from accidentally pressing enter
-        $('textarea').keypress(function(event) {
-            // Check the keyCode and if the user pressed Enter (code = 13) 
-            // disable it
-            if (event.keyCode === 13) {
-                event.preventDefault();
-            }
+        function start(){
+            //First initialization
+            initiate();
+            //Auto Focus to input
+            $('#defense-code').focus();
+            //Prevent from accidentally pressing enter
+            $('textarea').keypress(function(event) {
+                // Check the keyCode and if the user pressed Enter (code = 13) 
+                // disable it
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                }
+            });
+        }
+        
+        var start_btn = new textButton(paper, (w/2), (h/2), "START", "40px");   
+        start_btn.draw();
+        
+        $("#start_button").click(function(){
+                paper.clear();
+                mainmenu = false;
+                start();
         });
         
         var mainloop = function() {
-            if (!lost) {
-                if (win()) {
-                    nextLevel();
+            if(!mainmenu){
+                if (!lost) {
+                    if (win()) {
+                        nextLevel();
+                    }
+                    var tmp = wordMatch(killed);
+                    if(tmp !== null){
+                        killed.push(tmp);
+                    }
+                    update();
+                    lost = lose();
                 }
-                var tmp = wordMatch(killed);
-                if(tmp !== null){
-                    killed.push(tmp);
-                }
-                update();
-                lost = lose();
             }
         };
+        
         
         var add_enemy_id = setInterval(function(){
             if(!lost && !win()){

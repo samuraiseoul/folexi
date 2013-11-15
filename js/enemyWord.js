@@ -8,6 +8,8 @@ function enemyWord(paper, hero, lang1, lang2, speedM){
     this.y = 0;
     this.r = 0;
     
+    this.texSize = null;
+    
     this.word = lang1;
     this.impactAngle = 0;
     this.word2 = lang2;
@@ -76,7 +78,9 @@ function enemyWord(paper, hero, lang1, lang2, speedM){
 
     enemyWord.prototype.setByY = function(y1, w) {
         this.tex.setText(this.word);
-        var length = this.tex.size();
+        if(this.texSize === null){
+            var length = this.tex.size();
+        }
         this.y = y1;
         this.r = length;
         this.x = (w+15) + this.r;
