@@ -114,7 +114,6 @@ function hero(paper){
                     for(var k = 0 ; k < ret.length ; k++){
                                                 enemies[ret[k]].kill();
                     }
-                    console.log("Purple!");
                 }else if(enemies[bulls[kills[i]].getEnemyI()].type() === "yellow"){
                     slow = enemies[bulls[kills[i]].getEnemyI()].slowSurrounding(enemies_on_screen);
                     for (var k = 0; k < slow.length; k++) {
@@ -133,11 +132,9 @@ function hero(paper){
             }
         }
         if(ret !== null){
-        console.log(enemies);
             enemies = $.grep(enemies, function(n, i) {
                 return $.inArray(i, ret) === -1;
             });
-        console.log(enemies);
         }
         return enemies;
     };

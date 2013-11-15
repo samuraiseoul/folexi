@@ -1,5 +1,19 @@
 @extends('template.template')
 
+@section('js')
+<script>
+    $(document).ready(function(){
+        $('#login').ajaxForm(function(json){
+            if(json.status === "OK"){
+                window.location.replace("{{URL::to('')}}");
+            }else{
+                
+            }
+        });
+    });
+</script>
+@stop
+
 @section('content')
 <div class='login'>
     <div class='form_wrapper'>

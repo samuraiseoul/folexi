@@ -38,3 +38,7 @@ Route::any('/logout', function(){
         return Response::json(array('status' => 'FAIL'));        
     }
 });
+
+Route::any('/info/{action}', function($action){
+    return View::make("info.".$action);
+});

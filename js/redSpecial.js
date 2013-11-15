@@ -18,7 +18,7 @@ redSpecial.prototype.type = function(){
 };
 
 redSpecial.prototype.finalKill = function(){
-    return (this.shot === 3);
+    return (this.shot === 2);
 };
 
 redSpecial.prototype.isSpecial = function(){
@@ -28,4 +28,8 @@ redSpecial.prototype.isSpecial = function(){
 redSpecial.prototype.set = function(x, y){
     enemyWord.prototype.set.call(this, x, y);
     this.circ.setColor(255, 0, 0);
+};
+
+redSpecial.prototype.purpleKill = function(){
+    this.shot = 1;
 };

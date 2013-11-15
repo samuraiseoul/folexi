@@ -243,6 +243,7 @@
 
 
 @section('content')
+<div class="game_container">
 <div class='left'>
     <div class='ui_top'>
         <div class="input_area">
@@ -265,5 +266,6 @@
         <div class='word_col' id='col_0'></div>
         <div class='word_col' id='col_1'></div>
     </div>
+</div>
 </div>
 @stop

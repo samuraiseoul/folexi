@@ -11,6 +11,9 @@ div{
 a{
     margin: 0;
 }
+.clickable{
+    cursor: pointer;
+}
 .header{
     width: 100%;
     border-bottom: solid;
@@ -88,12 +91,14 @@ a{
 }
 .wrapper{
     width: 100%;
-    height : 1000px;
+    min-height : 500px;
 }
 .content{
+    font-family: ARIAL BLACK;
+    text-align: center;
     margin: 1em auto 0;
     width: 80%;
-    min-height: 1000px;
+    min-height: 500px;
 }
 
 .login{
@@ -102,6 +107,11 @@ a{
     margin: auto;
     border-radius: 15px;
     border: solid;
+}
+
+.login a{
+    text-decoration: none;
+    color:black;
 }
 
 .login .form_wrapper{
@@ -160,7 +170,10 @@ a{
     font-family: Arial Black;
     float: left;
 }
-
+.game_container{
+    display: block;
+    width: 100%;
+}
 #game{
     border : black;
     border-style: solid;
@@ -244,4 +257,129 @@ a{
     margin: 0 2.5%;
     float: left;
     text-align: center;
+}
+.footer{
+    width: 100%;
+    float: left;
+    margin-top: 1em;
+    height: 100px;
+    border-radius: 100px;
+    border-top: solid;
+}
+.footer a{
+    text-decoration: none;
+}
+.footer a:visited{
+    color: black;
+}
+.footer .left{
+    margin-left: 5%;
+    width: 20%;
+    float: left;
+    height: 50%;
+    font-family: ARIAL BLACK;
+    margin-top: 2.5%;
+}
+
+.footer .right{
+    width: 60%;
+    margin-right: 5%;
+    float: right;
+    text-align: right;
+    height: 50%;
+    font-family: ARIAL BLACK;
+    margin-top: 2.5%;
+}
+
+.about_container{
+    width: 600px;
+    min-height: 300px;
+    display: inline-block;
+    margin: auto;
+    border-radius: 15px;
+    border: solid;
+    padding: .5em;
+    clear: both;
+}
+.about_container .text{
+    display: block;
+    margin: 3% 5%;
+    width: 90%;
+    height: 94%;
+    clear: both;
+    float: left;
+}
+
+.register{
+    width: 550px;
+    height: 300px;
+    margin: auto;
+    border-radius: 15px;
+    border: solid;
+}
+
+.register a{
+    text-decoration: none;
+    color:black;
+}
+
+.register .form_wrapper{
+    margin: 10px auto;
+    top: 0; left: 0; bottom: 0; right: 0;
+    width: 500px;
+    height: 300px;
+}
+
+.register .form_wrapper .top{
+    top: 0; left: 0; bottom: 0; right: 0;
+    width: 465px;
+    margin: 0 auto;    
+    height: 250px;
+    font-family: Arial Black;
+}
+
+.register .form_wrapper .top .labels{
+    float: left;
+}
+.register .form_wrapper .top .labels .seperator{
+    height: 10px;
+    width: 100%;
+}
+
+.register .form_wrapper .top .inputs{
+    float: right;    
+}
+
+.register .form_wrapper .top .inputs .seperator{
+    width: 100%;
+    height: 7px;
+}
+
+.register .form_wrapper .top .inputs input{
+    border-radius: 5px;    
+    width: 200px;
+    height: 20px;
+}
+
+.register .form_wrapper .top .inputs select{
+    border-radius: 5px;        
+    height: 20px;
+}
+
+.register .form_wrapper .bottom{
+    top: 0; left: 0; bottom: 0; right: 0;
+    font-family: Arial Black;
+    width: 315px;
+    margin: 0 auto;
+    height: 30px;
+}
+
+.register .form_wrapper .bottom input{
+    font-family: Arial Black;
+}
+
+.register .form_wrapper .bottom a{
+    text-decoration: none;
+    font-family: Arial Black;
+    float: left;
 }

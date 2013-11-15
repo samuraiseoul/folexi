@@ -22,6 +22,11 @@ purpleSpecial.prototype.killSurrounding = function(enemies){
     var kills = [];
     for(var i = 0 , len = enemies.length ; i < len ; i++){
         if(this.inRange(enemies[i].getCoords())){
+            if(enemies[i].isSpecial()){
+                if(enemies[i].type() === "red"){
+                    enemies[i].purpleKill();
+                }
+            }
             kills.push(i);
         }
     }
