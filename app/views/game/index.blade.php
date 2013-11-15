@@ -30,6 +30,7 @@
         });
         $('#tutorial').hide();
         $('#pausemenu').hide();
+        $('#lose_menu').hide();
     });
 </script>
 <script>
@@ -63,9 +64,8 @@
         var seconds = 0;
         
         var lost = false;
-                       
-        function initiate() {
-            thisLevel = levels[level].concat();
+        
+        function oldWordsToLevel(){
             if(knownWords.length > 0){
                 var used = [];
                 for(var i = 0 ; i < level+extraWords ; i++){
@@ -84,11 +84,23 @@
                     used.push(tmp);
                     thisLevel.push(knownWords[tmp]);
                 }
-            }
-            for(var i = 0 ; i < levels[level].length ; i++){
-                $('#new_word_list').append(levels[level][i][0] + " ");
-            }
-            //makes sure new enemies are not special.
+            }            
+        }
+        function setEnemies(){
+            var quadrant = 0;
+            var qH = h/4;
+            var qS = qH/6;
+            var qA = (qH/3)*2;
+            for (var i = 0; i < enemies.length; i++) {
+                y = (qS)+(qH*quadrant)+((Math.random()*1000)%(qA));
+                quadrant++;
+                enemies[i].setByY(y, w);
+                if(quadrant > 3){
+                    quadrant = 0;
+                }
+            }                        
+        }
+        function createEnemies(){//makes sure new enemies are not special.
             for (var i = 0; i < levels[level].length; i++) {
                     enemies.push(new enemyWord(paper, Hero.center(), thisLevel[i][1], thisLevel[i][0], speedMult));
             }
@@ -108,18 +120,16 @@
                             enemies.push(new purpleSpecial(paper, Hero.center(), thisLevel[i][1], thisLevel[i][0], speedMult));                            
                         }
             }
-            var quadrant = 0;
-            var qH = h/4;
-            var qS = qH/6;
-            var qA = (qH/3)*2;
-            for (var i = 0; i < enemies.length; i++) {
-                y = (qS)+(qH*quadrant)+((Math.random()*1000)%(qA));
-                quadrant++;
-                enemies[i].setByY(y, w);
-                if(quadrant > 3){
-                    quadrant = 0;
-                }
+            setEnemies();
+        }
+                       
+        function initiate() {
+            thisLevel = levels[level].concat();
+            oldWordsToLevel();
+            for(var i = 0 ; i < levels[level].length ; i++){
+                $('#new_word_list').append(levels[level][i][0] + " ");
             }
+            createEnemies();
             enemies_on_screen.push(enemies[0]);
             seconds++;
         };
@@ -260,7 +270,9 @@
             $('#tutorial').show();
         });
         $('#exit').click(function(){
-            if(!paused){
+            if(lost){
+                $('#lose_menu').show();
+            }else if(!paused){
                 $('#mainmenu').show();
             }else{
                 $('#pausemenu').show();
@@ -270,8 +282,10 @@
         $('#mainmenu_btn').click(function(){
             reset();
             $("#new_word_list").html('');
+            $('.word_col').html('');
             $('#pausemenu').hide();
             $('#mainmenu').show();         
+            $('#defense-code').prop("disabled", false);
         });
         function restartLevel(){
             killed = [];
@@ -287,6 +301,7 @@
             $('#pausemenu').hide();
             $('#menu').hide();
             $("#new_word_list").html('');
+            $('#defense-code').prop("disabled", false);
             restartLevel();
         });
         
@@ -298,15 +313,52 @@
                     $('#tutorial').hide();
                     $('#mainmenu').hide();
                     $('#pausemenu').show();
+                    $('#defense-code').prop("disabled", true);
                 }else{
                     $('#tutorial').hide();
                     $('#mainmenu').hide();
                     $('#pausemenu').hide();
                     $('#menu').hide();
+                    $('#defense-code').prop("disabled", false);
                 }
             }
         });
-        
+        var loseMenu = false;
+        function loseMenuDisplay(){
+            loseMenu = true;
+            $('#menu').show();
+            $('#tutorial').hide();
+            $('#mainmenu').hide();
+            $('#pausemenu').hide();
+            $('#lose_menu').show();
+        }
+        $('#lose_restart_btn').click(function(){
+            console.log("here!");
+            $('#pausemenu').hide();
+            $('#lose_menu').hide();
+            $('#menu').hide();
+            $("#new_word_list").html('');
+            lost = false;
+            loseMenu = false;
+            restartLevel();
+        });
+        $("#lose_tutorial_btn").click(function(){
+            $("#pausemenu").hide();
+            $('#mainmenu').hide();
+            $('#lose_menu').hide();
+            console.log("lost: "+lost);
+            $('#tutorial').show();
+        });
+        $('#lose_mainmenu_btn').click(function(){
+            $('#lose_menu').hide();
+            reset();
+            $("#new_word_list").html('');
+            $('.word_col').html('');
+            $('#pausemenu').hide();
+            $('#mainmenu').show();         
+            lost = false;
+            loseMenu = false;
+        });
         var mainloop = function() {
             if(!mainmenu){
                 if(!paused){
@@ -320,6 +372,10 @@
                         }
                         update();
                         lost = lose();
+                    }else{
+                        if(!loseMenu){
+                            loseMenuDisplay();
+                        }
                     }
                 }
             }
@@ -365,6 +421,7 @@
             @include('game/mainmenu')
             @include('game/tutorial')
             @include('game/pause')
+            @include('game/losemenu')
     </div>
 </div>
 <div class="right">    

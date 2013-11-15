@@ -446,6 +446,18 @@ a{
     padding: 1em;
     float: left;
 }
+.menu #lose_menu .center{
+    border : black;
+    border-style: solid;
+    border-radius: 10px;
+    width: auto;
+    height: auto;
+    position: absolute;
+    left: 28%;
+    top: 30%;
+    padding: 1em;
+    float: left;
+}
 .menu .button{
     font-size: 40px;
         
