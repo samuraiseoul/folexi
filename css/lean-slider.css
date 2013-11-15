@@ -1,0 +1,63 @@
+/*
+ * Lean Slider v1.0
+ * http://dev7studios.com/lean-slider
+ *
+ * Copyright 2012, Dev7studios
+ * Free to use and abuse under the MIT license.
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+ 
+.lean-slider { 
+    position: relative; 
+    *zoom: 1;
+}
+.lean-slider:before,
+.lean-slider:after {
+    content: " ";
+    display: table;
+}
+.lean-slider:after {
+    clear: both;
+}
+
+.lean-slider-slide { 
+    float: left;
+    width: 100%;
+    margin-right: -100%;
+    display: none; 
+}
+.lean-slider-slide.current { display: block; }
+
+.lean-slider-next{
+    float: right;
+    font-family: ARIAL BLACK;
+    text-decoration: none;
+    color: black;
+}
+
+.lean-slider-prev{
+    float: left;
+    font-family: ARIAL BLACK;
+    text-decoration: none;
+    color: black;
+}
+.slider{
+    float: left;
+    left: 05%;
+    width: 90%;
+    height: auto;
+    height: 330px;
+}
+
+#slider-direction-nav{
+    top: 43%;
+    position: absolute;
+    width: 85%;
+    margin-left: 2.5%;
+    height: auto;
+}
+
+.arrow{
+    font-size: 2em;
+    font-family: ARIAL BLACK;
+}

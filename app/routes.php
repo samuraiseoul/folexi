@@ -10,15 +10,14 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
-
-function hi(){
-    
-}
-
 Route::controller('users', 'UserController');
 
 Route::any('/',function(){
     return View::make('index.index');
+});
+
+Route::any('/game/tutorial', function(){
+    return View::make('game.tutorial');
 });
 
 Route::any('/game',function(){

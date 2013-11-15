@@ -17,6 +17,21 @@
 <script type="text/javascript" src="{{URL::asset('js/yellowSpecial.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/textButton.js')}}"></script>
 <script type="application/javascript" src="{{URL::asset('js/en_ko.dic')}}"></script>
+<script type="text/javascript" src="{{URL::asset('js/lean-slider.js')}}"></script>
+<link rel="stylesheet" href="{{ URL::asset('css/lean-slider.css')}}" type="text/css" />
+<script>
+    $(document).ready(function() {
+        $('#slider').leanSlider({
+            pauseTime: false,
+            directionNav: '#slider-direction-nav',
+            controlNav: '#slider-control-nav',
+            prevText: '<span class="arrow left"> < </span>',
+            nextText: '<span class="arrow right"> > </span>'
+        });
+        $('#tutorial').hide();
+        $('#pausemenu').hide();
+    });
+</script>
 <script>
     var levels = [];
     for (var i = 0, k = 0; i < dic.length; i += 3, k++) {
@@ -41,7 +56,7 @@
         var enemiesPerSec = 1;
         var mainmenu = true;
         var killedWords = 0;
-        
+        var paused = false;
         var thisLevel = [];
         var knownWords = [];
         
@@ -50,10 +65,6 @@
         var lost = false;
                        
         function initiate() {
-            Hero = new hero(paper);
-            Hero.set((w*.055), (h*.47), ((w*.055)*.73));
-            Hero.setSize(2);
-            Hero.draw();
             thisLevel = levels[level].concat();
             if(knownWords.length > 0){
                 var used = [];
@@ -174,19 +185,12 @@
             enemiesPerSec = (Math.floor((level+1)/3))+1;
             extraWords = (Math.floor((level+1)/4));
             speedMult = 0.25*(Math.floor((level+1)/5));
-            seconds = 0;
             killedWords += enemies.length;
+            seconds = 0;
             enemies_on_screen = [];
             enemies = [];
-//            $("#level").html(level+1);
-//            $("#total-words").html(killedWords);
-//            $("#speed-mod").html(speedMult);
-//            $("#extra-words").html(extraWords);
-//            $("#out_rate").html(enemiesPerSec);
             initiate();
         };
-        
-        
 
         function update() {
             for (var i = 0; i < enemies_on_screen.length; i++) {
@@ -197,6 +201,10 @@
             }
         };
         function start(){
+            Hero = new hero(paper);
+            Hero.set((w*.055), (h*.47), ((w*.055)*.73));
+            Hero.setSize(2);
+            Hero.draw();
             //First initialization
             initiate();
             //Auto Focus to input
@@ -211,27 +219,108 @@
             });
         }
         
-        var start_btn = new textButton(paper, (w/2), (h/2), "START", "40px");   
-        start_btn.draw();
+        $('#menu').width(w);
+        $('#menu').height(h);
+        $('#menu').click(function(){
+            //$('#menu').hide();
+        });
+//        var start_btn = new textButton(paper, (w/2), (h*3/8), "START", "40px");
+//        var tutorial_btn = new textButton(paper, (w/2), (h/2), "TUTORIAL", "40px");
+//        start_btn.draw();
+//        tutorial_btn.draw();
+        function reset(){
+            killed = [];
+            enemies_on_screen = [];
+            enemies = [];
+            thisLevel = [];
+            seconds = 0;
+            paper.clear();
+            level = 0;
+            extraWords = 0;
+            speedMult = 0;
+            enemiesPerSec = 1;
+            paused = false;
+            mainmenu = true;            
+        }
         
-        $("#start_button").click(function(){
+        $("#start_btn").click(function(){
+                $('#menu').hide();
                 paper.clear();
                 mainmenu = false;
                 start();
         });
+        $("#tutorial_btn").click(function(){
+            $("#pausemenu").hide();
+            $('#mainmenu').hide();
+            $('#tutorial').show();
+        });
+        $("#pause_tutorial_btn").click(function(){
+            $("#pausemenu").hide();
+            $('#mainmenu').hide();
+            $('#tutorial').show();
+        });
+        $('#exit').click(function(){
+            if(!paused){
+                $('#mainmenu').show();
+            }else{
+                $('#pausemenu').show();
+            }
+            $('#tutorial').hide();            
+        });
+        $('#mainmenu_btn').click(function(){
+            reset();
+            $("#new_word_list").html('');
+            $('#pausemenu').hide();
+            $('#mainmenu').show();         
+        });
+        function restartLevel(){
+            killed = [];
+            enemies_on_screen = [];
+            enemies = [];
+            paper.clear();
+            paused = false;
+            thisLevel = [];
+            seconds = 0;
+            start();            
+        }
+        $('#restart_btn').click(function(){
+            $('#pausemenu').hide();
+            $('#menu').hide();
+            $("#new_word_list").html('');
+            restartLevel();
+        });
+        
+        $(document).keyup(function(e) { 
+            if (e.which === 27) {
+                paused = !paused;
+                if(paused){
+                    $('#menu').show();
+                    $('#tutorial').hide();
+                    $('#mainmenu').hide();
+                    $('#pausemenu').show();
+                }else{
+                    $('#tutorial').hide();
+                    $('#mainmenu').hide();
+                    $('#pausemenu').hide();
+                    $('#menu').hide();
+                }
+            }
+        });
         
         var mainloop = function() {
             if(!mainmenu){
-                if (!lost) {
-                    if (win()) {
-                        nextLevel();
+                if(!paused){
+                    if (!lost) {
+                        if (win()) {
+                            nextLevel();
+                        }
+                        var tmp = wordMatch(killed);
+                        if(tmp !== null){
+                            killed.push(tmp);
+                        }
+                        update();
+                        lost = lose();
                     }
-                    var tmp = wordMatch(killed);
-                    if(tmp !== null){
-                        killed.push(tmp);
-                    }
-                    update();
-                    lost = lose();
                 }
             }
         };
@@ -270,7 +359,13 @@
             <div class="new_word_list" id="new_word_list"></div>
         </div>
     </div>
+    
     <div id="game"></div>
+    <div id='menu' class='menu'>
+            @include('game/mainmenu')
+            @include('game/tutorial')
+            @include('game/pause')
+    </div>
 </div>
 <div class="right">    
     <div class="old_word_list" id ="old_word_list">

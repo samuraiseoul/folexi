@@ -180,6 +180,35 @@ a{
     width: 100%;
     float: left;
 }
+.round_solid{
+    border: solid;
+    border-radius: 15px;
+}
+.menu{
+    width: 100%;
+    position: absolute;
+    background-color: white;
+    z-index: 10;
+    opacity: 1; 
+    margin-left: 3px;
+    margin-top: 28px;
+}
+.menu .center{
+    border : black;
+    border-style: solid;
+    border-radius: 10px;
+    width: auto;
+    height: auto;
+    position: absolute;
+    left: 35%;
+    top: 35%;
+    padding: 1em;
+    float: left;
+}
+.menu .button{
+    font-size: 40px;
+        
+}
 .left{
     float: left;
     width: 80%;
@@ -382,4 +411,42 @@ a{
     text-decoration: none;
     font-family: Arial Black;
     float: left;
+}
+.tutorial{
+    margin-top: 10%;
+    height: 330px;
+    width: 90%;
+    margin-left: 05%;
+    height: auto;
+    float: left;    
+}
+.tutorial .exit{
+    text-align: right;
+    margin-right: .5em;
+}
+
+.menu{
+    width: 100%;
+    position: absolute;
+    background-color: white;
+    z-index: 10;
+    opacity: 1; 
+    margin-left: 3px;
+    margin-top: 28px;
+}
+.menu #pausemenu .center{
+    border : black;
+    border-style: solid;
+    border-radius: 10px;
+    width: auto;
+    height: auto;
+    position: absolute;
+    left: 28%;
+    top: 30%;
+    padding: 1em;
+    float: left;
+}
+.menu .button{
+    font-size: 40px;
+        
 }
