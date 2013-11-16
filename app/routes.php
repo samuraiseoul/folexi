@@ -12,17 +12,8 @@
 */
 Route::controller('users', 'UserController');
 
-Route::any("/dic", function(){
+Route::any("/dics", function(){
     
-    $filename = "en_ko_2.dic";
-    error_log($filename);
-    $filesize = filesize($filename); // file size
-    $file = fopen($filename, "a+"); // opens file
-    if ($file == false) {
-        echo ( "Error in opening file" );
-        exit(); 
-    }
-    $filetext = fread($file, $filesize); // requires filesize for some reason.
 });
 
 Route::any('/',function(){
