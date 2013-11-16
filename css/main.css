@@ -8,6 +8,10 @@ div{
     margin: 0;
     padding: 0;
 }
+.error{
+    color : red;
+    font-size: 1em;
+}
 a{
     margin: 0;
 }
@@ -459,6 +463,27 @@ a{
     float: left;
 }
 .menu .button{
-    font-size: 40px;
-        
+    font-size: 40px;        
+}
+
+.showcase{
+    margin-left: 77px;
+    position: relative;
+    width: 914px;
+    border: solid;
+    border-radius: 15px;
+    height: 575px;
+    float: left;    
+}
+.showcase p{
+    border-top: solid;
+}
+
+.play_now{
+    font-size: 5em;
+}
+
+.play_now a{
+    text-decoration: none;
+    color: black;
 }

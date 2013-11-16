@@ -7,7 +7,7 @@ function text(paper){
     var length = 0;
     var set = false;
     if(!$('#text-ruler').length){
-        $('body').append("<span id='text-ruler' style='font-size:14px'></span>");
+        $('body').append("<span id='text-ruler' style=' font-family :'arial, sans-serif'; font-size:14px; font-weight : 'bold';></span>");
         $('#text-ruler').hide();
     }
     var lengthX = function(){
@@ -36,7 +36,11 @@ function text(paper){
     };
 
     this.draw = function() {
-        return self = this.paper.text(x, y, word).attr({'font-size': '14px', "id": "enemy-" + word});
+        return self = this.paper.text(x, y, word).attr({"font-family" : "arial, sans-serif",
+            'font-size': '14px', 
+            "id": "enemy-" + word,
+            "font-weight" : 'bold'
+    });
     };
 
     this.size = function() {

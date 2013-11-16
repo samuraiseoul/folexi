@@ -49,14 +49,29 @@
     height: 330px;
 }
 
-#slider-direction-nav{
+.tutorial #slider-direction-nav{
     top: 43%;
     position: absolute;
     width: 85%;
     margin-left: 2.5%;
     height: auto;
+} 
+
+.showcase #slider-direction-nav{
+    top: 43%;
+    position: absolute;
+    width: 100%;
+    height: auto;
 }
 
+.showcase .slider{
+    margin-top: 3px;
+    border: none;
+    left : 0 !important;
+    float: left;
+    width: 100%;
+    height: auto;
+}
 .arrow{
     font-size: 2em;
     font-family: ARIAL BLACK;

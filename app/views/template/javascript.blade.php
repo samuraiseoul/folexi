@@ -1,5 +1,6 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
 <script src="{{URL::asset('js/form_helper.js')}}"></script>
+<script src="{{URL::asset('js/jquery.validate.min.js')}}"></script>
 <script>
 $(document).ready(function(){
     $('#logout').click(function(){

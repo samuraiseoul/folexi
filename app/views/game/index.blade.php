@@ -107,14 +107,14 @@
             for (var i = 3; i < thisLevel.length; i++) {
                     var special = Math.ceil(((Math.random()*10)%3));
                     //give 25% chance of special enemy.
-                    if(special !== 3){
+                    if(special < 2){
                     enemies.push(new enemyWord(paper, Hero.center(), thisLevel[i][1], thisLevel[i][0], speedMult));
                     }else{
-                        var type = Math.ceil(((Math.random()*10)%3));
-                        if(type === 1){
+                        var type = Math.ceil(((Math.random()*10)%8));
+                        if(type < 3){
                             enemies.push(new redSpecial(paper, Hero.center(), thisLevel[i][1], thisLevel[i][0], speedMult));                            
                         }
-                        else if(type === 2){
+                        else if(type < 7){
                             enemies.push(new yellowSpecial(paper, Hero.center(), thisLevel[i][1], thisLevel[i][0], speedMult));                            
                         }else
                             enemies.push(new purpleSpecial(paper, Hero.center(), thisLevel[i][1], thisLevel[i][0], speedMult));                            
