@@ -13,11 +13,32 @@
 Route::controller('users', 'UserController');
 
 Route::any("/admin/{action}", function($action){
-    return View::make("admin.".$action);
+    if(Auth::check() && (Auth::user()->level >=100) ){
+        if(View::exists('admin.'.$action)){
+            return View::make("admin.".$action);
+        }else{
+            App::abort(404, 'Page not found');
+        }
+    }else{
+        return Redirect::to("")->with("msg", "Must be an admin to access this page!");        
+    }
+});
+Route::any("/admin", function(){
+    if(Auth::check() && (Auth::user()->level >=100) ){
+        return View::make("admin.index");
+    }else{
+        return Redirect::to("")->with("msg", "Must be an admin to access this page!");        
+    }
 });
 
 Route::any("dic/review", function(){
+    if(Auth::check() && 
+            (Auth::user()->level >= 101)){
     return View::make('dic.review');
+    }else{
+        return Redirect::to("")->with("msg", "Must be an admin with
+            dictionary privledges to access this page!");
+    }
 });
 
 Route::post("dic/get", function(){
@@ -31,7 +52,6 @@ Route::post("dic/get", function(){
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 
         $data = curl_exec($ch);
-    //    error_log("i: ".$num);
         curl_close($ch);
 
         return $data;
@@ -52,7 +72,7 @@ Route::post("dic/get", function(){
     $ret = array();
     if (count($lang1) == count($lang2)) {
         for ($i = 0; $i < count($lang1); $i++) {
-            $ret[$lang1[$i]] = $lang2[$i];
+            $ret[$i] = array($lang1[$i] , $lang2[$i]);
         }
         return Response::json(array("status" => "OK", "data" => array("dic" => $ret, "lang" => $retLang)));
     } else {
@@ -61,28 +81,34 @@ Route::post("dic/get", function(){
 });
 
 Route::post("dic/modify", function(){
-    $input = Input::all();
-    $lang = $input['lang'];
-    $size = $input['size'];
-    $words = array();
-    for($i = 0 ; $i < $size ; $i++){
-        $words["".$i] = $input["word_".$i];
+    if(Auth::check() && 
+            (Auth::user()->level >= 101)){
+        $input = Input::all();
+        $lang = $input['lang'];
+        $size = $input['size'];
+        $words = array();
+        for($i = 0 ; $i < $size ; $i++){
+            $words["".$i] = $input["word_".$i];
+        }
+
+        $filename = base_path("dic/"."ko_master.dic");
+        $file = fopen($filename, "a+"); // opens file
+        if ($file == false) {
+    //        echo ( "Error in opening file" );
+            exit(); 
+        }
+        ftruncate($file, 0); // clears the file
+        fwrite($file, serialize($words));
+        return Response::json(array('status' => 'OK'));
+    }else{
+        return Response::json(array('status' => 'FAIL', 
+            'msg' => "Not Authorized!"));
     }
-    
-    $filename = base_path("dic/"."ko_master.dic");
-    $file = fopen($filename, "a+"); // opens file
-    if ($file == false) {
-//        echo ( "Error in opening file" );
-        exit(); 
-    }
-    ftruncate($file, 0); // clears the file
-    fwrite($file, serialize($words));
-    
-    
 });
 
 Route::any('/',function(){
-    return View::make('index.index');
+    $data = array('msg' => Session::get('msg'));
+    return View::make('index.index', $data);
 });
 
 Route::any('/game/tutorial', function(){
@@ -95,7 +121,12 @@ Route::any('/game',function(){
 
 
 Route::any('/user/{action}',function($action){
-    return View::make('user.'.$action);
+        if(View::exists('user.'.$action)){
+            return View::make('user.'.$action);
+        }else{
+            App::abort(404, 'Page not found');
+        }
+    
 });
 
 Route::any('/logout', function(){
@@ -108,5 +139,9 @@ Route::any('/logout', function(){
 });
 
 Route::any('/info/{action}', function($action){
-    return View::make("info.".$action);
+        if(View::exists('info.'.$action)){
+                return View::make("info." . $action);
+        }else{
+            App::abort(404, 'Page not found');
+        }
 });

@@ -204,10 +204,21 @@ a{
     width: auto;
     height: auto;
     position: absolute;
-    left: 35%;
-    top: 35%;
+    left: 31%;
+    top: 31%;
     padding: 1em;
     float: left;
+}
+.menu .center .lang{
+    font-family: Arial Black;
+    padding-bottom: .5em;
+}
+.menu .center .lang select{
+    border-radius: 3px;
+    font-family: Arial Black;
+    font-size: 1.5em;
+    height: 1.6em;
+    width: 5.5em;
 }
 .menu .button{
     font-size: 40px;
@@ -450,6 +461,17 @@ a{
     padding: 1em;
     float: left;
 }
+.menu #lose_menu .text{
+    position: absolute;
+    text-align: center;
+    font-family: Arial Black;
+    font-size: 2.5em;
+    top: 15%;
+    left: 35.5%;
+    float: left;
+    height: 1.5em;
+    width: auto;
+}
 .menu #lose_menu .center{
     border : black;
     border-style: solid;
@@ -457,13 +479,18 @@ a{
     width: auto;
     height: auto;
     position: absolute;
-    left: 28%;
+    left: 25%;
     top: 30%;
     padding: 1em;
     float: left;
 }
 .menu .button{
     font-size: 40px;        
+}
+
+.index_error{
+    width: 100%;
+    float: left;
 }
 
 .showcase{

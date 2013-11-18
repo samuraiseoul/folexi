@@ -16,7 +16,7 @@
 <script type="text/javascript" src="{{URL::asset('js/purpleSpecial.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/yellowSpecial.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/textButton.js')}}"></script>
-<script type="application/javascript" src="{{URL::asset('js/en_ko.dic')}}"></script>
+<!--<script type="application/javascript" src="{{URL::asset('js/en_ko.dic')}}"></script>-->
 <script type="text/javascript" src="{{URL::asset('js/lean-slider.js')}}"></script>
 <link rel="stylesheet" href="{{ URL::asset('css/lean-slider.css')}}" type="text/css" />
 <script>
@@ -34,13 +34,19 @@
     });
 </script>
 <script>
+    var dic = {};
     var levels = [];
-    for (var i = 0, k = 0; i < dic.length; i += 3, k++) {
-        levels.push([]);
-        for (var j = 0; j < 3; j++) {
-            levels[k].push(dic[i + j]);
-        }
-    }
+    var lang1 = "en";
+    var lang2 = "en";
+    
+    $(document).ready(function(){
+        $("#lang1").change(function(){
+            lang1 = $('#lang1').val()
+        });        
+        $("#lang2").change(function(){
+            lang2 = $('#lang2').val()
+        });        
+    }); 
 
     $(document).ready(function() {
         var startTime = 0;
@@ -257,6 +263,32 @@
                 $('#menu').hide();
                 paper.clear();
                 mainmenu = false;
+                $.ajax({
+                    type : "POST",
+                    url : "{{URL::to('dic/get')}}",
+                    data : {lang1 : lang1,
+                            lang2 :lang2},
+                    success : function( json ) {
+                        console.log(json.data.dic);
+                                dic = json.data.dic;
+                                    ajaxDone = true;
+                                },
+                    dataType : "json",
+                    async : false
+                });
+                var i = 0;
+                var j = 0;
+                var k = 0;
+//                console.log(dic[0]);
+                $.each(dic, function(k, v){
+//                    console.log(k+" : "+v);
+                });
+                for (var i = 0, k = 0; i < dic.length; i += 3, k++) {
+                    levels.push([]);
+                    for (var j = 0; j < 3; j++) {
+                        levels[k].push(dic[i + j]);
+                    }
+                }
                 start();
         });
         $("#tutorial_btn").click(function(){

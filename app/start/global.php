@@ -79,5 +79,10 @@ App::down(function()
 | definitions instead of putting them all in the main routes file.
 |
 */
+//go to 404!
+App::missing(function($exception)
+{
+    return View::make('404.index');
+});
 
 require app_path().'/filters.php';

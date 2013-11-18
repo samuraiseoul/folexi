@@ -17,6 +17,7 @@
 @stop
 
 @section('content')
+    <span class="error index_error">{{$msg}}</span>
 <div class='showcase'>
     <div id="slider" class="slider">
         <div class="slide1">

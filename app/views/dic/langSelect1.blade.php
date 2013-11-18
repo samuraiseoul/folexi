@@ -1,0 +1,12 @@
+{{Form::select('lang1', array('en' => 'English',
+                                            'ko' => 'Korean',
+                                             "es" => "Spanish",
+                                             "ja" => "Japanese",
+                                             "fr" => "French",
+                                             "ru" => "Russian",
+                                             "de" => "German",
+                                             "hi" => "Hindi",
+                                             "ar" => "Arabic",
+                                             "zh" => "Chinese"),
+                                         null,
+                                         array("id" => "lang1"))}}

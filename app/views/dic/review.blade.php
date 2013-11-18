@@ -2,61 +2,56 @@
 
 @section('js')
 <script>
+    $(document).ready(function(){
+        $("#button").hide();
     $('#langSelect').ajaxForm(function(json){
         if(json.status === "OK"){
             $('#entries').html("");
             $('#entries').append("<input type='hidden' name='lang' value='"+json.data.lang+"'/>");
             var dic = json.data.dic;
             var i = 0;
-            $.each(dic , function(k, v){ 
+            for ( var i = 0 ; i < dic.length ; i++){
                 $('#entries').append('<div class="entry">'
-                        +(i+1)+". "+k + ": <input type='text' name='word_"+i+"' value='"+v+"'/>"
-                        +'</div><br>');
-                        i++;
-            });
+                        +(i+1)+". "+ dic[i][0] +
+                        ": <input type='text' name='word_"+i+"' value='"+dic[i][1]+"'/>"
+                        +'</div><br>');                
+            }
             $('#entries').prepend("<input type='hidden' name='size' value='"+i+"'/>");
+            $('#button').show();
         }
+    });
+    
+    $('#modify').ajaxForm(function(json){
+        if(json.status == "OK"){
+            location.reload();
+        }
+    });
     });
 </script>
 @stop
 
 @section('content')
+<!--
 <ruby>
 <rb>紙芝居</rb>
 <rp>(</rp>
 <rt>かみしばい</rt>
 <rp>)</rp>
 </ruby>
-
+-->
 
     {{ Form::open(array('url' => URL::to('dic/get'), 'method' => 'POST' , 'id' => 'langSelect')) }}
-        Language :{{Form::select('lang1', array('en' => 'English',
-                                            'ko' => 'Korean',
-                                             "es" => "Spanish",
-                                             "ja" => "Japanese",
-                                             "fr" => "French",
-                                             "ru" => "Russian",
-                                             "de" => "German",
-                                             "hi" => "Hindi",
-                                             "ar" => "Arabic",
-                                             "zh" => "Chinese"))}}
-        To: {{Form::select('lang2', array('en' => 'English',
-                                         'ko' => 'Korean',
-                                         "es" => "Spanish",
-                                         "ja" => "Japanese",
-                                         "fr" => "French",
-                                         "ru" => "Russian",
-                                         "de" => "German",
-                                         "hi" => "Hindi",
-                                         "ar" => "Arabic",
-                                         "zh" => "Chinese"))}}
+        Language : @include('dic.langSelect1')
+        To: @include('dic.langSelect2')
         {{Form::submit('Get Dictionary')}}
     {{ Form::close() }}<br>
     
-    {{ Form::open(array('url' => URL::to('dic/modify'), 'method' => 'POST' , 'id' => 'dic')) }}
+    {{ Form::open(array('url' => URL::to('dic/modify'), 'method' => 'POST' , 'id' => 'modify')) }}
     <div id='entries'>
         
     </div>
+    <span id="button">
     {{Form::submit('Submit Changes')}}
+    </span>
     {{ Form::close() }}<br>
 @stop
