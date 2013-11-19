@@ -1,6 +1,6 @@
 @extends('template.template')
 @section('js')
-<script>
+<script type="text/javascript">
     $(document).ready(function(){
         //custom rule for selects
         $.validator.addMethod("valueNotEquals", function(value, element, arg){

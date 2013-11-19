@@ -3,7 +3,7 @@
 @section('js')
 <script type="text/javascript" src="{{URL::asset('js/lean-slider.js')}}"></script>
 <link rel="stylesheet" href="{{ URL::asset('css/lean-slider.css')}}" type="text/css" />
-<script>
+<script type="text/javascript">
     $(document).ready(function() {
         $('#slider').leanSlider({
             pauseTime: 5000,

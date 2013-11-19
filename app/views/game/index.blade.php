@@ -16,10 +16,9 @@
 <script type="text/javascript" src="{{URL::asset('js/purpleSpecial.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/yellowSpecial.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/textButton.js')}}"></script>
-<!--<script type="application/javascript" src="{{URL::asset('js/en_ko.dic')}}"></script>-->
 <script type="text/javascript" src="{{URL::asset('js/lean-slider.js')}}"></script>
 <link rel="stylesheet" href="{{ URL::asset('css/lean-slider.css')}}" type="text/css" />
-<script>
+<script type="text/javascript">
     $(document).ready(function() {
         $('#slider').leanSlider({
             pauseTime: false,
@@ -33,7 +32,7 @@
         $('#lose_menu').hide();
     });
 </script>
-<script>
+<script type="text/javascript">
     var dic = {};
     var levels = [];
     var lang1 = "en";
@@ -41,14 +40,15 @@
     
     $(document).ready(function(){
         $("#lang1").change(function(){
-            lang1 = $('#lang1').val()
+            lang1 = $('#lang1').val();
         });        
+        
         $("#lang2").change(function(){
-            lang2 = $('#lang2').val()
+            lang2 = $('#lang2').val();
         });        
     }); 
 
-    $(document).ready(function() {
+    $(document).ready(function(){
         var startTime = 0;
         var canvas = $('#game');
         var w = canvas.width();
@@ -73,6 +73,7 @@
         
         function oldWordsToLevel(){
             if(knownWords.length > 0){
+//                console.log("l: "+level+" eW: "+extraWords);
                 var used = [];
                 for(var i = 0 ; i < level+extraWords ; i++){
                     var rand = Math.floor(Math.random()*100);
@@ -88,6 +89,8 @@
                         continue;
                     }
                     used.push(tmp);
+//                    console.log("tmp: "+tmp+" kWs:");
+//                    console.log(knownWords);
                     thisLevel.push(knownWords[tmp]);
                 }
             }            
@@ -107,23 +110,31 @@
             }                        
         }
         function createEnemies(){//makes sure new enemies are not special.
+//            console.log(level);
+//            console.log(levels);
+//            console.log(thisLevel);
             for (var i = 0; i < levels[level].length; i++) {
-                    enemies.push(new enemyWord(paper, Hero.center(), thisLevel[i][1], thisLevel[i][0], speedMult));
+                    enemies.push(new enemyWord(paper, Hero.center(), thisLevel[i][1],
+                    thisLevel[i][0], speedMult));
             }
             for (var i = 3; i < thisLevel.length; i++) {
                     var special = Math.ceil(((Math.random()*10)%3));
                     //give 25% chance of special enemy.
                     if(special < 2){
-                    enemies.push(new enemyWord(paper, Hero.center(), thisLevel[i][1], thisLevel[i][0], speedMult));
+                    enemies.push(new enemyWord(paper, Hero.center(), thisLevel[i][1],
+                    thisLevel[i][0], speedMult));
                     }else{
                         var type = Math.ceil(((Math.random()*10)%8));
                         if(type < 3){
-                            enemies.push(new redSpecial(paper, Hero.center(), thisLevel[i][1], thisLevel[i][0], speedMult));                            
+                            enemies.push(new redSpecial(paper, Hero.center(), 
+                            thisLevel[i][1], thisLevel[i][0], speedMult));                            
                         }
                         else if(type < 7){
-                            enemies.push(new yellowSpecial(paper, Hero.center(), thisLevel[i][1], thisLevel[i][0], speedMult));                            
+                            enemies.push(new yellowSpecial(paper, Hero.center(),
+                            thisLevel[i][1], thisLevel[i][0], speedMult));                            
                         }else
-                            enemies.push(new purpleSpecial(paper, Hero.center(), thisLevel[i][1], thisLevel[i][0], speedMult));                            
+                            enemies.push(new purpleSpecial(paper, Hero.center(),
+                        thisLevel[i][1], thisLevel[i][0], speedMult));                            
                         }
             }
             setEnemies();
@@ -183,7 +194,9 @@
          */
         function win() {
             if (enemies_on_screen.length <= 0) {
+                console.log(knownWords);
                 knownWords = knownWords.concat(levels[level]);
+                console.log(levels[level]);
                 thisLevel = [];
                 return true;
             }
@@ -237,17 +250,12 @@
         
         $('#menu').width(w);
         $('#menu').height(h);
-        $('#menu').click(function(){
-            //$('#menu').hide();
-        });
-//        var start_btn = new textButton(paper, (w/2), (h*3/8), "START", "40px");
-//        var tutorial_btn = new textButton(paper, (w/2), (h/2), "TUTORIAL", "40px");
-//        start_btn.draw();
-//        tutorial_btn.draw();
+        
         function reset(){
             killed = [];
             enemies_on_screen = [];
             enemies = [];
+            knownWords = [];
             thisLevel = [];
             seconds = 0;
             paper.clear();
@@ -256,39 +264,36 @@
             speedMult = 0;
             enemiesPerSec = 1;
             paused = false;
-            mainmenu = true;            
+            mainmenu = true;
         }
         
         $("#start_btn").click(function(){
                 $('#menu').hide();
                 paper.clear();
                 mainmenu = false;
+//                console.log("l1: "+lang1+" l2: "+lang2);
                 $.ajax({
                     type : "POST",
                     url : "{{URL::to('dic/get')}}",
                     data : {lang1 : lang1,
-                            lang2 :lang2},
+                            lang2 : lang2},
                     success : function( json ) {
-                        console.log(json.data.dic);
+//                        console.log(json.data.dic);
                                 dic = json.data.dic;
                                     ajaxDone = true;
                                 },
                     dataType : "json",
                     async : false
                 });
-                var i = 0;
-                var j = 0;
-                var k = 0;
-//                console.log(dic[0]);
-                $.each(dic, function(k, v){
-//                    console.log(k+" : "+v);
-                });
+//                console.log(dic);
+                levels = [];
                 for (var i = 0, k = 0; i < dic.length; i += 3, k++) {
                     levels.push([]);
                     for (var j = 0; j < 3; j++) {
                         levels[k].push(dic[i + j]);
                     }
                 }
+//                    console.log(levels);
                 start();
         });
         $("#tutorial_btn").click(function(){
@@ -311,8 +316,10 @@
             }
             $('#tutorial').hide();            
         });
+        
         $('#mainmenu_btn').click(function(){
             reset();
+            console.log("HERE");
             $("#new_word_list").html('');
             $('.word_col').html('');
             $('#pausemenu').hide();
@@ -414,15 +421,21 @@
         };
         
         
-        var add_enemy_id = setInterval(function(){
-            if(!lost && !win()){
-                for(var i = 0 ; i < enemiesPerSec ; i++){
-                    if(seconds < enemies.length){
-                        enemies_on_screen.push(enemies[seconds]);
-                        seconds++;
+        var add_enemy_id = setInterval(function(){            
+            if(!mainmenu){
+                if(!paused){
+                    if (!lost) {
+                        if(!lost && !win()){
+                            for(var i = 0 ; i < enemiesPerSec ; i++){
+                                if(seconds < enemies.length){
+                                    enemies_on_screen.push(enemies[seconds]);
+                                    seconds++;
+                                }
+                            }
+                        }
                     }
                 }
-            }
+             }
         }, 1500);
         //Sets the main function to load on repeat, at a framerate of 60 per sec.
         var timer_id = setInterval(mainloop, (1000 / 60));

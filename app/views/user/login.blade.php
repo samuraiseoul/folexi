@@ -1,7 +1,7 @@
 @extends('template.template')
 
 @section('js')
-<script>
+<script type="text/javascript">
     $(document).ready(function(){            
             $("#login").validate({
                 errorLabelContainer: "#errors",

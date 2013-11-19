@@ -30,7 +30,6 @@ Route::any("/admin", function(){
         return Redirect::to("")->with("msg", "Must be an admin to access this page!");        
     }
 });
-
 Route::any("dic/review", function(){
     if(Auth::check() && 
             (Auth::user()->level >= 101)){
@@ -40,7 +39,6 @@ Route::any("dic/review", function(){
             dictionary privledges to access this page!");
     }
 });
-
 Route::post("dic/get", function(){
     header('Content-type: text/html; charset=utf-8');
     function file_get_contents_curl($url){
@@ -59,12 +57,14 @@ Route::post("dic/get", function(){
     
     $lang1 = Input::get('lang1');
     $lang2 = Input::get('lang2');
+//    error_log("lang1: ".$lang1." l2: ".$lang2);
     $retLang = $lang2;
     
     $filename = URL::asset("dic/" . $lang1 . "_master.dic");
+    error_log($filename);
     $filetext =  file_get_contents_curl($filename);
     $lang1 = unserialize($filetext);
-    
+//    error_log(print_r($lang1, true));
     $filename = URL::asset("dic/" . $lang2 . "_master.dic");
     $filetext =  file_get_contents_curl($filename);
     $lang2 = unserialize($filetext);
@@ -74,12 +74,12 @@ Route::post("dic/get", function(){
         for ($i = 0; $i < count($lang1); $i++) {
             $ret[$i] = array($lang1[$i] , $lang2[$i]);
         }
+//        error_log(print_r($ret, true));
         return Response::json(array("status" => "OK", "data" => array("dic" => $ret, "lang" => $retLang)));
     } else {
         return Response::json(array("status" => 'FAIL', 'msg' => "Dictionaries are of different sizes!"));
     }
 });
-
 Route::post("dic/modify", function(){
     if(Auth::check() && 
             (Auth::user()->level >= 101)){
@@ -91,7 +91,7 @@ Route::post("dic/modify", function(){
             $words["".$i] = $input["word_".$i];
         }
 
-        $filename = base_path("dic/"."ko_master.dic");
+        $filename = base_path("dic/".$lang."_master.dic");
         $file = fopen($filename, "a+"); // opens file
         if ($file == false) {
     //        echo ( "Error in opening file" );
@@ -105,7 +105,6 @@ Route::post("dic/modify", function(){
             'msg' => "Not Authorized!"));
     }
 });
-
 Route::any('/',function(){
     $data = array('msg' => Session::get('msg'));
     return View::make('index.index', $data);

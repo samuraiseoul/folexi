@@ -1,7 +1,6 @@
 body{
     width: 100%;
-    margin: 0;
-    
+    margin: 0;    
     float: left;
 }
 div{
@@ -41,7 +40,7 @@ a{
     text-decoration:none;
     color: black;
     float: left;
-    font-family: Arial Black;
+    font-family: Arial Black, Arial;
 }
 
 .header .nav{
@@ -76,7 +75,7 @@ a{
     height: 100%;
     float: right;
     position: relative;
-    font-family: Arial Black;
+    font-family: Arial Black, Arial;
     font-size: .75em;
     text-align: center;
 }
@@ -98,7 +97,7 @@ a{
     min-height : 500px;
 }
 .content{
-    font-family: ARIAL BLACK;
+    font-family: ARIAL BLACK, Arial;
     text-align: center;
     margin: 1em auto 0;
     width: 80%;
@@ -130,7 +129,7 @@ a{
     width: 315px;
     margin: 0 auto;    
     height: 55px;
-    font-family: Arial Black;
+    font-family: Arial Black, Arial;
 }
 
 .login .form_wrapper .top .labels{
@@ -158,20 +157,20 @@ a{
 
 .login .form_wrapper .bottom{
     top: 0; left: 0; bottom: 0; right: 0;
-    font-family: Arial Black;
+    font-family: Arial Black, Arial;
     width: 315px;
     margin: 0 auto;
     height: 30px;
 }
 
 .login .form_wrapper .bottom input{
-    font-family: Arial Black;
+    font-family: Arial Black, Arial;
     float: right;
 }
 
 .login .form_wrapper .bottom a{
     text-decoration: none;
-    font-family: Arial Black;
+    font-family: Arial Black, Arial;
     float: left;
 }
 .game_container{
@@ -210,12 +209,12 @@ a{
     float: left;
 }
 .menu .center .lang{
-    font-family: Arial Black;
+    font-family: Arial Black, Arial;
     padding-bottom: .5em;
 }
 .menu .center .lang select{
     border-radius: 3px;
-    font-family: Arial Black;
+    font-family: Arial Black, Arial;
     font-size: 1.5em;
     height: 1.6em;
     width: 5.5em;
@@ -231,14 +230,14 @@ a{
 .right{
     float: left;
     width: 18%;
-    font-family: Arial Black;
+    font-family: Arial Black, Arial;
     margin-left: 2%;
 }
 .input_area{
     float: left;
     height: 25px;
     width: 325px;
-    font-family: Arial Black;
+    font-family: Arial Black, Arial;
 }
 .ui_top{
     width: 100%;
@@ -248,7 +247,7 @@ a{
 .input_area .label{
     float: left;
     margin-bottom: 50%;
-    font-family: Arial Black;
+    font-family: Arial Black, Arial;
 }
 #defense-code{
     margin-left: .5em;
@@ -264,13 +263,13 @@ a{
 .word_area .label{
     float: left;
     margin-bottom: 50%;    
-    font-family: Arial Black;
+    font-family: Arial Black, Arial;
 }
 .new_word_list{
     margin-left: .5em;
     float: left;
     height: 25px;
-    font-family: Arial Black;
+    font-family: Arial Black, Arial;
 }
 .old_word_list{
     float: left;
@@ -311,6 +310,7 @@ a{
     border-top: solid;
 }
 .footer a{
+    color: black;
     text-decoration: none;
 }
 .footer a:visited{
@@ -321,7 +321,7 @@ a{
     width: 20%;
     float: left;
     height: 50%;
-    font-family: ARIAL BLACK;
+    font-family: ARIAL BLACK, Arial;
     margin-top: 2.5%;
 }
 
@@ -331,7 +331,7 @@ a{
     float: right;
     text-align: right;
     height: 50%;
-    font-family: ARIAL BLACK;
+    font-family: ARIAL BLACK, Arial;
     margin-top: 2.5%;
 }
 
@@ -379,7 +379,7 @@ a{
     width: 465px;
     margin: 0 auto;    
     height: 250px;
-    font-family: Arial Black;
+    font-family: Arial Black, Arial;
 }
 
 .register .form_wrapper .top .labels{
@@ -412,19 +412,19 @@ a{
 
 .register .form_wrapper .bottom{
     top: 0; left: 0; bottom: 0; right: 0;
-    font-family: Arial Black;
+    font-family: Arial Black, Arial;
     width: 315px;
     margin: 0 auto;
     height: 30px;
 }
 
 .register .form_wrapper .bottom input{
-    font-family: Arial Black;
+    font-family: Arial Black, Arial;
 }
 
 .register .form_wrapper .bottom a{
     text-decoration: none;
-    font-family: Arial Black;
+    font-family: Arial Black, Arial;
     float: left;
 }
 .tutorial{
@@ -464,7 +464,7 @@ a{
 .menu #lose_menu .text{
     position: absolute;
     text-align: center;
-    font-family: Arial Black;
+    font-family: Arial Black, Arial;
     font-size: 2.5em;
     top: 15%;
     left: 35.5%;

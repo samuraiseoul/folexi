@@ -1,7 +1,7 @@
 @extends('template.template')
 
 @section('js')
-<script>
+<script type="text/javascript">
     $(document).ready(function(){
         $("#button").hide();
     $('#langSelect').ajaxForm(function(json){
@@ -46,7 +46,7 @@
         {{Form::submit('Get Dictionary')}}
     {{ Form::close() }}<br>
     
-    {{ Form::open(array('url' => URL::to('dic/modify'), 'method' => 'POST' , 'id' => 'modify')) }}
+    {{ Form::open(array('url' => URL::to('dic/modify'), 'method' => 'POST', 'id' => 'modify')) }}
     <div id='entries'>
         
     </div>
