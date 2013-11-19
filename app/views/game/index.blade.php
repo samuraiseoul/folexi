@@ -172,6 +172,8 @@
                     Hero.shoot(enemies_on_screen[i].getCoords(), i);
                     Hero.update();
                     kill = i;
+                    //can only type in one word at a time.
+                    break;
                 }
             }
         };
@@ -285,7 +287,7 @@
                     dataType : "json",
                     async : false
                 });
-//                console.log(dic);
+                console.log(dic);
                 levels = [];
                 for (var i = 0, k = 0; i < dic.length; i += 3, k++) {
                     levels.push([]);

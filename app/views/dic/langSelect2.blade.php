@@ -7,6 +7,7 @@
                                              "de" => "German",
                                              "hi" => "Hindi",
                                              "ar" => "Arabic",
-                                             "zh" => "Chinese"),
+                                             "zh" => "Chinese",
+                                             "pt" => "Portuguese"),
                                          null,
                                          array("id" => "lang2"))}}

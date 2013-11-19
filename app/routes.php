@@ -72,7 +72,7 @@ Route::post("dic/get", function(){
     $ret = array();
     if (count($lang1) == count($lang2)) {
         for ($i = 0; $i < count($lang1); $i++) {
-            $ret[$i] = array($lang1[$i] , $lang2[$i]);
+            $ret[$i] = array($lang1[$i] , $lang2[$i], $i, 0);
         }
 //        error_log(print_r($ret, true));
         return Response::json(array("status" => "OK", "data" => array("dic" => $ret, "lang" => $retLang)));
