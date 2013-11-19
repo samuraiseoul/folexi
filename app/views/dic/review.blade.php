@@ -41,8 +41,8 @@
 -->
 
     {{ Form::open(array('url' => URL::to('dic/get'), 'method' => 'POST' , 'id' => 'langSelect')) }}
-        Language : @include('dic.langSelect1')
-        To: @include('dic.langSelect2')
+        Language : @include('dic.langSelect', array('lang' => 'lang1'))
+        To: @include('dic.langSelect', array('lang' => "lang2"))
         {{Form::submit('Get Dictionary')}}
     {{ Form::close() }}<br>
     

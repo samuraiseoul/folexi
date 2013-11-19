@@ -115,26 +115,26 @@
 //            console.log(thisLevel);
             for (var i = 0; i < levels[level].length; i++) {
                     enemies.push(new enemyWord(paper, Hero.center(), thisLevel[i][1],
-                    thisLevel[i][0], speedMult));
+                    thisLevel[i][0], speedMult, thisLevel[i][2]));
             }
             for (var i = 3; i < thisLevel.length; i++) {
                     var special = Math.ceil(((Math.random()*10)%3));
                     //give 25% chance of special enemy.
                     if(special < 2){
                     enemies.push(new enemyWord(paper, Hero.center(), thisLevel[i][1],
-                    thisLevel[i][0], speedMult));
+                    thisLevel[i][0], speedMult, thisLevel[i][2]));
                     }else{
                         var type = Math.ceil(((Math.random()*10)%8));
                         if(type < 3){
                             enemies.push(new redSpecial(paper, Hero.center(), 
-                            thisLevel[i][1], thisLevel[i][0], speedMult));                            
+                            thisLevel[i][1], thisLevel[i][0], speedMult, thisLevel[i][2]));                            
                         }
                         else if(type < 7){
                             enemies.push(new yellowSpecial(paper, Hero.center(),
-                            thisLevel[i][1], thisLevel[i][0], speedMult));                            
+                            thisLevel[i][1], thisLevel[i][0], speedMult , thisLevel[i][2]));                            
                         }else
                             enemies.push(new purpleSpecial(paper, Hero.center(),
-                        thisLevel[i][1], thisLevel[i][0], speedMult));                            
+                        thisLevel[i][1], thisLevel[i][0], speedMult, thisLevel[i][2]));                            
                         }
             }
             setEnemies();
@@ -170,6 +170,7 @@
                     $('#defense-code').val("");
                     Hero.setEnemyAngle(enemies_on_screen[i].getImpactAngle());
                     Hero.shoot(enemies_on_screen[i].getCoords(), i);
+                    dic[enemies_on_screen[i].getIndex()][3]++;
                     Hero.update();
                     kill = i;
                     //can only type in one word at a time.
@@ -196,9 +197,9 @@
          */
         function win() {
             if (enemies_on_screen.length <= 0) {
-                console.log(knownWords);
+                console.log(dic);
                 knownWords = knownWords.concat(levels[level]);
-                console.log(levels[level]);
+//                console.log(levels[level]);
                 thisLevel = [];
                 return true;
             }
@@ -287,7 +288,7 @@
                     dataType : "json",
                     async : false
                 });
-                console.log(dic);
+//                console.log(dic);
                 levels = [];
                 for (var i = 0, k = 0; i < dic.length; i += 3, k++) {
                     levels.push([]);

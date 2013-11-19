@@ -1,4 +1,4 @@
-function enemyWord(paper, hero, lang1, lang2, speedM){
+function enemyWord(paper, hero, lang1, lang2, speedM, index){
     this.paper = paper;
     this.tex = new text(this.paper);
     this.speed = (1+speedM);
@@ -7,6 +7,8 @@ function enemyWord(paper, hero, lang1, lang2, speedM){
     this.x = 0;
     this.y = 0;
     this.r = 0;
+    
+    this.index = index;
     
     this.texSize = null;
     
@@ -105,4 +107,8 @@ function enemyWord(paper, hero, lang1, lang2, speedM){
         this.circ.attr({stroke : "rgb(255,245,0)"});
         this.speed /= 2;
         this.ySpeed /= 2;
+    };
+    
+    enemyWord.prototype.getIndex = function(){
+        return this.index;
     };
