@@ -1,10 +1,10 @@
-function yellowSpecial(paper, hero, lang1, lang2, speedM){
+function yellowSpecial(paper, hero, lang1, lang2, speedM, index){
     this.shot = 0;
     this.special = true;
     this.R = 255;
     this.G = 245;
     this.B = 0;
-    enemyWord.call(this, paper, hero, lang1, lang2, speedM);    
+    enemyWord.call(this, paper, hero, lang1, lang2, speedM, index);    
 };
 
 yellowSpecial.prototype = Object.create(enemyWord.prototype);

@@ -60,32 +60,9 @@ Route::post("dic/get", function(){
     $words = Word::all();
     $dic = array();
     foreach($words as $k){
-        array_push($dic, array($k[$lang1], $k[$lang2]));
+        array_push($dic, array($k[$lang1], $k[$lang2], $k['id'], 0));
     }
-        return Response::json(array("status" => "OK", "data" => array("dic" => $dic, "lang" => $lang2)));
-//        error_log(print_r($dic, true));
-////    error_log("lang1: ".$lang1." l2: ".$lang2);
-//    $retLang = $lang2;
-//    
-//    $filename = URL::asset("dic/" . $lang1 . "_master.dic");
-//    error_log($filename);
-//    $filetext =  file_get_contents_curl($filename);
-//    $lang1 = unserialize($filetext);
-////    error_log(print_r($lang1, true));
-//    $filename = URL::asset("dic/" . $lang2 . "_master.dic");
-//    $filetext =  file_get_contents_curl($filename);
-//    $lang2 = unserialize($filetext);
-//    
-//    $ret = array();
-//    if (count($lang1) == count($lang2)) {
-//        for ($i = 0; $i < count($lang1); $i++) {
-//            $ret[$i] = array($lang1[$i] , $lang2[$i], $i, 0);
-//        }
-////        error_log(print_r($ret, true));
-//        return Response::json(array("status" => "OK", "data" => array("dic" => $ret, "lang" => $retLang)));
-//    } else {
-//        return Response::json(array("status" => 'FAIL', 'msg' => "Dictionaries are of different sizes!"));
-//    }
+    return Response::json(array("status" => "OK", "data" => array("dic" => $dic, "lang" => $lang2)));
 });
 Route::post("dic/modify", function(){
     if(Auth::check() && 
@@ -101,7 +78,6 @@ Route::post("dic/modify", function(){
         $filename = base_path("dic/".$lang."_master.dic");
         $file = fopen($filename, "a+"); // opens file
         if ($file == false) {
-    //        echo ( "Error in opening file" );
             exit(); 
         }
         ftruncate($file, 0); // clears the file
@@ -110,6 +86,40 @@ Route::post("dic/modify", function(){
     }else{
         return Response::json(array('status' => 'FAIL', 
             'msg' => "Not Authorized!"));
+    }
+});
+Route::post('dic/addWords', function(){
+    $lang1 = Input::get('lang1');
+    $lang2 = Input::get('lang2');
+    $words = Input::get('words');
+    
+    if(Auth::check){
+        for($i = 0 ; count($words) ; $i++){
+            try{    
+            $user_word = UserWord::whereRaw("user_id = ".Auth::user()->id
+                        ." AND lang1 = '".$lang1
+                        ."' AND lang2 = '".$lang2
+                        ."' AND word_id = ".$words[$i][2])->first();        
+            if($user_word != null){
+                $user_word['right'] = $words[$i][3];
+                $user_word->save();
+            }else{
+                $user_word = new UserWord();
+                $user_word->user_id = Auth::user()->id;
+                $user_word->lang1 = $lang1;
+                $user_word->lang2 = $lang2;
+                $user_word->word_id = $words[$i][2];
+                $user_word->right = $words[$i][3];
+                $user_word->save();
+            }
+            }catch(Exception $e){
+                return Response::json(array('status' => "FAIL", 
+                    "msg" => "Failed to update the database!"));
+            }
+        }
+    }else{
+            return Response::json(array('status' => "FAIL", 
+                "msg" => "Must be logged in!"));
     }
 });
 Route::any('/',function(){

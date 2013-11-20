@@ -71,9 +71,23 @@
         
         var lost = false;
         
+        function sendWords(){
+            $.ajax({
+                    type : "POST",
+                    url : "{{URL::to('dic/addWords')}}",
+                    data : {lang1 : lang1,
+                            lang2 : lang2,
+                            words : knownWords},
+                    success : function( json ) {
+//                                dic = json.data.dic;
+                                },
+                    dataType : "json",
+                    async : false
+                });
+        };
+        
         function oldWordsToLevel(){
             if(knownWords.length > 0){
-//                console.log("l: "+level+" eW: "+extraWords);
                 var used = [];
                 for(var i = 0 ; i < level+extraWords ; i++){
                     var rand = Math.floor(Math.random()*100);
@@ -89,8 +103,6 @@
                         continue;
                     }
                     used.push(tmp);
-//                    console.log("tmp: "+tmp+" kWs:");
-//                    console.log(knownWords);
                     thisLevel.push(knownWords[tmp]);
                 }
             }            
@@ -128,10 +140,9 @@
                         if(type < 3){
                             enemies.push(new redSpecial(paper, Hero.center(), 
                             thisLevel[i][1], thisLevel[i][0], speedMult, thisLevel[i][2]));                            
-                        }
-                        else if(type < 7){
+                        }else if(type < 7){
                             enemies.push(new yellowSpecial(paper, Hero.center(),
-                            thisLevel[i][1], thisLevel[i][0], speedMult , thisLevel[i][2]));                            
+                            thisLevel[i][1], thisLevel[i][0], speedMult, thisLevel[i][2]));                            
                         }else
                             enemies.push(new purpleSpecial(paper, Hero.center(),
                         thisLevel[i][1], thisLevel[i][0], speedMult, thisLevel[i][2]));                            
@@ -170,12 +181,29 @@
                     $('#defense-code').val("");
                     Hero.setEnemyAngle(enemies_on_screen[i].getImpactAngle());
                     Hero.shoot(enemies_on_screen[i].getCoords(), i);
-                    dic[enemies_on_screen[i].getIndex()][3]++;
+                    for(var j = 0 ; j < knownWords.length ; j++){
+                        console.log("eOSI: "+enemies_on_screen[i].getIndex()+" lL: "+levels[level].length);
+                        if(knownWords[j][2] === enemies_on_screen[i].getIndex()){
+                            if(!enemies_on_screen[i].isSpecial()){
+                                knownWords[j][3]++;
+                            }else{
+                                if(enemies_on_screen[i].type() === "red"){
+                                    enemies_on_screen[i].match();
+                                    if(enemies_on_screen[i].finalKill()){
+                                        knownWords[j][3]++;
+                                    }
+                                }else{
+                                    knownWords[j][3]++;                                    
+                                }
+                            }
+                        }
+                    }
                     Hero.update();
                     kill = i;
                     //can only type in one word at a time.
                     break;
                 }
+                
             }
         };
         
@@ -197,10 +225,14 @@
          */
         function win() {
             if (enemies_on_screen.length <= 0) {
-                console.log(dic);
+//                console.log(dic);
                 knownWords = knownWords.concat(levels[level]);
-//                console.log(levels[level]);
+//                for(var i = (knownWords.length -3 ) ; i < knownWords.length ; i++){
+//                    knownWords[i][3]++;
+//                }
+                console.log(knownWords);
                 thisLevel = [];
+                sendWords();
                 return true;
             }
             return false;
@@ -274,21 +306,17 @@
                 $('#menu').hide();
                 paper.clear();
                 mainmenu = false;
-//                console.log("l1: "+lang1+" l2: "+lang2);
                 $.ajax({
                     type : "POST",
                     url : "{{URL::to('dic/get')}}",
                     data : {lang1 : lang1,
                             lang2 : lang2},
                     success : function( json ) {
-//                        console.log(json.data.dic);
                                 dic = json.data.dic;
-                                    ajaxDone = true;
                                 },
                     dataType : "json",
                     async : false
                 });
-//                console.log(dic);
                 levels = [];
                 for (var i = 0, k = 0; i < dic.length; i += 3, k++) {
                     levels.push([]);
@@ -296,7 +324,6 @@
                         levels[k].push(dic[i + j]);
                     }
                 }
-//                    console.log(levels);
                 start();
         });
         $("#tutorial_btn").click(function(){

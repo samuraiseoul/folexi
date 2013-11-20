@@ -1,13 +1,26 @@
-function redSpecial(paper, hero, lang1, lang2, speedM){
+function redSpecial(paper, hero, lang1, lang2, speedM, index){
     this.shot = 0;
-    enemyWord.call(this, paper, hero, lang1, lang2, speedM);    
+    enemyWord.call(this, paper, hero, lang1, lang2, speedM, index);    
 };
 
 redSpecial.prototype = Object.create(enemyWord.prototype);
 redSpecial.prototype.constructor = redSpecial;
 
-redSpecial.prototype.kill = function(){
+//redSpecial.prototype.isShot = function(){
+//    if(enemyWord.prototype.isShot(this)){
+//        this.shot++;
+//        return true;
+//    }else{
+//        return false;
+//    }
+//};
+
+redSpecial.prototype.match = function(){
     this.shot++;
+};
+
+redSpecial.prototype.kill = function(){
+//    this.shot++;
     if(this.finalKill()){
         enemyWord.prototype.kill.call(this);
     }
@@ -18,7 +31,8 @@ redSpecial.prototype.type = function(){
 };
 
 redSpecial.prototype.finalKill = function(){
-    return (this.shot === 2);
+    console.log("s: "+this.shot);
+    return (this.shot >= 2);
 };
 
 redSpecial.prototype.isSpecial = function(){

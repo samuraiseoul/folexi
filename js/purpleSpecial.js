@@ -1,6 +1,6 @@
-function purpleSpecial(paper, hero, lang1, lang2, speedM){
+function purpleSpecial(paper, hero, lang1, lang2, speedM, index){
     this.shot = 0;
-    enemyWord.call(this, paper, hero, lang1, lang2, speedM);    
+    enemyWord.call(this, paper, hero, lang1, lang2, speedM, index);    
 };
 
 purpleSpecial.prototype = Object.create(enemyWord.prototype);
