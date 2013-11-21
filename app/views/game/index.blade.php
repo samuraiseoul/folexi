@@ -66,11 +66,22 @@
         var paused = false;
         var thisLevel = [];
         var knownWords = [];
+        var activeKnownWords = 0;
 
         var seconds = 0;
 
         var lost = false;
-
+        
+        function numKnownActive(){
+//            console.log("aKW: "+activeKnownWords);
+                activeKnownWords = 0;
+            for(var i = 0 ; i < knownWords.length ; i++){
+                if(knownWords[i][3] < 10){
+//                    console.log("Here");
+                    activeKnownWords++;
+                }
+            }
+        }
         function sendWords() {
             $.ajax({
                 type: "POST",
@@ -85,7 +96,6 @@
                 dataType: "json"
             });
         }
-        ;
         function getKnownWords() {
             $.ajax({
                 type: "POST",
@@ -102,16 +112,20 @@
                             json.data[i]['right']
                         ]);
                     }
+                    numKnownActive();
                 },
                 dataType: "json",
                 async: false
             });
         }
-
         function oldWordsToLevel() {
             if (knownWords.length > 0) {
+                var newReplace = 3;
+                if(activeKnownWords < 25){
+                    newReplace = 0;
+                }
                 var used = [];
-                for (var i = 0; i < level + extraWords; i++) {
+                for (var i = 0; i < (level + extraWords + newReplace); i++) {
                     var rand = Math.floor(Math.random() * 100);
                     var tmp = rand % knownWords.length;
                     var cont = false;
@@ -128,9 +142,10 @@
                     thisLevel.push(knownWords[tmp]);
                 }
             }
+//            console.log(thisLevel);
         }
-        
         function setEnemies() {
+            console.log(enemies);
             var quadrant = 0;
             var qH = h / 4;
             var qS = qH / 6;
@@ -145,11 +160,16 @@
             }
         }
         function createEnemies() {//makes sure new enemies are not special.
-            for (var i = 0; i < levels[level].length; i++) {
-                enemies.push(new enemyWord(paper, Hero.center(), thisLevel[i][1],
-                        thisLevel[i][0], speedMult, thisLevel[i][2]));
-            }
-            for (var i = 3; i < thisLevel.length; i++) {
+            var tooManyWords = 3;
+            if(activeKnownWords < 25){
+                for (var i = 0; i < levels[level].length; i++) {
+                    enemies.push(new enemyWord(paper, Hero.center(), thisLevel[i][1],
+                            thisLevel[i][0], speedMult, thisLevel[i][2]));
+                }
+            }else{
+                tooMaynWords = 0;
+            }            
+            for (var i = (3-tooManyWords) ; i < thisLevel.length; i++) {
                 var special = Math.ceil(((Math.random() * 10) % 3));
                 //give 25% chance of special enemy.
                 if (special < 2) {
@@ -168,21 +188,23 @@
                                 thisLevel[i][1], thisLevel[i][0], speedMult, thisLevel[i][2]));
                 }
             }
+            console.log(enemies);
             setEnemies();
         }
-
         function initiate() {
-            thisLevel = levels[level].concat();
+            if(activeKnownWords < 25){
+                thisLevel = levels[level].concat();
+            }
             oldWordsToLevel();
-            for (var i = 0; i < levels[level].length; i++) {
-                $('#new_word_list').append(levels[level][i][0] + " ");
+            if(activeKnownWords < 25){
+                for (var i = 0; i < levels[level].length; i++) {
+                    $('#new_word_list').append(levels[level][i][0] + " ");
+                }
             }
             createEnemies();
             enemies_on_screen.push(enemies[0]);
             seconds++;
         }
-        ;
-
         function addOldWords() {
             $('#col_0').html("");
             $('#col_1').html("");
@@ -196,13 +218,13 @@
                 }
             }
         }
-        ;
         /*
          * If the words match(lowercase check)
          * then kill the enemy.
          */
         function wordMatch() {
             for (var i = 0; i < enemies_on_screen.length; i++) {
+                console.log(enemies_on_screen);
                 if ($('#defense-code').val().toLowerCase() === enemies_on_screen[i].getAnswer().toLowerCase()) {
                     $('#defense-code').val("");
                     Hero.setEnemyAngle(enemies_on_screen[i].getImpactAngle());
@@ -231,8 +253,6 @@
 
             }
         }
-        ;
-
         /*
          *Checks if the circles collide.
          *Uses the radius of both circles and if it's shorter
@@ -246,7 +266,6 @@
             }
             return false;
         }
-        ;
         /*
          * If no enemies left, then you win.
          */
@@ -262,33 +281,33 @@
                     }
                     knownWords.push(levels[level][i]);
                 }
+                numKnownActive();
                 thisLevel = [];
                 sendWords();
                 return true;
             }
             return false;
         }
-        ;
         /* 
          * Clears the new word list for the next level
          * Gives the running words list the previous level's words
          * increases the level and initializes it. 
          */
-        function nextLevel() {
+        function nextLevel() {            
             $("#new_word_list").html('');
             addOldWords();
+            if(activeKnownWords < 25){
             level++;
             enemiesPerSec = (Math.floor((level + 1) / 3)) + 1;
             extraWords = (Math.floor((level + 1) / 4));
             speedMult = 0.25 * (Math.floor((level + 1) / 5));
             killedWords += enemies.length;
+            }
             seconds = 0;
             enemies_on_screen = [];
             enemies = [];
             initiate();
         }
-        ;
-
         function update() {
             for (var i = 0; i < enemies_on_screen.length; i++) {
                 enemies_on_screen[i].update();
@@ -297,7 +316,6 @@
                 enemies_on_screen = Hero.updateBullets(enemies_on_screen);
             }
         }
-        ;
         function start() {
             Hero = new hero(paper);
             Hero.set((w * .055), (h * .47), ((w * .055) * .73));
@@ -498,8 +516,6 @@
                 }
             }
         };
-
-
         var add_enemy_id = setInterval(function() {
             if (!mainmenu) {
                 if (!paused) {
