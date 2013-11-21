@@ -37,22 +37,22 @@
     var levels = [];
     var lang1 = "en";
     var lang2 = "en";
-    
-    $(document).ready(function(){
-        $("#lang1").change(function(){
-            lang1 = $('#lang1').val();
-        });        
-        
-        $("#lang2").change(function(){
-            lang2 = $('#lang2').val();
-        });        
-    }); 
 
-    $(document).ready(function(){
+    $(document).ready(function() {
+        $("#lang1").change(function() {
+            lang1 = $('#lang1').val();
+        });
+
+        $("#lang2").change(function() {
+            lang2 = $('#lang2').val();
+        });
+    });
+
+    $(document).ready(function() {
         var startTime = 0;
         var canvas = $('#game');
         var w = canvas.width();
-        var h = (canvas.width()*.6);
+        var h = (canvas.width() * .6);
         var paper = new Raphael($('#game')[0], w, h);
         enemies_on_screen = [];
         killed = [];
@@ -66,134 +66,159 @@
         var paused = false;
         var thisLevel = [];
         var knownWords = [];
-        
+
         var seconds = 0;
-        
+
         var lost = false;
-        
-        function sendWords(){
+
+        function sendWords() {
             $.ajax({
-                    type : "POST",
-                    url : "{{URL::to('dic/addWords')}}",
-                    data : {lang1 : lang1,
-                            lang2 : lang2,
-                            words : knownWords},
-                    success : function( json ) {
+                type: "POST",
+                url: "{{URL::to('dic/addWords')}}",
+                data: {lang1: lang1,
+                    lang2: lang2,
+                    words: knownWords},
+                success: function(json) {
+                    console.log(json);
 //                                dic = json.data.dic;
-                                },
-                    dataType : "json",
-                    async : false
-                });
-        };
-        
-        function oldWordsToLevel(){
-            if(knownWords.length > 0){
+                },
+                dataType: "json"
+            });
+        }
+        ;
+        function getKnownWords() {
+            $.ajax({
+                type: "POST",
+                url: "{{URL::to('dic/getWords')}}",
+                data: {lang1: lang1,
+                    lang2: lang2},
+                success: function(json) {
+                    console.log(json);
+                    for (var i = 0; i < json.data.length; i++) {
+                        knownWords.push([
+                            json.data[i]['word'][json.data[i]['lang1']],
+                            json.data[i]['word'][json.data[i]['lang2']],
+                            json.data[i]['word_id'],
+                            json.data[i]['right']
+                        ]);
+                    }
+                },
+                dataType: "json",
+                async: false
+            });
+        }
+
+        function oldWordsToLevel() {
+            if (knownWords.length > 0) {
                 var used = [];
-                for(var i = 0 ; i < level+extraWords ; i++){
-                    var rand = Math.floor(Math.random()*100);
-                    var tmp = rand%knownWords.length;
+                for (var i = 0; i < level + extraWords; i++) {
+                    var rand = Math.floor(Math.random() * 100);
+                    var tmp = rand % knownWords.length;
                     var cont = false;
-                    for(var j = 0 ; j < used.length ; j++){
-                        if(tmp === used[j]){
+                    for (var j = 0; j < used.length; j++) {
+                        if ((tmp === used[j]) || (knownWords[tmp][3] > 10)) {
                             cont = true;
                             break;
                         }
                     }
-                    if(cont){
+                    if (cont) {
                         continue;
                     }
                     used.push(tmp);
                     thisLevel.push(knownWords[tmp]);
                 }
-            }            
+            }
         }
-        function setEnemies(){
+        
+        function setEnemies() {
             var quadrant = 0;
-            var qH = h/4;
-            var qS = qH/6;
-            var qA = (qH/3)*2;
+            var qH = h / 4;
+            var qS = qH / 6;
+            var qA = (qH / 3) * 2;
             for (var i = 0; i < enemies.length; i++) {
-                y = (qS)+(qH*quadrant)+((Math.random()*1000)%(qA));
+                y = (qS) + (qH * quadrant) + ((Math.random() * 1000) % (qA));
                 quadrant++;
                 enemies[i].setByY(y, w);
-                if(quadrant > 3){
+                if (quadrant > 3) {
                     quadrant = 0;
                 }
-            }                        
+            }
         }
-        function createEnemies(){//makes sure new enemies are not special.
-//            console.log(level);
-//            console.log(levels);
-//            console.log(thisLevel);
+        function createEnemies() {//makes sure new enemies are not special.
             for (var i = 0; i < levels[level].length; i++) {
-                    enemies.push(new enemyWord(paper, Hero.center(), thisLevel[i][1],
-                    thisLevel[i][0], speedMult, thisLevel[i][2]));
+                enemies.push(new enemyWord(paper, Hero.center(), thisLevel[i][1],
+                        thisLevel[i][0], speedMult, thisLevel[i][2]));
             }
             for (var i = 3; i < thisLevel.length; i++) {
-                    var special = Math.ceil(((Math.random()*10)%3));
-                    //give 25% chance of special enemy.
-                    if(special < 2){
+                var special = Math.ceil(((Math.random() * 10) % 3));
+                //give 25% chance of special enemy.
+                if (special < 2) {
                     enemies.push(new enemyWord(paper, Hero.center(), thisLevel[i][1],
-                    thisLevel[i][0], speedMult, thisLevel[i][2]));
-                    }else{
-                        var type = Math.ceil(((Math.random()*10)%8));
-                        if(type < 3){
-                            enemies.push(new redSpecial(paper, Hero.center(), 
-                            thisLevel[i][1], thisLevel[i][0], speedMult, thisLevel[i][2]));                            
-                        }else if(type < 7){
-                            enemies.push(new yellowSpecial(paper, Hero.center(),
-                            thisLevel[i][1], thisLevel[i][0], speedMult, thisLevel[i][2]));                            
-                        }else
-                            enemies.push(new purpleSpecial(paper, Hero.center(),
-                        thisLevel[i][1], thisLevel[i][0], speedMult, thisLevel[i][2]));                            
-                        }
+                            thisLevel[i][0], speedMult, thisLevel[i][2]));
+                } else {
+                    var type = Math.ceil(((Math.random() * 10) % 8));
+                    if (type < 3) {
+                        enemies.push(new redSpecial(paper, Hero.center(),
+                                thisLevel[i][1], thisLevel[i][0], speedMult, thisLevel[i][2]));
+                    } else if (type < 7) {
+                        enemies.push(new yellowSpecial(paper, Hero.center(),
+                                thisLevel[i][1], thisLevel[i][0], speedMult, thisLevel[i][2]));
+                    } else
+                        enemies.push(new purpleSpecial(paper, Hero.center(),
+                                thisLevel[i][1], thisLevel[i][0], speedMult, thisLevel[i][2]));
+                }
             }
             setEnemies();
         }
-                       
+
         function initiate() {
             thisLevel = levels[level].concat();
             oldWordsToLevel();
-            for(var i = 0 ; i < levels[level].length ; i++){
+            for (var i = 0; i < levels[level].length; i++) {
                 $('#new_word_list').append(levels[level][i][0] + " ");
             }
             createEnemies();
             enemies_on_screen.push(enemies[0]);
             seconds++;
-        };
-        
+        }
+        ;
+
         function addOldWords() {
-            for (var i = 0; i < levels[level].length; i++) {
-                if((i+level)%2 === 0){
-                $('#col_0').append(levels[level][i][0] + " ");
-                }else{
-                $('#col_1').append(levels[level][i][0] + " ");                    
+            $('#col_0').html("");
+            $('#col_1').html("");
+            for (var i = 0; i < knownWords.length; i++) {
+                if (knownWords[i][3] <= 5) {
+                    if ((i % 2) === 0) {
+                        $('#col_0').append(knownWords[i][0] + "<br>");
+                    } else {
+                        $('#col_1').append(knownWords[i][0] + "<br>");
+                    }
                 }
             }
-        };
-         /*
-          * If the words match(lowercase check)
-          * then kill the enemy.
-          */
+        }
+        ;
+        /*
+         * If the words match(lowercase check)
+         * then kill the enemy.
+         */
         function wordMatch() {
             for (var i = 0; i < enemies_on_screen.length; i++) {
-                if ($('#defense-code').val().toLowerCase() === enemies_on_screen[i].getAnswer().toLowerCase()) {   
+                if ($('#defense-code').val().toLowerCase() === enemies_on_screen[i].getAnswer().toLowerCase()) {
                     $('#defense-code').val("");
                     Hero.setEnemyAngle(enemies_on_screen[i].getImpactAngle());
                     Hero.shoot(enemies_on_screen[i].getCoords(), i);
-                    for(var j = 0 ; j < knownWords.length ; j++){
-                        console.log("eOSI: "+enemies_on_screen[i].getIndex()+" lL: "+levels[level].length);
-                        if(knownWords[j][2] === enemies_on_screen[i].getIndex()){
-                            if(!enemies_on_screen[i].isSpecial()){
+                    for (var j = 0; j < knownWords.length; j++) {
+                        if (knownWords[j][2] === enemies_on_screen[i].getIndex()) {
+                            if (!enemies_on_screen[i].isSpecial()) {
                                 knownWords[j][3]++;
-                            }else{
-                                if(enemies_on_screen[i].type() === "red"){
+                            } else {
+                                if (enemies_on_screen[i].type() === "red") {
                                     enemies_on_screen[i].match();
-                                    if(enemies_on_screen[i].finalKill()){
+                                    if (enemies_on_screen[i].finalKill()) {
                                         knownWords[j][3]++;
                                     }
-                                }else{
-                                    knownWords[j][3]++;                                    
+                                } else {
+                                    knownWords[j][3]++;
                                 }
                             }
                         }
@@ -203,70 +228,79 @@
                     //can only type in one word at a time.
                     break;
                 }
-                
+
             }
-        };
-        
+        }
+        ;
+
         /*
          *Checks if the circles collide.
          *Uses the radius of both circles and if it's shorter
          *than the combined length, then they have colided.
-         */        
+         */
         function lose() {
             for (var i = 0; i < enemies_on_screen.length; i++) {
-                if(Hero.collision(enemies_on_screen[i])){
+                if (Hero.collision(enemies_on_screen[i])) {
                     return true;
                 }
             }
             return false;
-        };
+        }
+        ;
         /*
          * If no enemies left, then you win.
          */
         function win() {
             if (enemies_on_screen.length <= 0) {
-//                console.log(dic);
-                knownWords = knownWords.concat(levels[level]);
-//                for(var i = (knownWords.length -3 ) ; i < knownWords.length ; i++){
-//                    knownWords[i][3]++;
-//                }
-                console.log(knownWords);
+                loop1:
+                        for (var i = 0; i < levels[level].length; i++) {
+                    loop2 :
+                            for (var j = 0; j < knownWords.length; j++) {
+                        if (knownWords[j][2] === levels[level][i][2]) {
+                            continue loop1;
+                        }
+                    }
+                    knownWords.push(levels[level][i]);
+                }
                 thisLevel = [];
                 sendWords();
                 return true;
             }
             return false;
-        };
+        }
+        ;
         /* 
          * Clears the new word list for the next level
          * Gives the running words list the previous level's words
          * increases the level and initializes it. 
          */
-        function nextLevel(){
+        function nextLevel() {
             $("#new_word_list").html('');
             addOldWords();
             level++;
-            enemiesPerSec = (Math.floor((level+1)/3))+1;
-            extraWords = (Math.floor((level+1)/4));
-            speedMult = 0.25*(Math.floor((level+1)/5));
+            enemiesPerSec = (Math.floor((level + 1) / 3)) + 1;
+            extraWords = (Math.floor((level + 1) / 4));
+            speedMult = 0.25 * (Math.floor((level + 1) / 5));
             killedWords += enemies.length;
             seconds = 0;
             enemies_on_screen = [];
             enemies = [];
             initiate();
-        };
+        }
+        ;
 
         function update() {
             for (var i = 0; i < enemies_on_screen.length; i++) {
-                enemies_on_screen[i].update();                
+                enemies_on_screen[i].update();
             }
-            if(Hero.isShot()){
+            if (Hero.isShot()) {
                 enemies_on_screen = Hero.updateBullets(enemies_on_screen);
             }
-        };
-        function start(){
+        }
+        ;
+        function start() {
             Hero = new hero(paper);
-            Hero.set((w*.055), (h*.47), ((w*.055)*.73));
+            Hero.set((w * .055), (h * .47), ((w * .055) * .73));
             Hero.setSize(2);
             Hero.draw();
             //First initialization
@@ -282,15 +316,16 @@
                 }
             });
         }
-        
+
         $('#menu').width(w);
         $('#menu').height(h);
-        
-        function reset(){
+
+        function reset() {
             killed = [];
             enemies_on_screen = [];
             enemies = [];
             knownWords = [];
+            getKnownWords();
             thisLevel = [];
             seconds = 0;
             paper.clear();
@@ -301,62 +336,76 @@
             paused = false;
             mainmenu = true;
         }
-        
-        $("#start_btn").click(function(){
-                $('#menu').hide();
-                paper.clear();
-                mainmenu = false;
-                $.ajax({
-                    type : "POST",
-                    url : "{{URL::to('dic/get')}}",
-                    data : {lang1 : lang1,
-                            lang2 : lang2},
-                    success : function( json ) {
-                                dic = json.data.dic;
-                                },
-                    dataType : "json",
-                    async : false
-                });
-                levels = [];
-                for (var i = 0, k = 0; i < dic.length; i += 3, k++) {
-                    levels.push([]);
-                    for (var j = 0; j < 3; j++) {
-                        levels[k].push(dic[i + j]);
+
+        $("#start_btn").click(function() {
+            $('#menu').hide();
+            paper.clear();
+            mainmenu = false;
+            $.ajax({
+                type: "POST",
+                url: "{{URL::to('dic/get')}}",
+                data: {lang1: lang1,
+                    lang2: lang2},
+                success: function(json) {
+                    dic = json.data.dic;
+                },
+                dataType: "json",
+                async: false
+            });
+            getKnownWords();
+            levels = [];
+            for (var i = 0, k = 0; i < dic.length; i += 3, k++) {
+                levels.push([]);
+                loopj :
+                        for (var j = 0; j < 3; j++) {
+                    for (var m = 0; m < knownWords.length; m++) {
+                        if ((i + j) < dic.length - 1) { // fixed an array out of bound index error
+                            if (
+                                    (knownWords[m][2] === dic[i + j][2])
+                                    ) {
+                                i += 1;
+                                j--;
+                                continue loopj;
+                            }
+                        }
                     }
+                    levels[k].push(dic[i + j]);
                 }
-                start();
+            }
+            addOldWords();
+            start();
         });
-        $("#tutorial_btn").click(function(){
+        $("#tutorial_btn").click(function() {
             $("#pausemenu").hide();
             $('#mainmenu').hide();
             $('#tutorial').show();
         });
-        $("#pause_tutorial_btn").click(function(){
+        $("#pause_tutorial_btn").click(function() {
             $("#pausemenu").hide();
             $('#mainmenu').hide();
             $('#tutorial').show();
         });
-        $('#exit').click(function(){
-            if(lost){
+        $('#exit').click(function() {
+            if (lost) {
                 $('#lose_menu').show();
-            }else if(!paused){
+            } else if (!paused) {
                 $('#mainmenu').show();
-            }else{
+            } else {
                 $('#pausemenu').show();
             }
-            $('#tutorial').hide();            
+            $('#tutorial').hide();
         });
-        
-        $('#mainmenu_btn').click(function(){
+
+        $('#mainmenu_btn').click(function() {
             reset();
             console.log("HERE");
             $("#new_word_list").html('');
             $('.word_col').html('');
             $('#pausemenu').hide();
-            $('#mainmenu').show();         
+            $('#mainmenu').show();
             $('#defense-code').prop("disabled", false);
         });
-        function restartLevel(){
+        function restartLevel() {
             killed = [];
             enemies_on_screen = [];
             enemies = [];
@@ -364,26 +413,26 @@
             paused = false;
             thisLevel = [];
             seconds = 0;
-            start();            
+            start();
         }
-        $('#restart_btn').click(function(){
+        $('#restart_btn').click(function() {
             $('#pausemenu').hide();
             $('#menu').hide();
             $("#new_word_list").html('');
             $('#defense-code').prop("disabled", false);
             restartLevel();
         });
-        
-        $(document).keyup(function(e) { 
+
+        $(document).keyup(function(e) {
             if (e.which === 27) {
                 paused = !paused;
-                if(paused){
+                if (paused) {
                     $('#menu').show();
                     $('#tutorial').hide();
                     $('#mainmenu').hide();
                     $('#pausemenu').show();
                     $('#defense-code').prop("disabled", true);
-                }else{
+                } else {
                     $('#tutorial').hide();
                     $('#mainmenu').hide();
                     $('#pausemenu').hide();
@@ -393,7 +442,7 @@
             }
         });
         var loseMenu = false;
-        function loseMenuDisplay(){
+        function loseMenuDisplay() {
             loseMenu = true;
             $('#menu').show();
             $('#tutorial').hide();
@@ -401,7 +450,7 @@
             $('#pausemenu').hide();
             $('#lose_menu').show();
         }
-        $('#lose_restart_btn').click(function(){
+        $('#lose_restart_btn').click(function() {
             console.log("here!");
             $('#pausemenu').hide();
             $('#lose_menu').hide();
@@ -411,53 +460,53 @@
             loseMenu = false;
             restartLevel();
         });
-        $("#lose_tutorial_btn").click(function(){
+        $("#lose_tutorial_btn").click(function() {
             $("#pausemenu").hide();
             $('#mainmenu').hide();
             $('#lose_menu').hide();
-            console.log("lost: "+lost);
+            console.log("lost: " + lost);
             $('#tutorial').show();
         });
-        $('#lose_mainmenu_btn').click(function(){
+        $('#lose_mainmenu_btn').click(function() {
             $('#lose_menu').hide();
             reset();
             $("#new_word_list").html('');
             $('.word_col').html('');
             $('#pausemenu').hide();
-            $('#mainmenu').show();         
+            $('#mainmenu').show();
             lost = false;
             loseMenu = false;
         });
         var mainloop = function() {
-            if(!mainmenu){
-                if(!paused){
+            if (!mainmenu) {
+                if (!paused) {
                     if (!lost) {
                         if (win()) {
                             nextLevel();
                         }
                         var tmp = wordMatch(killed);
-                        if(tmp !== null){
+                        if (tmp !== null) {
                             killed.push(tmp);
                         }
                         update();
                         lost = lose();
-                    }else{
-                        if(!loseMenu){
+                    } else {
+                        if (!loseMenu) {
                             loseMenuDisplay();
                         }
                     }
                 }
             }
         };
-        
-        
-        var add_enemy_id = setInterval(function(){            
-            if(!mainmenu){
-                if(!paused){
+
+
+        var add_enemy_id = setInterval(function() {
+            if (!mainmenu) {
+                if (!paused) {
                     if (!lost) {
-                        if(!lost && !win()){
-                            for(var i = 0 ; i < enemiesPerSec ; i++){
-                                if(seconds < enemies.length){
+                        if (!lost && !win()) {
+                            for (var i = 0; i < enemiesPerSec; i++) {
+                                if (seconds < enemies.length) {
                                     enemies_on_screen.push(enemies[seconds]);
                                     seconds++;
                                 }
@@ -465,13 +514,13 @@
                         }
                     }
                 }
-             }
+            }
         }, 1500);
         //Sets the main function to load on repeat, at a framerate of 60 per sec.
         var timer_id = setInterval(mainloop, (1000 / 60));
     });
-    
-    
+
+
 
 </script>
 @stop
@@ -479,35 +528,35 @@
 
 @section('content')
 <div class="game_container">
-<div class='left'>
-    <div class='ui_top'>
-        <div class="input_area">
-            <span class='label'>Defense Code: </span>
-            <textarea id='defense-code' rows="1"></textarea>
+    <div class='left'>
+        <div class='ui_top'>
+            <div class="input_area">
+                <span class='label'>Defense Code: </span>
+                <textarea id='defense-code' rows="1"></textarea>
+            </div>
+            <div class='word_area'>
+                <span class='label'>New Words: </span>
+                <div class="new_word_list" id="new_word_list"></div>
+            </div>
         </div>
-        <div class='word_area'>
-            <span class='label'>New Words: </span>
-            <div class="new_word_list" id="new_word_list"></div>
-        </div>
-    </div>
-    
-    <div id="game"></div>
-    <div id='menu' class='menu'>
+
+        <div id="game"></div>
+        <div id='menu' class='menu'>
             @include('game/mainmenu')
             @include('game/tutorial')
             @include('game/pause')
             @include('game/losemenu')
+        </div>
     </div>
-</div>
-<div class="right">    
-    <div class="old_word_list" id ="old_word_list">
-        <div class='ghost'></div>
-        <span class='label'> Old Words: </span>
+    <div class="right">    
+        <div class="old_word_list" id ="old_word_list">
+            <div class='ghost'></div>
+            <span class='label'> Old Words: </span>
+        </div>
+        <div class='cols'>
+            <div class='word_col' id='col_0'></div>
+            <div class='word_col' id='col_1'></div>
+        </div>
     </div>
-    <div class='cols'>
-        <div class='word_col' id='col_0'></div>
-        <div class='word_col' id='col_1'></div>
-    </div>
-</div>
 </div>
 @stop

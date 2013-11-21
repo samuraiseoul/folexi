@@ -93,8 +93,8 @@ Route::post('dic/addWords', function(){
     $lang2 = Input::get('lang2');
     $words = Input::get('words');
     
-    if(Auth::check){
-        for($i = 0 ; count($words) ; $i++){
+    if(Auth::check()){
+        for($i = 0 ; $i < count($words) ; $i++){
             try{    
             $user_word = UserWord::whereRaw("user_id = ".Auth::user()->id
                         ." AND lang1 = '".$lang1
@@ -113,13 +113,36 @@ Route::post('dic/addWords', function(){
                 $user_word->save();
             }
             }catch(Exception $e){
+                error_log(print_r($e, true));
                 return Response::json(array('status' => "FAIL", 
                     "msg" => "Failed to update the database!"));
             }
         }
+        return Response::json(array('status' => "OK", 
+                "msg" => "All good!"));
     }else{
             return Response::json(array('status' => "FAIL", 
                 "msg" => "Must be logged in!"));
+    }
+});
+Route::post('dic/getWords', function(){
+    $lang1 = Input::get('lang1');
+    $lang2 = Input::get('lang2');
+    if(Auth::check()){
+        try{
+        $words = UserWord::where("user_id" , Auth::user()->id)
+                ->where("lang1", $lang1)
+                ->where("lang2", $lang2)
+                ->with("word")
+                ->get();
+        }catch(Exception $e){
+            error_log(print_r($e, true));
+        }
+//        error_log(print_r($words, true));
+        return Response::json(array('status' => "OK", "data" => $words->toArray()));
+    }else{
+            return Response::json(array('status' => "FAIL", 
+                "msg" => "Must be logged in!"));        
     }
 });
 Route::any('/',function(){

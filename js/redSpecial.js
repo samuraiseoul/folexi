@@ -31,7 +31,7 @@ redSpecial.prototype.type = function(){
 };
 
 redSpecial.prototype.finalKill = function(){
-    console.log("s: "+this.shot);
+//    console.log("s: "+this.shot);
     return (this.shot >= 2);
 };
 
@@ -45,5 +45,5 @@ redSpecial.prototype.set = function(x, y){
 };
 
 redSpecial.prototype.purpleKill = function(){
-    this.shot = 1;
+    this.shot = 2;
 };

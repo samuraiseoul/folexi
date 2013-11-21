@@ -112,7 +112,16 @@ function hero(paper){
                 }else if(enemies[bulls[kills[i]].getEnemyI()].type() === "purple"){
                     ret = enemies[bulls[kills[i]].getEnemyI()].killSurrounding(enemies);
                     for(var k = 0 ; k < ret.length ; k++){
-                                                enemies[ret[k]].kill();
+                        if(enemies[ret[k]].isSpecial()){
+                            if(enemies[ret[k]].type() === "red"){
+                                enemies[ret[k]].purpleKill();
+                                enemies[ret[k]].kill();
+                            }else{
+                                enemies[ret[k]].kill();
+                            }
+                        }else{
+                            enemies[ret[k]].kill();                            
+                        }
                     }
                 }else if(enemies[bulls[kills[i]].getEnemyI()].type() === "yellow"){
                     slow = enemies[bulls[kills[i]].getEnemyI()].slowSurrounding(enemies_on_screen);

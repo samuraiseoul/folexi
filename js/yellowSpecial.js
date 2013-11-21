@@ -11,7 +11,6 @@ yellowSpecial.prototype = Object.create(enemyWord.prototype);
 yellowSpecial.prototype.constructor = yellowSpecial;
 
 yellowSpecial.prototype.kill = function() {
-    console.log("r: "+this.r);
         this.circ.animate({ r : (this.r * 2.5)}, 400, "linear", function(){
             this.attr({stroke : "rgb(255,0,0)"}).animate({ r : 0}, 400, "linear", function(){
                 this.remove();
