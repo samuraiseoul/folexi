@@ -89,6 +89,7 @@
                     lang2: lang2,
                     words: knownWords},
                 success: function(json) {
+                    console.log(json);
 //                    console.log(json);
 //                                dic = json.data.dic;
                 },
@@ -115,7 +116,12 @@
                         numKnownActive();
                     }else{
                         if(json.status === "FAIL"){
-                            console.log(json);
+//                            console.log(json);
+                            knownWords = json.data;
+                            for(var i = 0 ; i < knownWords.length ; i++){
+                                knownWords[i][2] = parseInt(knownWords[i][2]);
+                                knownWords[i][3] = parseInt(knownWords[i][3]);
+                            }
                         }
                         numKnownActive();
                     }
@@ -378,6 +384,7 @@
             });
             getKnownWords();
             levels = [];
+            console.log(knownWords);
             for (var i = 0, k = 0; i < dic.length; i += 3, k++) {
                 levels.push([]);
                 loopj :
@@ -387,6 +394,7 @@
                             if (
                                     (knownWords[m][2] === dic[i + j][2])
                                     ) {
+                                            console.log("HERE!");
                                 i += 1;
                                 j--;
                                 continue loopj;
@@ -396,6 +404,7 @@
                     levels[k].push(dic[i + j]);
                 }
             }
+            console.log(levels);
             addOldWords();
             start();
         });

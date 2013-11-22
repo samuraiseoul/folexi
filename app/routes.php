@@ -124,7 +124,7 @@ Route::post('dic/addWords', function(){
             $cookie = Cookie::forever('knownWords', serialize($words));
             error_log(print_r($words,true));
             return Response::json(array('status' => "FAIL", 
-                "msg" => "Info stored in cookie!"))->headers->withCookie($cookie);
+                "msg" => "Info stored in cookie!"))->withCookie($cookie);
     }
 });
 Route::post('dic/getWords', function(){

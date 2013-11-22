@@ -31,7 +31,7 @@ use Predis\Transaction\MultiExecContext;
  */
 class Client implements ClientInterface
 {
-    const VERSION = '0.8.4';
+    const VERSION = '0.8.5-dev';
 
     private $options;
     private $profile;
@@ -369,10 +369,26 @@ class Client implements ClientInterface
      * Creates a new transaction context and returns it, or returns the results of
      * a transaction executed inside the optionally provided callable object.
      *
+     * @deprecated You should start using the new Client::transaction() method
+     *             as it will replace Client::multiExec() in the next major
+     *             version of the library.
+     *
      * @param mixed $arg,... Options for the context, a callable object, or both.
      * @return MultiExecContext|array
      */
     public function multiExec(/* arguments */)
+    {
+        return $this->sharedInitializer(func_get_args(), 'initMultiExec');
+    }
+
+    /**
+     * Creates a new transaction context and returns it, or returns the results of
+     * a transaction executed inside the optionally provided callable object.
+     *
+     * @param mixed $arg,... Options for the context, a callable object, or both.
+     * @return MultiExecContext|array
+     */
+    public function transaction(/* arguments */)
     {
         return $this->sharedInitializer(func_get_args(), 'initMultiExec');
     }
@@ -394,10 +410,27 @@ class Client implements ClientInterface
      * Creates a new Publish / Subscribe context and returns it, or executes it
      * inside the optionally provided callable object.
      *
+     * @deprecated This method will change in the next major release to support
+     *             the new PUBSUB command introduced in Redis 2.8. Please use
+     *             Client::pubSubLoop() to create Predis\PubSub\PubSubContext
+     *             instances from now on.
+     *
      * @param mixed $arg,... Options for the context, a callable object, or both.
-     * @return MultiExecContext|array
+     * @return PubSubExecContext|array
      */
     public function pubSub(/* arguments */)
+    {
+        return call_user_func_array(array($this, 'pubSubLoop'), func_get_args());
+    }
+
+    /**
+     * Creates a new Publish / Subscribe context and returns it, or executes it
+     * inside the optionally provided callable object.
+     *
+     * @param mixed $arg,... Options for the context, a callable object, or both.
+     * @return PubSubExecContext|array
+     */
+    public function pubSubLoop(/* arguments */)
     {
         return $this->sharedInitializer(func_get_args(), 'initPubSub');
     }
