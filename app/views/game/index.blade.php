@@ -73,14 +73,13 @@
         var lost = false;
         
         function numKnownActive(){
-//            console.log("aKW: "+activeKnownWords);
                 activeKnownWords = 0;
             for(var i = 0 ; i < knownWords.length ; i++){
                 if(knownWords[i][3] < 10){
-//                    console.log("Here");
                     activeKnownWords++;
                 }
             }
+            console.log(activeKnownWords);
         }
         function sendWords() {
             $.ajax({
@@ -90,29 +89,36 @@
                     lang2: lang2,
                     words: knownWords},
                 success: function(json) {
-                    console.log(json);
+//                    console.log(json);
 //                                dic = json.data.dic;
                 },
                 dataType: "json"
             });
         }
         function getKnownWords() {
+            knownWords = [];
             $.ajax({
                 type: "POST",
                 url: "{{URL::to('dic/getWords')}}",
                 data: {lang1: lang1,
                     lang2: lang2},
                 success: function(json) {
-                    console.log(json);
-                    for (var i = 0; i < json.data.length; i++) {
-                        knownWords.push([
-                            json.data[i]['word'][json.data[i]['lang1']],
-                            json.data[i]['word'][json.data[i]['lang2']],
-                            json.data[i]['word_id'],
-                            json.data[i]['right']
-                        ]);
+                        if(json.status === "OK"){
+                        for (var i = 0; i < json.data.length; i++) {
+                            knownWords.push([
+                                json.data[i]['word'][json.data[i]['lang1']],
+                                json.data[i]['word'][json.data[i]['lang2']],
+                                json.data[i]['word_id'],
+                                json.data[i]['right']
+                            ]);
+                        }
+                        numKnownActive();
+                    }else{
+                        if(json.status === "FAIL"){
+                            console.log(json);
+                        }
+                        numKnownActive();
                     }
-                    numKnownActive();
                 },
                 dataType: "json",
                 async: false
@@ -128,15 +134,11 @@
                 for (var i = 0; i < (level + extraWords + newReplace); i++) {
                     var rand = Math.floor(Math.random() * 100);
                     var tmp = rand % knownWords.length;
-                    var cont = false;
-                    for (var j = 0; j < used.length; j++) {
-                        if ((tmp === used[j]) || (knownWords[tmp][3] > 10)) {
-                            cont = true;
-                            break;
-                        }
-                    }
-                    if (cont) {
-                        continue;
+//                    console.log(used.indexOf(tmp));
+//                    console.log(knownWords[tmp][3]);
+                    while((used.indexOf(tmp) > 0) || (knownWords[tmp][3] >= 10)){
+                         rand = Math.floor(Math.random() * 100);
+                         tmp = rand % knownWords.length;                        
                     }
                     used.push(tmp);
                     thisLevel.push(knownWords[tmp]);
@@ -145,7 +147,6 @@
 //            console.log(thisLevel);
         }
         function setEnemies() {
-            console.log(enemies);
             var quadrant = 0;
             var qH = h / 4;
             var qS = qH / 6;
@@ -164,12 +165,15 @@
             if(activeKnownWords < 25){
                 for (var i = 0; i < levels[level].length; i++) {
                     enemies.push(new enemyWord(paper, Hero.center(), thisLevel[i][1],
-                            thisLevel[i][0], speedMult, thisLevel[i][2]));
-                }
-            }else{
-                tooMaynWords = 0;
-            }            
+                    thisLevel[i][0], speedMult, thisLevel[i][2]));        
+                }                    
+//                console.log("HERE");
+                tooManyWords = 0;
+            }
+//            console.log(activeKnownWords);
+//            console.log(tooManyWords);
             for (var i = (3-tooManyWords) ; i < thisLevel.length; i++) {
+//                console.log("here");
                 var special = Math.ceil(((Math.random() * 10) % 3));
                 //give 25% chance of special enemy.
                 if (special < 2) {
@@ -188,7 +192,6 @@
                                 thisLevel[i][1], thisLevel[i][0], speedMult, thisLevel[i][2]));
                 }
             }
-            console.log(enemies);
             setEnemies();
         }
         function initiate() {
@@ -209,7 +212,7 @@
             $('#col_0').html("");
             $('#col_1').html("");
             for (var i = 0; i < knownWords.length; i++) {
-                if (knownWords[i][3] <= 5) {
+                if (knownWords[i][3] < 5) {
                     if ((i % 2) === 0) {
                         $('#col_0').append(knownWords[i][0] + "<br>");
                     } else {
@@ -224,7 +227,6 @@
          */
         function wordMatch() {
             for (var i = 0; i < enemies_on_screen.length; i++) {
-                console.log(enemies_on_screen);
                 if ($('#defense-code').val().toLowerCase() === enemies_on_screen[i].getAnswer().toLowerCase()) {
                     $('#defense-code').val("");
                     Hero.setEnemyAngle(enemies_on_screen[i].getImpactAngle());
@@ -270,21 +272,23 @@
          * If no enemies left, then you win.
          */
         function win() {
-            if (enemies_on_screen.length <= 0) {
-                loop1:
-                        for (var i = 0; i < levels[level].length; i++) {
-                    loop2 :
-                            for (var j = 0; j < knownWords.length; j++) {
-                        if (knownWords[j][2] === levels[level][i][2]) {
-                            continue loop1;
+            if (enemies_on_screen.length <= 0) {      
+                if(activeKnownWords < 25){
+                    loop1:
+                            for (var i = 0; i < levels[level].length; i++) {
+                        loop2 :
+                                for (var j = 0; j < knownWords.length; j++) {
+                            if (knownWords[j][2] === levels[level][i][2]) {
+                                continue loop1;
+                            }
                         }
-                    }
-                    knownWords.push(levels[level][i]);
+                        knownWords.push(levels[level][i]);
+                    }   
                 }
-                numKnownActive();
-                thisLevel = [];
-                sendWords();
-                return true;
+                    numKnownActive();
+                    thisLevel = [];
+                    sendWords();
+                    return true;
             }
             return false;
         }
@@ -297,12 +301,14 @@
             $("#new_word_list").html('');
             addOldWords();
             if(activeKnownWords < 25){
+                console.log("here! new words!");
             level++;
+            }
             enemiesPerSec = (Math.floor((level + 1) / 3)) + 1;
             extraWords = (Math.floor((level + 1) / 4));
             speedMult = 0.25 * (Math.floor((level + 1) / 5));
             killedWords += enemies.length;
-            }
+            
             seconds = 0;
             enemies_on_screen = [];
             enemies = [];
@@ -456,6 +462,7 @@
                     $('#pausemenu').hide();
                     $('#menu').hide();
                     $('#defense-code').prop("disabled", false);
+                    $('#defense-code').focus();
                 }
             }
         });

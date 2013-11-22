@@ -121,8 +121,10 @@ Route::post('dic/addWords', function(){
         return Response::json(array('status' => "OK", 
                 "msg" => "All good!"));
     }else{
+            $cookie = Cookie::forever('knownWords', serialize($words));
+            error_log(print_r($words,true));
             return Response::json(array('status' => "FAIL", 
-                "msg" => "Must be logged in!"));
+                "msg" => "Info stored in cookie!"))->headers->withCookie($cookie);
     }
 });
 Route::post('dic/getWords', function(){
@@ -138,11 +140,16 @@ Route::post('dic/getWords', function(){
         }catch(Exception $e){
             error_log(print_r($e, true));
         }
-//        error_log(print_r($words, true));
         return Response::json(array('status' => "OK", "data" => $words->toArray()));
     }else{
+            $words = array();
+            if(Cookie::has('knownWords')){
+                $words = unserialize(Cookie::get('knownWords'));         
+                error_log(print_r($words, true));
+            }
             return Response::json(array('status' => "FAIL", 
-                "msg" => "Must be logged in!"));        
+                "msg" => "Not logged in! Cookie info attached.",
+                "data" => $words));        
     }
 });
 Route::any('/',function(){
