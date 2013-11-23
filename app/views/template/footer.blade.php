@@ -16,7 +16,6 @@
                 }
             }(document, 'script', 'twitter-wjs');
         </script>
-        <br>
     <div id="fb-root"></div>
     <script>(function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
@@ -26,6 +25,7 @@
       fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
     </script>
+    <div class="fb-share-button" data-href="http://folexi.com" data-type="button"></div>
     </div>
     <div class="right">
         <a href="{{URL::to('info/faq')}}">FAQ</a> 

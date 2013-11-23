@@ -330,17 +330,22 @@ a{
     margin-top: 2.5%;
 }
 .footer .social{
-    width: 5%;
+    width: 11%;
     height:50%;
     margin-top:2%;
-    margin-left: 5%;
+    margin-left: 2%;
     float: left;
 }
-.footer .social #fb-root{
+
+.footer .social .twitter-follow-button{
+    float : left;
+}
+.footer .social .fb-share-button{
+    margin-left: .75em;
     float: left;
 }
 .footer .right{
-    width: 50%;
+    width: 47%;
     margin-right: 5%;
     float: right;
     text-align: right;
