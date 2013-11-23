@@ -58,6 +58,7 @@
         killed = [];
         enemies = [];
         level = 0;
+        effectiveLevel = 0;
         extraWords = 0;
         speedMult = 0;
         var enemiesPerSec = 1;
@@ -84,7 +85,7 @@
         function sendWords() {
             $.ajax({
                 type: "POST",
-                url: "{{URL::to('dic/addWords')}}",
+                url: "{{URL::to('dic/add-words')}}",
                 data: {lang1: lang1,
                     lang2: lang2,
                     words: knownWords},
@@ -100,7 +101,7 @@
             knownWords = [];
             $.ajax({
                 type: "POST",
-                url: "{{URL::to('dic/getWords')}}",
+                url: "{{URL::to('dic/get-words')}}",
                 data: {lang1: lang1,
                     lang2: lang2},
                 success: function(json) {
@@ -137,7 +138,7 @@
                     newReplace = 0;
                 }
                 var used = [];
-                for (var i = 0; i < (level + extraWords + newReplace); i++) {
+                for (var i = 0; i < (effectiveLevel + extraWords + newReplace); i++) {
                     var rand = Math.floor(Math.random() * 100);
                     var tmp = rand % knownWords.length;
 //                    console.log(used.indexOf(tmp));
@@ -310,9 +311,13 @@
                 console.log("here! new words!");
             level++;
             }
-            enemiesPerSec = (Math.floor((level + 1) / 3)) + 1;
-            extraWords = (Math.floor((level + 1) / 4));
-            speedMult = 0.25 * (Math.floor((level + 1) / 5));
+            effectiveLevel++;
+//            enemiesPerSec = (Math.floor((level + 1) / 3)) + 1;
+//            extraWords = (Math.floor((level + 1) / 4));
+//            speedMult = 0.25 * (Math.floor((level + 1) / 5));
+            enemiesPerSec = (Math.floor((effectiveLevel + 1) / 3)) + 1;
+            extraWords = (Math.floor((effectiveLevel + 1) / 4));
+            speedMult = 0.25 * (Math.floor((effectiveLevel + 1) / 5));
             killedWords += enemies.length;
             
             seconds = 0;
@@ -360,6 +365,7 @@
             seconds = 0;
             paper.clear();
             level = 0;
+            effectiveLevel = 0;
             extraWords = 0;
             speedMult = 0;
             enemiesPerSec = 1;
@@ -559,6 +565,11 @@
 
 
 @section('content')
+<span class="error left">
+    @if(!Auth::check())
+    Log in to save your progress across machines or save progress on more than one language!<br>
+    @endif
+</span>
 <div class="game_container">
     <div class='left'>
         <div class='ui_top'>

@@ -2,8 +2,9 @@
 <html>
 <head>
  <meta charset="UTF-8">
- <title>@yield('title', 'Lang - Learn Language')</title>
- <meta name="description" content="Awesome Description Here">
+ <title>@yield('title', 'Folexi - Vocab Game')</title>
+ <meta name="description" content="Folexi is a foreign language vocabulary game.
+       We use spaced repetition of words in a fun environment to maximize retention!">
  <link rel="stylesheet" type="text/css" href="{{URL::asset('css/main.css')}}">
  @include('template.javascript')
  @yield('js')

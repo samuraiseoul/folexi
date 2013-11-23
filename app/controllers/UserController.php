@@ -2,8 +2,6 @@
 class UserController extends Controller{
     
 public function postRegister() {
-//        try{
-        error_log(print_r(Input::all(), true));
         $rules = array(
             "email" => 'email|unique:users,email|required',
             "username" => "between:5,20|unique:users,username|required",
@@ -44,7 +42,7 @@ public function postRegister() {
         $user->birthdate = $birthdate;
         $user = $user->save();
         if ($user) {
-            return $this->login($email, $password);
+            return $this->login($email, $password, true);
         } else {
             return Response::json(array('user' => $user));
         }
@@ -73,9 +71,40 @@ public function postRegister() {
         return $this->login($email, $password);
     }
     
-    private function login($email, $password) {
+    private function login($email, $password, $register = false) {
         $credentials = array('email' => $email, 'password' => $password);
         if (Auth::attempt($credentials)) {
+            if($register){
+                if(Cookie::has('knownWords')){
+                    $words = unserialize(Cookie::get('knownWords'));
+                    $lang1 = Cookie::get('lang1');
+                    $lang2 = Cookie::geT('lang2');
+                    for ($i = 0; $i < count($words); $i++) {
+                        try {
+                            $user_word = UserWord::whereRaw("user_id = " . Auth::user()->id
+                                            . " AND lang1 = '" . $lang1
+                                            . "' AND lang2 = '" . $lang2
+                                            . "' AND word_id = " . $words[$i][2])->first();
+                            if ($user_word != null) {
+                                $user_word['right'] = $words[$i][3];
+                                $user_word->save();
+                            } else {
+                                $user_word = new UserWord();
+                                $user_word->user_id = Auth::user()->id;
+                                $user_word->lang1 = $lang1;
+                                $user_word->lang2 = $lang2;
+                                $user_word->word_id = $words[$i][2];
+                                $user_word->right = $words[$i][3];
+                                $user_word->save();
+                            }
+                        } catch (Exception $e) {
+                            error_log(print_r($e, true));
+                            return Response::json(array('status' => "FAIL",
+                                        "msg" => "Failed to update the database!"));
+                        }
+                    }
+                }
+            }
             return Response::json(array('status' => 'OK'));
         } else {
             return Response::json(array('status' => 'FAIL'));
