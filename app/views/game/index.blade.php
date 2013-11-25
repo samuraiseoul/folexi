@@ -315,8 +315,8 @@
 //            enemiesPerSec = (Math.floor((level + 1) / 3)) + 1;
 //            extraWords = (Math.floor((level + 1) / 4));
 //            speedMult = 0.25 * (Math.floor((level + 1) / 5));
-            enemiesPerSec = (Math.floor((effectiveLevel + 1) / 3)) + 1;
-            extraWords = (Math.floor((effectiveLevel + 1) / 4));
+            enemiesPerSec = (Math.floor((effectiveLevel + 1) / 4)) + 1;
+            extraWords = (Math.floor((effectiveLevel + 1) / 3));
             speedMult = 0.25 * (Math.floor((effectiveLevel + 1) / 5));
             killedWords += enemies.length;
             

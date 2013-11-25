@@ -10,7 +10,6 @@
   ga('create', 'UA-45806750-1', 'folexi.com');
   ga('require', 'linkid', 'linkid.js');
   ga('send', 'pageview');
-
 </script>
 <script type="text/javascript">
 $(document).ready(function(){
