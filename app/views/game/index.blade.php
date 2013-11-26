@@ -2,6 +2,7 @@
 
 @section('content')
 @section('js')
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
 <script type="text/javascript" src="{{URL::asset('js/raphael-min2.1.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/line.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/rectangle.js')}}"></script>
@@ -17,6 +18,7 @@
 <script type="text/javascript" src="{{URL::asset('js/yellowSpecial.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/textButton.js')}}"></script>
 <script type="text/javascript" src="{{URL::asset('js/lean-slider.js')}}"></script>
+<script type="text/javascript" src="{{URL::asset('js/life.js')}}"></script>
 <link rel="stylesheet" href="{{ URL::asset('css/lean-slider.css')}}" type="text/css" />
 <script type="text/javascript">
     $(document).ready(function() {
@@ -54,6 +56,7 @@
         var w = canvas.width();
         var h = (canvas.width() * .6);
         var paper = new Raphael($('#game')[0], w, h);
+        var lives = new life($("#life-area"), 100, 50, 4, {'margin' : (w*.02)+"px 0 0 "+(w*.01)+"px"});
         enemies_on_screen = [];
         killed = [];
         enemies = [];
@@ -270,6 +273,7 @@
         function lose() {
             for (var i = 0; i < enemies_on_screen.length; i++) {
                 if (Hero.collision(enemies_on_screen[i])) {
+                    lives.killed();
                     return true;
                 }
             }
@@ -589,6 +593,8 @@
             @include('game/tutorial')
             @include('game/pause')
             @include('game/losemenu')
+        </div>
+        <div id="life-area">
         </div>
     </div>
     <div class="right">    

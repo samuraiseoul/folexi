@@ -13,6 +13,7 @@ public function postRegister() {
             'last' => 'required|required'
         );
         $messages = array(
+            'username.unique' => "Username already taken!",
             'first.required' => "First Name can not be blank!",
             'last.required' => "Last Name can not be blank!",
             'day.numeric' => "Day must be a number!",
@@ -110,5 +111,4 @@ public function postRegister() {
             return Response::json(array('status' => 'FAIL'));
         }
     }
-    
 }
