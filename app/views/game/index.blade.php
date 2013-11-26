@@ -72,6 +72,7 @@
         var knownWords = [];
         var activeKnownWords = 0;
 
+        var loseSeconds = 0;
         var seconds = 0;
 
         var lost = false;
@@ -274,6 +275,7 @@
             for (var i = 0; i < enemies_on_screen.length; i++) {
                 if (Hero.collision(enemies_on_screen[i])) {
                     lives.killed();
+                    loseSeconds = new Date().getTime() / 1000;
                     return true;
                 }
             }
@@ -394,7 +396,7 @@
             });
             getKnownWords();
             levels = [];
-            console.log(knownWords);
+//            console.log(knownWords);
             for (var i = 0, k = 0; i < dic.length; i += 3, k++) {
                 levels.push([]);
                 loopj :
@@ -414,7 +416,7 @@
                     levels[k].push(dic[i + j]);
                 }
             }
-            console.log(levels);
+//            console.log(levels);
             addOldWords();
             start();
         });
@@ -521,6 +523,7 @@
             lost = false;
             loseMenu = false;
         });
+        
         var mainloop = function() {
             if (!mainmenu) {
                 if (!paused) {
@@ -534,9 +537,12 @@
                         }
                         update();
                         lost = lose();
-                    } else {
-                        if (!loseMenu) {
-                            loseMenuDisplay();
+                    } else {                    
+                        var time = new Date().getTime() / 1000;
+                        if((time - loseSeconds) >= 2){
+                            lost = false;
+                            $("#new_word_list").html('');
+                            restartLevel();
                         }
                     }
                 }
