@@ -112,3 +112,11 @@ function enemyWord(paper, hero, lang1, lang2, speedM, index){
     enemyWord.prototype.getIndex = function(){
         return this.index;
     };
+    
+    enemyWord.prototype.showWord = function(){
+        this.tex.remove();
+        this.tex = new text(this.paper);
+        this.tex.setText(this.word+'\n'+this.word2);
+        this.tex.set(this.x, this.y);
+        this.tex.draw();
+    };

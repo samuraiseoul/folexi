@@ -275,7 +275,10 @@
             for (var i = 0; i < enemies_on_screen.length; i++) {
                 if (Hero.collision(enemies_on_screen[i])) {
                     lives.killed();
-                    loseSeconds = new Date().getTime() / 1000;
+                    loseSeconds = new Date().getTime() / 1000;                    
+                    for(var i = 0 ; i < enemies_on_screen.length ; i++){
+                        enemies_on_screen[i].showWord();
+                    }
                     return true;
                 }
             }
@@ -318,9 +321,6 @@
             level++;
             }
             effectiveLevel++;
-//            enemiesPerSec = (Math.floor((level + 1) / 3)) + 1;
-//            extraWords = (Math.floor((level + 1) / 4));
-//            speedMult = 0.25 * (Math.floor((level + 1) / 5));
             enemiesPerSec = (Math.floor((effectiveLevel + 1) / 4)) + 1;
             extraWords = (Math.floor((effectiveLevel + 1) / 3));
             speedMult = 0.25 * (Math.floor((effectiveLevel + 1) / 5));
@@ -497,11 +497,16 @@
             $('#lose_menu').show();
         }
         $('#lose_restart_btn').click(function() {
+            enemiesPerSec = 0;
+            extraWords = 0;
+            speedMult = 0;
             console.log("here!");
             $('#pausemenu').hide();
             $('#lose_menu').hide();
             $('#menu').hide();
             $("#new_word_list").html('');
+            lives.reset();
+            effectiveLevel = 0;
             lost = false;
             loseMenu = false;
             restartLevel();
@@ -539,10 +544,18 @@
                         lost = lose();
                     } else {                    
                         var time = new Date().getTime() / 1000;
-                        if((time - loseSeconds) >= 2){
-                            lost = false;
-                            $("#new_word_list").html('');
-                            restartLevel();
+                        if(!lives.defeated()){
+                            if((time - loseSeconds) >= 5){
+                                lost = false;
+                                $("#new_word_list").html('');
+                                restartLevel();
+                            }
+                        }else{
+                            if((time - loseSeconds) >= 5){
+                                if (!loseMenu) {
+                                    loseMenuDisplay();
+                                }
+                            }
                         }
                     }
                 }

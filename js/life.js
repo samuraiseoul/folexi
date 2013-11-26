@@ -33,15 +33,23 @@ life.prototype.draw = function(){
 };
 
 life.prototype.killed = function(){
-    this.lives--;
-    this.lost++;
+    if(this.lives > 0){
+        this.lives--;
+        this.lost++;
+    }
     this.draw();
 };
 
 life.prototype.plusOne = function(){
-    this.lives++;
-    this.lost--;
+    if(this.lost > 0){
+        this.lives++;
+        this.lost--;
+    }
     this.draw();
+};
+
+life.prototype.defeated = function(){
+    return (this.lives === 0);
 };
 
 life.prototype.hide = function(){
@@ -50,4 +58,10 @@ life.prototype.hide = function(){
 
 life.prototype.show = function(){
     this.e.show();
+};
+
+life.prototype.reset = function(){
+    this.lives += this.lost;
+    this.lost = 0;
+    this.draw();
 };
