@@ -37,12 +37,8 @@ class DictionaryController extends Controller{
             {
              $input = Input::except(array('lang', "_token"));
              $lang = Input::get('lang');
-//             unset($input['lang']);
-//             unset($input['_token']);
-             error_log(print_r($lang, true));
              try{
              foreach($input as $k => $v){
-                 error_log("k: ".str_replace("word_", "", $k)." v: ".$v);
                  $word = Word::where('id', str_replace("word_", "", $k))
                          ->first();
                  $word->$lang = $v;
@@ -54,6 +50,30 @@ class DictionaryController extends Controller{
              return Response::json(array('status' => 'OK'));
             } else {
              return Response::json(array('status' => 'FAIL',
+                         'msg' => "Not Authorized!"));
+         }
+    }
+    
+    public function postLevelmodify(){
+        header('Content-type: text/html; charset=utf-8');
+        if (Auth::check() &&
+             (Auth::user()->level >= 101)) 
+            {
+             $input = Input::except(array('lang', "_token"));
+             error_log(print_r($input, true));
+             try{
+                foreach($input as $k => $v){
+                    $word = Word::where('id', str_replace("word_", "", $k))
+                            ->first();
+                    $word->diff_lvl = $v;
+                    $word->save();
+                }
+             }catch(Exception $e){
+                 error_log(print_r($e, true));
+             }
+                return Response::json(array('status' => 'OK'));
+            } else {
+                return Response::json(array('status' => 'FAIL',
                          'msg' => "Not Authorized!"));
          }
     }
@@ -148,7 +168,9 @@ class DictionaryController extends Controller{
 
         $lang1 = Input::get('lang1');
         $lang2 = Input::get('lang2');
-        $words = Word::all();
+        $level = Input::get('level');
+        $words = Word::where('diff_lvl', $level)->get();
+        error_log(print_r($words, true));
         $dic = array();
         foreach($words as $k){
             array_push($dic, array($k[$lang1], $k[$lang2], $k['id'], 0));
@@ -197,4 +219,33 @@ class DictionaryController extends Controller{
             return Redirect::to("")->with("msg", "Must be a full site admin to access this page!");
         }      
     }
+    
+    public function anyLevelselect(){
+        if (Auth::check() &&
+                (Auth::user()->level >= 101)) {
+            return View::make('dic.levelSelect');
+        } else {
+            return Redirect::to("")->with("msg", "Must be an admin with
+                dictionary privledges to access this page!");
+        }
+    }
+    
+    public function anyLevelresults(){
+        header('Content-type: text/html; charset=utf-8');
+        if (Auth::check() &&
+                (Auth::user()->level >= 101)) {
+            $lang = Input::get('lang');
+            $words = Word::paginate(24);
+            $dic = array();
+            foreach ($words as $k) {
+                array_push($dic, array($k[$lang], $k['id'], $k['diff_lvl']));
+            }
+            $data = array("dic" => $dic, "links" => $words->appends(Input::except(array('page')))->links());
+            return View::make('dic.levelResults', $data);
+        } else {
+            return Redirect::to("")->with("msg", "Must be an admin with
+                dictionary privledges to access this page!");
+        }
+    }
+    
 }

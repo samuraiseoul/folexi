@@ -39,6 +39,7 @@
     var levels = [];
     var lang1 = "en";
     var lang2 = "en";
+    var wordLevel = 1;
 
     $(document).ready(function() {
         $("#lang1").change(function() {
@@ -47,6 +48,10 @@
 
         $("#lang2").change(function() {
             lang2 = $('#lang2').val();
+        });
+
+        $("#level").change(function() {
+            wordLevel = $('#level').val();
         });
     });
 
@@ -387,7 +392,8 @@
                 type: "POST",
                 url: "{{URL::to('dic/get')}}",
                 data: {lang1: lang1,
-                    lang2: lang2},
+                    lang2: lang2,
+                    level : wordLevel},
                 success: function(json) {
                     dic = json.data.dic;
                 },
@@ -396,26 +402,37 @@
             });
             getKnownWords();
             levels = [];
-//            console.log(knownWords);
             for (var i = 0, k = 0; i < dic.length; i += 3, k++) {
                 levels.push([]);
                 loopj :
                         for (var j = 0; j < 3; j++) {
-                    for (var m = 0; m < knownWords.length; m++) {
-                        if ((i + j) < dic.length - 1) { // fixed an array out of bound index error
-                            if (
-                                    (knownWords[m][2] === dic[i + j][2])
-                                    ) {
-                                            console.log("HERE!");
-                                i += 1;
-                                j--;
-                                continue loopj;
+                            if(typeof dic[i+j] !== "undefined"){
+                                    console.log("i:  "+i+" j: "+j+" iJ: "+(i+j));
+                                    console.log(dic[i+j]);
+                                if(dic[i+j][1] === ""){
+                                    console.log(dic[i+j]);
+                                    i += 1;
+                                    j--;
+                                    continue loopj;                                
+                                }
+                        for (var m = 0; m < knownWords.length; m++) {
+                            if ((i + j) < dic.length - 1) { // fixed an array out of bound index error
+
+                                if (
+                                        (knownWords[m][2] === dic[i + j][2])
+                                        ) {
+                                                console.log("HERE!");
+                                    i += 1;
+                                    j--;
+                                    continue loopj;
+                                }
                             }
                         }
+                        levels[k].push(dic[i + j]);
                     }
-                    levels[k].push(dic[i + j]);
                 }
             }
+//            console.log(levels);
 //            console.log(levels);
             addOldWords();
             start();
@@ -442,6 +459,7 @@
         });
 
         $('#mainmenu_btn').click(function() {
+            lives.reset();
             reset();
             console.log("HERE");
             $("#new_word_list").html('');
@@ -520,6 +538,7 @@
         });
         $('#lose_mainmenu_btn').click(function() {
             $('#lose_menu').hide();
+            lives.reset();
             reset();
             $("#new_word_list").html('');
             $('.word_col').html('');
