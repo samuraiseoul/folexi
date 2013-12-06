@@ -1,6 +1,6 @@
-function redSpecial(paper, hero, lang1, lang2, speedM, index){
+function redSpecial(paper, hero, lang1, lang2, synonyms, speedM, index){
     this.shot = 0;
-    enemyWord.call(this, paper, hero, lang1, lang2, speedM, index);    
+    enemyWord.call(this, paper, hero, lang1, lang2, synonyms, speedM, index);    
 };
 
 redSpecial.prototype = Object.create(enemyWord.prototype);

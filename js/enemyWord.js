@@ -1,4 +1,4 @@
-function enemyWord(paper, hero, lang1, lang2, speedM, index){
+function enemyWord(paper, hero, lang1, lang2, synonyms, speedM, index){
     this.paper = paper;
     this.tex = new text(this.paper);
     this.speed = (1+speedM);
@@ -7,6 +7,7 @@ function enemyWord(paper, hero, lang1, lang2, speedM, index){
     this.x = 0;
     this.y = 0;
     this.r = 0;
+    this.synonyms = synonyms;
     
     this.index = index;
     
@@ -45,6 +46,19 @@ function enemyWord(paper, hero, lang1, lang2, speedM, index){
     enemyWord.prototype.getAnswer = function() {
         return this.word2;
     };
+    
+    enemyWord.prototype.wordMatch = function(word){
+        if(word.toLowerCase() === this.word2.toLowerCase()){
+            return true;
+        }
+        for(var i = 0 ; i < this.synonyms.length ; i++){
+            console.log(this.synonyms[i]);
+            if(word.toLowerCase() === this.synonyms[i].toLowerCase()){
+                return true;
+            }
+        }
+        return false;
+    };
 
     enemyWord.prototype.kill = function() {
         this.circ.attr({stroke : "rgb(255,0,0)"}).animate({ r : 0}, 400, "linear", function(){
@@ -52,8 +66,7 @@ function enemyWord(paper, hero, lang1, lang2, speedM, index){
         });
         this.tex.remove();
     };
-    
-     
+       
     enemyWord.prototype.isSpecial = function(){
         return false;
     };
@@ -92,7 +105,6 @@ function enemyWord(paper, hero, lang1, lang2, speedM, index){
         this.setYSpeed();   
         this.draw();
     };
-   
     
     enemyWord.prototype.setYSpeed = function() {
         var distX = this.x - this.heroCoord['x'];

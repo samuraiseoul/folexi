@@ -590,3 +590,6 @@ a{
 #life-area{
     margin: 20px 0 0 5px;
 }
+.tag{
+    width: 300px;
+}

@@ -1,6 +1,6 @@
 <div class="footer">
     <div class="left"> 
-        Comment/Suggestion/Bug? Contact us: folexi.info@gmail.com
+        Comment/Suggestion/Bug?<br> Contact us at: folexi.info@gmail.com
     </div>
     <div class="social">
         SHARE:<br>

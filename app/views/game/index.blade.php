@@ -89,7 +89,7 @@
                     activeKnownWords++;
                 }
             }
-            console.log(activeKnownWords);
+//            console.log(activeKnownWords);
         }
         function sendWords() {
             $.ajax({
@@ -115,13 +115,20 @@
                     lang2: lang2},
                 success: function(json) {
                         if(json.status === "OK"){
+                            console.log(json);
                         for (var i = 0; i < json.data.length; i++) {
                             knownWords.push([
                                 json.data[i]['word'][json.data[i]['lang1']],
                                 json.data[i]['word'][json.data[i]['lang2']],
                                 json.data[i]['word_id'],
-                                json.data[i]['right']
+                                json.data[i]['right'],
+                                []
                             ]);
+                            if(json.data[i]["word"]["synonyms"].length > 0){
+                                for(var j = 0 ; j < json.data[i]["word"]["synonyms"].length ; j++){
+                                    knownWords[i][4].push(json.data[i]["word"]["synonyms"][j]['word'][json.data[i]['lang1']]);
+                                }
+                            }
                         }
                         numKnownActive();
                     }else{
@@ -135,6 +142,7 @@
                         }
                         numKnownActive();
                     }
+                    console.log(knownWords);
                 },
                 dataType: "json",
                 async: false
@@ -177,11 +185,13 @@
             }
         }
         function createEnemies() {//makes sure new enemies are not special.
+//            console.log(thisLevel);
             var tooManyWords = 3;
             if(activeKnownWords < 25){
                 for (var i = 0; i < levels[level].length; i++) {
+                    console.log(thisLevel[i][4]);
                     enemies.push(new enemyWord(paper, Hero.center(), thisLevel[i][1],
-                    thisLevel[i][0], speedMult, thisLevel[i][2]));        
+                    thisLevel[i][0], thisLevel[i][4], speedMult, thisLevel[i][2]));        
                 }                    
 //                console.log("HERE");
                 tooManyWords = 0;
@@ -194,24 +204,26 @@
                 //give 25% chance of special enemy.
                 if (special < 2) {
                     enemies.push(new enemyWord(paper, Hero.center(), thisLevel[i][1],
-                            thisLevel[i][0], speedMult, thisLevel[i][2]));
+                            thisLevel[i][0], thisLevel[i][4], speedMult, thisLevel[i][2]));
                 } else {
                     var type = Math.ceil(((Math.random() * 10) % 8));
                     if (type < 3) {
                         enemies.push(new redSpecial(paper, Hero.center(),
-                                thisLevel[i][1], thisLevel[i][0], speedMult, thisLevel[i][2]));
+                                thisLevel[i][1], thisLevel[i][0], thisLevel[i][4], speedMult, thisLevel[i][2]));
                     } else if (type < 7) {
                         enemies.push(new yellowSpecial(paper, Hero.center(),
-                                thisLevel[i][1], thisLevel[i][0], speedMult, thisLevel[i][2]));
+                                thisLevel[i][1], thisLevel[i][0], thisLevel[i][4], speedMult, thisLevel[i][2]));
                     } else
                         enemies.push(new purpleSpecial(paper, Hero.center(),
-                                thisLevel[i][1], thisLevel[i][0], speedMult, thisLevel[i][2]));
+                                thisLevel[i][1], thisLevel[i][0], thisLevel[i][4], speedMult, thisLevel[i][2]));
                 }
             }
             setEnemies();
         }
         function initiate() {
             if(activeKnownWords < 25){
+//                console.log(level);
+//                console.log(levels);
                 thisLevel = levels[level].concat();
             }
             oldWordsToLevel();
@@ -243,7 +255,7 @@
          */
         function wordMatch() {
             for (var i = 0; i < enemies_on_screen.length; i++) {
-                if ($('#defense-code').val().toLowerCase() === enemies_on_screen[i].getAnswer().toLowerCase()) {
+                if(enemies_on_screen[i].wordMatch($("#defense-code").val())){
                     $('#defense-code').val("");
                     Hero.setEnemyAngle(enemies_on_screen[i].getImpactAngle());
                     Hero.shoot(enemies_on_screen[i].getCoords(), i);
@@ -400,6 +412,7 @@
                 dataType: "json",
                 async: false
             });
+//            console.log(dic);
             getKnownWords();
             levels = [];
             for (var i = 0, k = 0; i < dic.length; i += 3, k++) {
@@ -407,8 +420,6 @@
                 loopj :
                         for (var j = 0; j < 3; j++) {
                             if(typeof dic[i+j] !== "undefined"){
-                                    console.log("i:  "+i+" j: "+j+" iJ: "+(i+j));
-                                    console.log(dic[i+j]);
                                 if(dic[i+j][1] === ""){
                                     console.log(dic[i+j]);
                                     i += 1;
@@ -432,8 +443,6 @@
                     }
                 }
             }
-//            console.log(levels);
-//            console.log(levels);
             addOldWords();
             start();
         });
@@ -483,6 +492,7 @@
             $('#menu').hide();
             $("#new_word_list").html('');
             $('#defense-code').prop("disabled", false);
+            lives.killed();
             restartLevel();
         });
 

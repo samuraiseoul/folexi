@@ -138,6 +138,8 @@ class DictionaryController extends Controller{
                         ->where("lang1", $lang1)
                         ->where("lang2", $lang2)
                         ->with("word")
+                        ->with('word.synonyms')
+                        ->with('word.synonyms.word')
                         ->get();
             } catch (Exception $e) {
                 error_log(print_r($e, true));
@@ -169,11 +171,16 @@ class DictionaryController extends Controller{
         $lang1 = Input::get('lang1');
         $lang2 = Input::get('lang2');
         $level = Input::get('level');
-        $words = Word::where('diff_lvl', $level)->get();
+        $words = Word::where('diff_lvl', $level)->with('synonyms.word')->get();
         error_log(print_r($words, true));
         $dic = array();
         foreach($words as $k){
-            array_push($dic, array($k[$lang1], $k[$lang2], $k['id'], 0));
+            $syns = array();
+            $tmp = $k['synonyms'];
+            for($i = 0 ; $i < count($tmp); $i++){
+                array_push($syns, $tmp[$i]['word'][$lang1]);
+            }
+            array_push($dic, array($k[$lang1], $k[$lang2], $k['id'], 0, $syns));
         }
         return Response::json(array("status" => "OK", "data" => array("dic" => $dic, "lang" => $lang2)));
     }
@@ -248,4 +255,43 @@ class DictionaryController extends Controller{
         }
     }
     
+    public function anySynonymselect(){
+        if (Auth::check() &&
+                (Auth::user()->level >= 101)) {
+            return View::make('dic.synonymSelect');
+        } else {
+            return Redirect::to("")->with("msg", "Must be an admin with
+                dictionary privledges to access this page!");
+        }        
+    }
+    
+    public function anySynonyms(){
+        header('Content-type: text/html; charset=utf-8');
+        if (Auth::check() &&
+                (Auth::user()->level >= 101)) {
+            $lang = Input::get('lang');
+            $words = Word::with('synonyms')->paginate(24);
+            $dic = array();
+            foreach ($words as $k) {
+                array_push($dic, array($k[$lang], $k['id'], $k['synonyms']));
+            }
+            $data = array("dic" => $dic,
+                "links" => $words->appends(Input::except(array('page')))->links(),
+                "list" => Word::all()->lists($lang, "id"));
+            return View::make('dic.synonymResults', $data);
+        } else {
+            return Redirect::to("")->with("msg", "Must be an admin with
+                dictionary privledges to access this page!");
+        }        
+    }
+
+    public function anyTest(){
+        $words = Word::where('diff_lvl', 1)->with('synonyms.word')->get();
+        error_log(print_r($words, true));
+        return View::make('dic.test', array("words" => $words));
+    }    
+    
+    public function postSynonymmodify(){
+        return Response::json(array('status' => "FAIL", 'data' => Input::all()));
+    }
 }
