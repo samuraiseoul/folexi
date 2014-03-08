@@ -120,5 +120,7 @@ return array(
 		),
 
 	),
+	
+	'log' => true
 
 );

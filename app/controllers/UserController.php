@@ -25,14 +25,12 @@ public function postRegister() {
             return Response::json(array('status' => "FAIL", "msg" => $validator->messages()->all()));
         }
         
-        
         $email = Input::get('email');
         $password = Input::get('password');
         $first = Input::get('first');
         $last = Input::get('last');
         $username = Input::get('username');
         $birthdate = Input::get('year') . "-" . Input::get('month') . "-" . Input::get('day');
-        
 
         $user = new User;
         $user->username = $username;
@@ -42,6 +40,8 @@ public function postRegister() {
         $user->last_name = $last;
         $user->birthdate = $birthdate;
         $user = $user->save();
+		error_log("here4");
+		
         if ($user) {
             return $this->login($email, $password, true);
         } else {

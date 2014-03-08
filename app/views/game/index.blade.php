@@ -121,14 +121,13 @@
                                 json.data[i]['word'][json.data[i]['lang1']],
                                 json.data[i]['word'][json.data[i]['lang2']],
                                 json.data[i]['word_id'],
-                                json.data[i]['right'],
-                                []
+                                json.data[i]['right']
                             ]);
-                            if(json.data[i]["word"]["synonyms"].length > 0){
-                                for(var j = 0 ; j < json.data[i]["word"]["synonyms"].length ; j++){
-                                    knownWords[i][4].push(json.data[i]["word"]["synonyms"][j]['word'][json.data[i]['lang1']]);
-                                }
-                            }
+                            // if(json.data[i]["word"]["synonyms"].length > 0){
+                                // for(var j = 0 ; j < json.data[i]["word"]["synonyms"].length ; j++){
+                                    // knownWords[i][4].push(json.data[i]["word"]["synonyms"][j]['word'][json.data[i]['lang1']]);
+                                // }
+                            // }
                         }
                         numKnownActive();
                     }else{
@@ -407,6 +406,7 @@
                     lang2: lang2,
                     level : wordLevel},
                 success: function(json) {
+                	console.log(json);
                     dic = json.data.dic;
                 },
                 dataType: "json",
@@ -609,8 +609,6 @@
         //Sets the main function to load on repeat, at a framerate of 60 per sec.
         var timer_id = setInterval(mainloop, (1000 / 60));
     });
-
-
 
 </script>
 @stop

@@ -10,9 +10,40 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
+if (Config::get('database.log', false))
+{           
+    Event::listen('illuminate.query', function($query, $bindings, $time, $name)
+    {
+        $data = compact('bindings', 'time', 'name');
+
+        // Format binding data for sql insertion
+        foreach ($bindings as $i => $binding)
+        {   
+            if ($binding instanceof \DateTime)
+            {   
+                $bindings[$i] = $binding->format('\'Y-m-d H:i:s\'');
+            }
+            else if (is_string($binding))
+            {   
+                $bindings[$i] = "'$binding'";
+            }   
+        }       
+
+        // Insert bindings into query
+        $query = str_replace(array('%', '?'), array('%%', '%s'), $query);
+        $query = vsprintf($query, $bindings); 
+
+        Log::info($query, $data);
+    });
+}
 
 Route::controller('users', 'UserController');
 Route::controller('dic', 'DictionaryController');
+
+Route::any("test/query", function(){
+	$out = Word::with('synonyms')->get();
+	return View::make( "index.test" , array("out" => $out->toArray()));
+});
 
 Route::any("/admin/{action}", function($action){
     if(Auth::check() && (Auth::user()->level >=100) ){

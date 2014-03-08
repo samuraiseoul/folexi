@@ -9,7 +9,18 @@ class DictionaryController extends Controller{
                 dictionary privledges to access this page!");
         }        
     }
-
+	
+	public function anyAddnew(){
+		if( Auth::check() && 
+            (Auth::user()->level >= 101)
+		   ){
+        	return View::make('dic.new');
+        }else{
+            return Redirect::to("")->with("msg", "Must be an admin with
+                dictionary privledges to access this page!");
+        }        
+	}
+	
     public function getResults(){        
         header('Content-type: text/html; charset=utf-8');
         if(Auth::check() && 
@@ -137,14 +148,14 @@ class DictionaryController extends Controller{
                 $words = UserWord::where("user_id", Auth::user()->id)
                         ->where("lang1", $lang1)
                         ->where("lang2", $lang2)
-                        ->with("word")
-                        ->with('word.synonyms')
-                        ->with('word.synonyms.word')
                         ->get();
+				$words = $words->toArray();
+				foreach ($words as $num => $word) {
+					$words[$num]['word'] = Word::find($words[$num]['word_id'])->toArray();				
+				}
             } catch (Exception $e) {
-                error_log(print_r($e, true));
             }
-            return Response::json(array('status' => "OK", "data" => $words->toArray()));
+            return Response::json(array('status' => "OK", "data" => $words));
         } else {
             $words = array();
             if (Cookie::has('lang1') && Cookie::has('lang2')) { // sees if langauge changed, if so, reset cookies
@@ -171,8 +182,8 @@ class DictionaryController extends Controller{
         $lang1 = Input::get('lang1');
         $lang2 = Input::get('lang2');
         $level = Input::get('level');
-        $words = Word::where('diff_lvl', $level)->with('synonyms.word')->get();
-        error_log(print_r($words, true));
+        $words = Word::where('diff_lvl', $level)->with('synonyms')->get();
+        // error_log(print_r($words, true));
         $dic = array();
         foreach($words as $k){
             $syns = array();
@@ -292,6 +303,37 @@ class DictionaryController extends Controller{
     }    
     
     public function postSynonymmodify(){
+    	
         return Response::json(array('status' => "FAIL", 'data' => Input::all()));
     }
+	
+	public function postAddnewword(){
+		error_log("HERE I am");
+		$lang1 = Input::get('lang1');
+		$lang2 = Input::get('lang2');
+		$word1 = Input::get('word1');
+		$word2 = Input::get('word2');
+		$diff_lvl = Input::get('diff_lvl');
+		error_log("HERE I am2");
+		error_log("l1: ".$lang1." l2: ".$lang2." w1: ".$word1." w2: ".$word2." dl: ".$diff_lvl);
+		$wrd = new Word;
+		error_log("HERE I am2.5");
+		$wrd->$lang1 = $word1;
+		$wrd->$lang2 = $word2;
+		$wrd->diff_lvl = $diff_lvl;
+		error_log("HERE I am3");
+		$wrd = $wrd->save();
+		error_log("HERE I am4");
+		
+		if($wrd){
+			return Response::json(array("status" => "OK"));			
+		}else{
+			return Response::json(array("status" => "FAIL"));
+		}
+	}
 }
+
+
+
+
+
