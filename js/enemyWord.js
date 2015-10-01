@@ -51,6 +51,9 @@ function enemyWord(paper, hero, lang1, lang2, synonyms, speedM, index){
         if(word.toLowerCase() === this.word2.toLowerCase()){
             return true;
         }
+        if(!this.synonyms) { //checks for undefined
+            return false;
+        }
         for(var i = 0 ; i < this.synonyms.length ; i++){
             console.log(this.synonyms[i]);
             if(word.toLowerCase() === this.synonyms[i].toLowerCase()){
