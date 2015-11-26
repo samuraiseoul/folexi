@@ -3,3 +3,6 @@
 composer.phar
 composer.lock
 .DS_Store
+
+# Ignore the c9 files.
+/.c9/
