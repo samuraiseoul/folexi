@@ -308,27 +308,29 @@ class DictionaryController extends Controller{
     }
 	
 	public function postAddnewword(){
-		error_log("HERE I am");
 		$lang1 = Input::get('lang1');
 		$lang2 = Input::get('lang2');
 		$word1 = Input::get('word1');
 		$word2 = Input::get('word2');
 		$diff_lvl = Input::get('diff_lvl');
-		error_log("HERE I am2");
-		error_log("l1: ".$lang1." l2: ".$lang2." w1: ".$word1." w2: ".$word2." dl: ".$diff_lvl);
-		$wrd = new Word;
-		error_log("HERE I am2.5");
+		
+	    if($lang1 == $lang2) {
+	        return Response::json(array("status" => "FAIL", "msg" => "Can't be same language!"));
+	    }
+	    $wrd = Word::where($lang1, "=", $word1)->first();
+		if(is_null($wrd)) {
+		    $wrd = new Word;
+		}
+		
 		$wrd->$lang1 = $word1;
 		$wrd->$lang2 = $word2;
 		$wrd->diff_lvl = $diff_lvl;
-		error_log("HERE I am3");
 		$wrd = $wrd->save();
-		error_log("HERE I am4");
 		
 		if($wrd){
 			return Response::json(array("status" => "OK"));			
 		}else{
-			return Response::json(array("status" => "FAIL"));
+			return Response::json(array("status" => "FAIL", "msg" => "Could not save word at this time."));
 		}
 	}
 }

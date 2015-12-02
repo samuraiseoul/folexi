@@ -4,7 +4,6 @@
 <script>
 $(document).ready(function(){
     $('#addWord').ajaxForm(function(json){
-        	console.log(json);
         if(json.status === "OK"){
         	console.log(json);
         }else{
