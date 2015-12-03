@@ -28,10 +28,13 @@
     <div class="fb-share-button" data-href="http://folexi.com" data-type="button"></div>
     </div>
     <div class="right">
+        @if(Auth::check() && Auth::user()->level >= 100)
+            <a href="{{URL::to('admin')}}">ADMIN</a> 
+        @endif
         <a href="{{URL::to('info/faq')}}">FAQ</a> 
         <a href="{{URL::to('info/about')}}">ABOUT</a>
         @if(Auth::check())
-        <span id='logout' class='clickable'>LOGOUT</span>
+            <span id='logout' class='clickable'>LOGOUT</span>
         @endif
     </div>
 </div>
