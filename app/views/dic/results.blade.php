@@ -5,7 +5,7 @@
 $(document).ready(function(){
     $('#modify').ajaxForm(function(json){
         if(json.status === "OK"){
-            window.location.replace("{{URL::to('dic/results?page='.(Input::get('page')+1).'&lang1='.Input::get('lang1').'&lang2='.Input::get('lang2'))}}");
+            window.location.replace("{{URL::to('dic/results?lang1='.Input::get('lang1').'&lang2='.Input::get('lang2'))}}");
         }else{
             $('#error').html(json.msg);
         }
@@ -24,7 +24,7 @@ $(document).ready(function(){
     <div class="label">
         {{$word[0]}}: 
     </div>
-    <input class="word" type="textbox" name="word_{{$word[2]}}" value="{{$word[1]}}"/><br>
+    <input class="word" type="textbox" name="{{$word[2]}}" value="{{$word[1]}}"/><br>
 </div>
 @endforeach
 </div>

@@ -5,7 +5,7 @@
 $(document).ready(function(){
     $('#modify').ajaxForm(function(json){
         if(json.status === "OK"){
-            window.location.replace("{{URL::to('dic/levelresults?page='.(Input::get('page')+1).'&lang='.Input::get('lang'))}}");
+            window.location.replace("{{URL::to('dic/levelresults?lang='.Input::get('lang'))}}");
         }else{
             $('#error').html(json.msg);
         }
@@ -24,19 +24,18 @@ $(document).ready(function(){
         {{$word[0]}}: 
     </div>
     {{
-        Form::select
-                    (
-                    'word_'.$word[1] , 
-                     array(
-                         '1' => 'One',
-                         '2' => 'Two',
-                         '3' => 'Three',
-                         '4' => 'Four',
-                         '5' => 'Five',
-                         '6' => 'Six'
-                         ),
-                         $word[2]
-                   )
+        Form::select(
+            $word[1], 
+            array(
+                '1' => 'One',
+                '2' => 'Two',
+                '3' => 'Three',
+                '4' => 'Four',
+                '5' => 'Five',
+                '6' => 'Six'
+            ),
+            $word[2]
+        )
     }}
 </div>
 @endforeach
