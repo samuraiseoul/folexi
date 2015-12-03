@@ -6,6 +6,7 @@ $(document).ready(function(){
     $('#addWord').ajaxForm(function(json){
         if(json.status === "OK"){
         	console.log(json);
+        	$('input[type=text]').val("");
         }else{
         	console.log(json);
         }
