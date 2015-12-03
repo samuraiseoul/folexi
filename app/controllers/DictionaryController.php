@@ -15,7 +15,7 @@ class DictionaryController extends Controller{
         {
             $lang1 = Input::get('lang1');
             $lang2 = Input::get('lang2');
-            $words = Word::paginate(24);
+            $words = Word::orderBy("id", "asc")->paginate(24);
             $dic = array();
             foreach ($words as $key) {
                 array_push($dic, array($key[$lang1], $key[$lang2], $key['id']));
@@ -51,7 +51,7 @@ class DictionaryController extends Controller{
         header('Content-type: text/html; charset=utf-8');
         if (Auth::check() && (Auth::user()->level >= 101)) {
             $lang = Input::get('lang');
-            $words = Word::paginate(24);
+            $words = Word::orderBy("id", "asc")->paginate(24);
             $dic = array();
             foreach ($words as $key) {
                 array_push($dic, array($key[$lang], $key['id'], $key['diff_lvl']));
