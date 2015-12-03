@@ -5,10 +5,8 @@ function life(element, width, height, lives, css){
     this.lives = lives;
     this.lost = 0;
     if(typeof css !== "undefined"){
-        console.log("here")
         this.css = css;
     }else{
-        console.log("here3")
         this.css = {};
     }
     
