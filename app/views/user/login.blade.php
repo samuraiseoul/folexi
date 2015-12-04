@@ -31,7 +31,6 @@
             
             $('#login').ajaxForm(function(json){
                 if (json.status === "OK") {
-//                         console.log("Back from the server man!");
                      window.location.replace("{{URL::to('')}}");
                 } else {
                     $("#errors").html("");
@@ -45,26 +44,37 @@
 @stop
 
 @section('content')
-<span id='errors' class='error'></span>
-<div class='login'>
-    <div class='form_wrapper'>
-        {{ Form::open(array('action' => 'UserController@postLogin', 'method' => 'POST' , 'id' => 'login')) }}
-        <div class='top'>    
-            <div class='labels'>
-                {{ Form::Label('email', 'EMAIL') }}
-                <div class='seperator'></div>
-                {{ Form::Label('password', 'PASSWORD') }}
-            </div>
-            <div class='inputs'> 
-                {{ Form::text('email') }}
-                <div class='seperator'></div>
-                {{ Form::password('password') }}
-            </div>
+<div class="row">
+    <span id='errors' class='error col_12 last'></span>
+</div>
+<div class="row">
+    <div class="col_4 offset"></div>
+    <div class='login col_4'>
+        <div class='form_wrapper'>
+            {{ Form::open(array('action' => 'UserController@postLogin', 'method' => 'POST' , 'id' => 'login')) }}
+                    <p>
+                        <p>
+                            {{ Form::Label('email', 'EMAIL') }}
+                        </p>
+                        <p>
+                            {{ Form::text('email') }}
+                        </p>
+                    </p>
+                    <p>
+                        <p>
+                            {{ Form::Label('password', 'PASSWORD') }}
+                        </p>
+                        <p>
+                            {{ Form::password('password') }}
+                        </p>
+                    </p>
+                    <div class="submit">
+                        {{Form::submit('Sign In')}}
+                    </div>
+            {{ Form::close() }} 
         </div>
-        <div class='bottom'>
-            <a href="{{URL::to('user/register')}}">Not registered? Click here!</a> {{Form::submit('Sign In')}}
-        </div>
-        {{ Form::close() }}
+        <a href="{{URL::to('user/register')}}" id="register_link">Not registered? Click here!</a>
     </div>
+    <div class="last col_4 offset"></div>
 </div>
 @stop

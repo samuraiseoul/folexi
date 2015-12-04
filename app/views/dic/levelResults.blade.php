@@ -15,34 +15,41 @@ $(document).ready(function(){
 @stop
 
 @section('content')
-<span class="error" id="error"></span>
-<div class="word_list">
-{{ Form::open(array('url' => URL::to('dic/levelmodify'), 'method' => 'POST', 'id' => 'modify')) }}
-@foreach($dic as $word)
-<div class="entry">
-    <div class="label">
-        {{$word[0]}}: 
+    <div class="row">
+        <span class="error col_12 last" id="error"></span>
     </div>
-    {{
-        Form::select(
-            $word[1], 
-            array(
-                '1' => 'One',
-                '2' => 'Two',
-                '3' => 'Three',
-                '4' => 'Four',
-                '5' => 'Five',
-                '6' => 'Six'
-            ),
-            $word[2]
-        )
-    }}
-</div>
-@endforeach
-</div>
-<div>
-{{Form::submit('Submit Changes')}}
-{{ Form::close() }}
-</div>
-<div class="pages">{{$links}}</div>
+        {{ Form::open(array('url' => URL::to('dic/levelmodify'), 'method' => 'POST', 'id' => 'modify')) }}
+            <input type="hidden" name="lang" value="{{Input::get('lang2')}}"/>
+            @for($i = 0; $i < count($dic); $i++)
+                @if($i % 3 == 0)
+                    <div class="row">
+                @endif
+                <div class="entry col_4">
+                    <div class="label">
+                        {{$dic[$i][0]}}: 
+                    </div>
+                    {{
+                        Form::select(
+                            $dic[$i][1], 
+                            array(
+                                '1' => 'One',
+                                '2' => 'Two',
+                                '3' => 'Three',
+                                '4' => 'Four',
+                                '5' => 'Five',
+                                '6' => 'Six'
+                            ),
+                            $dic[$i][2]
+                        )
+                    }}
+                </div>
+                @if(($i+1) % 3 == 0)
+                    </div>
+                @endif
+            @endfor
+            {{Form::submit('Submit Changes')}}
+        {{ Form::close() }}
+    <div class="row">
+        <div class="pages col_12 last">{{$links}}</div>
+    </div>
 @stop

@@ -95,47 +95,96 @@
     });
 </script>
 @stop
+
 @section('content')
+<div class="row">
     <span id='errors' class='error'></span>
-<div class='register'>
-    <div class='form_wrapper'>
-        {{ Form::open(array('action' => 'UserController@postRegister', 'method' => 'POST' , 'id' => 'register')) }}
-        <div class='top'>    
-            <div class='labels'>
-                {{ Form::label('username', 'USERNAME')}}
-                <div class='seperator'></div>
-                {{ Form::Label('email', 'EMAIL') }}
-                <div class='seperator'></div>
-                {{ Form::Label('password', 'PASSWORD') }}
-                <div class='seperator'></div>
-                {{ Form::Label('password_confirmation', 'CONFIRM PASSWORD') }}
-                <div class='seperator'></div>
-                {{ Form::Label('first', 'FIRST NAME') }} 
-                <div class='seperator'></div>
-                {{ Form::Label('last', 'LAST NAME') }} 
-                <div class='seperator'></div>
-                {{ Form::Label('birthday', 'BIRTHDAY')}}
+</div>
+<div class="row">
+    <div class="offset col_3"></div>
+    <div class='register col_6'>
+        <div class="wrapper">
+            {{ Form::open(array('action' => 'UserController@postRegister', 'method' => 'POST' , 'id' => 'register')) }}
+            <div class="row">
+                <!--<div class="offset col_1"></div>-->
+                <div class="col_6">
+                    {{ Form::label('username', 'USERNAME')}}
+                </div>
+                <div class="col_6">
+                    {{ Form::text('username') }}
+                </div>
+                <!--<div class="offset col_1 last"></div>-->
             </div>
-            <div class='inputs'> 
-                {{ Form::text('username') }}
-                <div class='seperator'></div>
-                {{ Form::text('email') }}
-                <div class='seperator'></div>
-                {{ Form::password('password') }}
-                <div class='seperator'></div>
-                {{ Form::password('password_confirmation') }}    
-                <div class='seperator'></div>
-                {{ Form::text('first') }}
-                <div class='seperator'></div>
-                {{ Form::text('last') }}
-                <div class='seperator'></div> 
-                {{ Form::dateThree()}} 
+            <div class="row">
+                <!--<div class="offset col_1"></div>-->
+                <div class="col_6">
+                    {{ Form::Label('email', 'EMAIL') }}
+                </div>
+                <div class="col_6">
+                    {{ Form::text('email') }}
+                </div>
+                <!--<div class="offset col_1 last"></div>-->
             </div>
+            <div class="row">
+                <!--<div class="offset col_1"></div>-->
+                <div class="col_6">
+                    {{ Form::Label('password', 'PASSWORD') }}
+                </div>
+                <div class="col_6">
+                    {{ Form::password('password') }}
+                </div>
+                <!--<div class="offset col_1 last"></div>-->
+            </div>
+            <div class="row">
+                <!--<div class="offset col_1"></div>-->
+                <div class="col_6">
+                    {{ Form::Label('password_confirmation', 'CONFIRM PASSWORD') }}
+                </div>
+                <div class="col_6">
+                    {{ Form::password('password_confirmation') }}
+                </div>
+                <!--<div class="offset col_1 last"></div>-->
+            </div>
+            <div class="row">
+                <!--<div class="offset col_1"></div>-->
+                <div class="col_6">
+                    {{ Form::Label('first', 'FIRST NAME') }}
+                </div>
+                <div class="col_6">
+                    {{ Form::text('first') }}
+                </div>
+                <!--<div class="offset col_1 last"></div>-->
+            </div>
+            <div class="row">
+                <!--<div class="offset col_1"></div>-->
+                <div class="col_6">
+                    {{ Form::Label('last', 'LAST NAME') }}
+                </div>
+                <div class="col_6">
+                    {{ Form::text('first') }}
+                </div>
+                <!--<div class="offset col_1 last"></div>-->
+            </div>
+            <div class="row">
+                <!--<div class="offset col_1"></div>-->
+                <div class="col_6">
+                    {{ Form::Label('birthday', 'BIRTHDAY')}}
+                </div>
+                <div class="col_6">
+                    {{ Form::dateThree()}}
+                </div>
+                <!--<div class="offset col_1 last"></div>-->
+            </div>
+            <div class="row">
+                <div class="offset col_4"></div>
+                <div class="col_4">
+                    {{Form::submit('Register!')}}
+                </div>
+                <div class="offset col_4 last"></div>
+            </div>
+            {{ Form::close() }}
         </div>
-        <div class='bottom'>
-            {{Form::submit('Register!')}}
-        </div>
-        {{ Form::close() }}
     </div>
+    <div class="offset col_3 last"></div>
 </div>
 @stop

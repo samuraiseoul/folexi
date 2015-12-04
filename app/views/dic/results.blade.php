@@ -15,22 +15,28 @@ $(document).ready(function(){
 @stop
 
 @section('content')
-<span class="error" id="error"></span>
-<div class="word_list">
-{{ Form::open(array('url' => URL::to('dic/modify'), 'method' => 'POST', 'id' => 'modify')) }}
-    <input type="hidden" name="lang" value="{{Input::get('lang2')}}"/>
-@foreach($dic as $word)
-<div class="entry">
-    <div class="label">
-        {{$word[0]}}: 
+    <div class="row">
+        <span class="error col_12 last" id="error"></span>
     </div>
-    <input class="word" type="textbox" name="{{$word[2]}}" value="{{$word[1]}}"/><br>
-</div>
-@endforeach
-</div>
-<div>
-{{Form::submit('Submit Changes')}}
-{{ Form::close() }}
-</div>
-<div class="pages">{{$links}}</div>
+        {{ Form::open(array('url' => URL::to('dic/modify'), 'method' => 'POST', 'id' => 'modify')) }}
+            <input type="hidden" name="lang" value="{{Input::get('lang2')}}"/>
+            @for($i = 0; $i < count($dic); $i++)
+                @if($i % 3 == 0)
+                    <div class="row">
+                @endif
+                <div class="entry col_4">
+                    <div class="label">
+                        {{$dic[$i][0]}}: 
+                    </div>
+                    <input class="word" type="textbox" name="{{$dic[$i][2]}}" value="{{$dic[$i][1]}}"/><br>
+                </div>
+                @if(($i+1) % 3 == 0)
+                    </div>
+                @endif
+            @endfor
+            {{Form::submit('Submit Changes')}}
+        {{ Form::close() }}
+    <div class="row">
+        <div class="pages col_12 last">{{$links}}</div>
+    </div>
 @stop
