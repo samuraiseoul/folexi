@@ -83,10 +83,12 @@
                 }
             });
         $('#register').ajaxForm(function(json){
+            console.log(json);
             if(json.status === "OK"){
                 window.location.replace("{{URL::to('')}}");
             }else{
                 $("#errors").html("");
+                $("#errors").show();
                 for(var i = 0 ; i < json.msg.length ; i++){
                 $('#errors').append(json.msg[i]+"<br>");
                 }
@@ -161,7 +163,7 @@
                     {{ Form::Label('last', 'LAST NAME') }}
                 </div>
                 <div class="col_6">
-                    {{ Form::text('first') }}
+                    {{ Form::text('last') }}
                 </div>
                 <!--<div class="offset col_1 last"></div>-->
             </div>

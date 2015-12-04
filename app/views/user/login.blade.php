@@ -35,6 +35,7 @@
                 } else {
                     $("#errors").html("");
                     for (var i = 0; i < json.msg.length; i++) {
+                        $('#errors').show();
                         $('#errors').append(json.msg[i] + "<br>");
                     }
                 }
