@@ -1,3 +1,4 @@
+/*
 body{
     width: 100%;
     margin: 0;    
@@ -22,81 +23,9 @@ a{
 .clickable{
     cursor: pointer;
 }
-.header{
-    width: 100%;
-    border-bottom: solid;
-    height: 50px;
-    border-radius: 20px;
-}
 
-.header .logo{
-    width: 15%;
-    height: 100%;
-    float: left; 
-    position: relative;
-}
 
-.header .logo a{
-    position: absolute;
-    left: 15%;
-    top: -5%;
-    font-size: 40px;
-    text-decoration:none;
-    color: black;
-    float: left;
-    font-family:  Arial Black, Helvetica, Verdana, sans-serif;
-}
 
-.header .nav{
-    margin-right: 1%;
-    width: 69%;
-    height: 100%;
-    float: left;
-}
-
-.header .nav .game{
-    width: 10%;
-    height: 100%;
-    margin-right: 2em;
-    float: right; 
-    position: relative;    
-}
-
-.header .nav a{
-    position: absolute;
-    top: 50%;
-    margin: -20% 0 0 0;
-    font-size: 30px;    
-    text-decoration:none;
-    color: black;
-    float: left;
-    font-family:  Arial Black, Helvetica, Verdana, sans-serif;
-}
-
-.header .user_info{
-    top: 13%;
-    display: block;
-    width: 15%;
-    height: 100%;
-    float: right;
-    position: relative;
-    font-family:  Arial Black, Helvetica, Verdana, sans-serif;
-    font-size: .75em;
-    text-align: center;
-}
-
-.header .user_info .center{
-    margin-top: 10px;
-}
-
-.header .user_info .center span{
-}
-
-.header .user_info a{
-    text-decoration:none;
-    color: black;
-    float: left;    
-}
 .wrapper{
     width: 100%;
     min-height : 500px;
@@ -109,75 +38,193 @@ a{
     min-height: 500px;
 }
 
-.login{
-    width: 400px;
-    height: 300px;
+
+
+*/
+
+/* GLOBAL */
+#content{
+    /*Ensure footer stays bottom*/
+    min-height: 750px;
+    font-family:  Arial Black, Helvetica, Verdana, sans-serif;
+    text-align: center;
+}
+
+/* HEADER */
+header{
+    border-bottom: solid;
+    border-radius: 20px;
+    border-bottom-width: 3px;
+}
+
+.header .logo a{
+    font-size: 40px;
+    text-decoration:none;
+    color: black;
+    font-family:  Arial Black, Helvetica, Verdana, sans-serif;
+}
+
+.header .nav a{
+    font-size: 30px;    
+    text-decoration:none;
+    color: black;
+    font-family:  Arial Black, Helvetica, Verdana, sans-serif;
+}
+
+.header .user_info{
+    font-family:  Arial Black, Helvetica, Verdana, sans-serif;
+    font-size: .75em;
+    text-align: center;
+}
+
+.header .user_info a{
+    text-decoration:none;
+    color: black;
+}
+
+/* FOOTER */
+footer{
+    border-radius: 100px;
+    border-top: solid;
+}
+footer a{
+    color: black;
+    text-decoration: none;
+}
+footer a:visited{
+    color: black;
+}
+footer .left{
+    font-family: Arial Black, Helvetica, Verdana, sans-serif;
+}
+
+footer .social .social_button,
+footer .social iframe{
+    float: left;
+    margin-right: .25em;
+}
+
+footer .right{
+    text-align: right;
+    font-family: Arial Black, Helvetica, Verdana, sans-serif;
+}
+
+/* FAQ and ABOUT */
+
+article h1{
+    font-family: Arial Black, Helvetica, Verdana, sans-serif;
+    font-size: 3em;
+    font-weight:bold;
+    text-align: center;
+}
+article .about_container{
+    font-family: Arial Black, Helvetica, Verdana, sans-serif;
     margin: auto;
     border-radius: 15px;
     border: solid;
+    padding: .5em;
+    text-align: center;
+}
+article .about_container h3{
+    font-size: 2em;
+    font-weight:bold;
+    padding: 1em;
+}
+article .about_container p{
+    padding: 1em;
 }
 
+/* ADMIN */
+
+
+/* PAGINATION */
+.pages{
+    text-align:center;
+    width: 100%;
+    display: inline-block;
+    margin-top: 2em;
+}
+
+.pagination{
+    width: auto;
+    position: relative;
+    display: inline-block;
+}
+
+.pagination ul{
+    text-decoration:none;
+    display: inline-block;
+    list-style-type: none;
+}
+.pagination ul li{
+    list-style-type: none;
+    margin-left: .75em;
+    display: inline-block;
+}
+
+.pagination ul a{
+    text-decoration: none;
+    color: black;
+    display: inline-block;
+}
+
+.pagination ul a:visited{
+    color: darkslategrey;
+}
+
+.pagination ul .active{
+    background-color: black;
+    color:white;
+    border-radius: 5px;
+    padding-left: .15em;
+    padding-right: .15em;
+}
+
+/* LOGIN */
+.login{
+    border-radius: 15px;
+    border: solid;
+    font-family:  Arial Black, Helvetica, Verdana, sans-serif;
+    text-decoration: none;
+}
+.login label, .login .submit{
+    padding: 1em;
+    display: block;
+}
+.login #register_link{
+    padding-bottom: 1em;
+    display: block;
+}
 .login a{
     text-decoration: none;
     color:black;
 }
-
-.login .form_wrapper{
-    margin: 110px auto;
-    top: 0; left: 0; bottom: 0; right: 0;
-    width: 350px;
-    height: 100px;
-}
-
-.login .form_wrapper .top{
-    top: 0; left: 0; bottom: 0; right: 0;
-    width: 315px;
-    margin: 0 auto;    
-    height: 55px;
-    font-family:  Arial Black, Helvetica, Verdana, sans-serif
-}
-
-.login .form_wrapper .top .labels{
-    float: left;
-}
-.login .form_wrapper .top .labels .seperator{
-    height: 10px;
-    width: 100%;
-}
-
-.login .form_wrapper .top .inputs{
-    float: right;    
-}
-
-.login .form_wrapper .top .inputs .seperator{
-    width: 100px;
-    height: 10px;
-}
-
 .login .form_wrapper .top .inputs input{
+    border-radius: 5px;
+}
+
+/* REGISTER */
+.register{
+    border-radius: 15px;
+    border: solid;
+    font-family: Arial Black, Helvetica, Verdana, sans-serif;
+}
+.register a{
+    text-decoration: none;
+    color:black;
+}
+.register .form_wrapper .top .inputs input, .register .form_wrapper .top .inputs select{
     border-radius: 5px;    
-    width: 200px;
-    height: 20px;
 }
-
-.login .form_wrapper .bottom{
-    top: 0; left: 0; bottom: 0; right: 0;
-    font-family:  Arial Black, Helvetica, Verdana, sans-serif;
-    width: 315px;
-    margin: 0 auto;
-    height: 30px;
-}
-
-.login .form_wrapper .bottom input{
-    font-family:  Arial Black, Helvetica, Verdana, sans-serif;
-    float: right;
-}
-
-.login .form_wrapper .bottom a{
+.register .form_wrapper .bottom a{
     text-decoration: none;
     font-family: Arial Black, Helvetica, Verdana, sans-serif;
-    float: left;
 }
+
+/* 
+    GAME AND INDEX CSS 
+    TO BE REDONE NEXT RELEASE    
+*/
 .game_container{
     display: block;
     width: 100%;
@@ -228,11 +275,11 @@ a{
     font-size: 40px;
         
 }
-.left{
+.wrapper-game-index .left{
     float: left;
     width: 80%;
 }
-.right{
+.wrapper-game-index.right{
     float: left;
     width: 18%;
     font-family: Arial Black, Helvetica, Verdana, sans-serif;
@@ -306,146 +353,6 @@ a{
     float: left;
     text-align: center;
 }
-.footer{
-    width: 100%;
-    float: left;
-    margin-top: 1em;
-    height: 100px;
-    border-radius: 100px;
-    border-top: solid;
-}
-.footer a{
-    color: black;
-    text-decoration: none;
-}
-.footer a:visited{
-    color: black;
-}
-.footer .left{
-    margin-left: 5%;
-    width: 25%;
-    float: left;
-    height: 50%;
-    font-family: Arial Black, Helvetica, Verdana, sans-serif;
-    margin-top: 2.5%;
-}
-.footer .social{
-    width: 11%;
-    height:50%;
-    margin-top:2%;
-    margin-left: 2%;
-    float: left;
-}
-
-.footer .social .twitter-follow-button{
-    float : left;
-}
-.footer .social .fb-share-button{
-    margin-left: .75em;
-    float: left;
-}
-.footer .right{
-    width: 47%;
-    margin-right: 5%;
-    float: right;
-    text-align: right;
-    height: 50%;
-    font-family: Arial Black, Helvetica, Verdana, sans-serif;
-    margin-top: 2.5%;
-}
-
-.about_container{
-    width: 600px;
-    min-height: 300px;
-    display: inline-block;
-    margin: auto;
-    border-radius: 15px;
-    border: solid;
-    padding: .5em;
-    clear: both;
-}
-.about_container .text{
-    display: block;
-    margin: 3% 5%;
-    width: 90%;
-    height: 94%;
-    clear: both;
-    float: left;
-}
-
-.register{
-    width: 550px;
-    height: 300px;
-    margin: auto;
-    border-radius: 15px;
-    border: solid;
-}
-
-.register a{
-    text-decoration: none;
-    color:black;
-}
-
-.register .form_wrapper{
-    margin: 10px auto;
-    top: 0; left: 0; bottom: 0; right: 0;
-    width: 500px;
-    height: 300px;
-}
-
-.register .form_wrapper .top{
-    top: 0; left: 0; bottom: 0; right: 0;
-    width: 465px;
-    margin: 0 auto;    
-    height: 250px;
-    font-family: Arial Black, Helvetica, Verdana, sans-serif;
-}
-
-.register .form_wrapper .top .labels{
-    float: left;
-}
-.register .form_wrapper .top .labels .seperator{
-    height: 10px;
-    width: 100%;
-}
-
-.register .form_wrapper .top .inputs{
-    float: right;    
-}
-
-.register .form_wrapper .top .inputs .seperator{
-    width: 100%;
-    height: 7px;
-}
-
-.register .form_wrapper .top .inputs input{
-    border-radius: 5px;    
-    width: 200px;
-    height: 20px;
-}
-
-.register .form_wrapper .top .inputs select{
-    border-radius: 5px;        
-    height: 20px;
-}
-
-.register .form_wrapper .bottom{
-    top: 0; left: 0; bottom: 0; right: 0;
-    font-family: Arial Black, Helvetica, Verdana, sans-serif;
-    width: 315px;
-    margin: 0 auto;
-    height: 30px;
-}
-
-.register .form_wrapper .bottom input{
-    font-family: Arial Black, Helvetica, Verdana, sans-serif;
-}
-
-.register .form_wrapper .bottom a{
-    text-decoration: none;
-    font-family: Arial Black, Helvetica, Verdana, sans-serif;
-    float: left;
-}
 .tutorial{
     margin-top: 10%;
     height: 330px;
@@ -511,7 +418,23 @@ a{
     width: 100%;
     float: left;
 }
-
+.word_list{
+    width: 100%;
+    height: auto;
+    float: left;
+}
+.word_list .entry{
+    width: 33.3%;
+    float: left;
+    height: auto;
+    
+}
+#life-area{
+    margin: 20px 0 0 5px;
+}
+.tag{
+    width: 300px;
+}
 .showcase{
     margin-left: 35px;
     position: relative;
@@ -533,63 +456,14 @@ a{
     text-decoration: none;
     color: black;
 }
-
-.pages{
+.wrapper-game-index{
     width: 100%;
-    float: left;
+    min-height : 500px;
 }
-
-.pagination{
-    width: auto;
-    position: relative;
-    float: left;
-    margin: 0 auto;
-    left: 28%;
-}
-
-.pagination ul{
-    max-width: 600px;
-    text-decoration:none;
-    float: left;
-    list-style-type: none;
-}
-.pagination ul li{
-    float: left;
-    list-style-type: none;
-    margin-left: .75em;
-}
-
-.pagination ul a{
-    text-decoration: none;
-    color: black;
-}
-
-.pagination ul a:visited{
-    color: darkslategrey;
-}
-
-.pagination ul .active{
-    background-color: black;
-    color:white;
-    border-radius: 5px;
-    padding-left: .15em;
-    padding-right: .15em;
-}
-.word_list{
-    width: 100%;
-    height: auto;
-    float: left;
-}
-
-.word_list .entry{
-    width: 33.3%;
-    float: left;
-    height: auto;
-    
-}
-#life-area{
-    margin: 20px 0 0 5px;
-}
-.tag{
-    width: 300px;
+.content{
+    font-family:  Arial Black, Helvetica, Verdana, sans-serif;
+    text-align: center;
+    margin: 1em auto 0;
+    width: 80%;
+    min-height: 500px;
 }

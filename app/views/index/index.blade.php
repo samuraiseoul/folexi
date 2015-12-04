@@ -17,20 +17,25 @@
 @stop
 
 @section('content')
+
+<div class=wrapper-game-index>
     <span class="error index_error">{{$msg}}</span>
-<div class='showcase'>
-    <div id="slider" class="slider">
-        <div class="slide1">
-            <img src="{{URL::asset('images/frontpage/slide1.png')}}" alt="" height='521' width='858'/>
-            <p>Learn words to smite your enemies!</p>
+    <div class="row">
+        <div class='showcase'>
+            <div id="slider" class="slider">
+                <div class="slide1">
+                    <img src="{{URL::asset('images/frontpage/slide1.png')}}" alt="" height='521' width='858'/>
+                    <p>Learn words to smite your enemies!</p>
+                </div>
+                <div class="slide2">
+                    <img src="{{URL::asset('images/frontpage/slide2.png')}}" alt="" height='521' width='858'/>
+                    <p>Spaced repetition of words for maximum retention!</p>
+                </div>
+            </div>    
+            <div id="slider-direction-nav"></div>
         </div>
-        <div class="slide2">
-            <img src="{{URL::asset('images/frontpage/slide2.png')}}" alt="" height='521' width='858'/>
-            <p>Spaced repetition of words for maximum retention!</p>
-        </div>
-    </div>    
-    <div id="slider-direction-nav"></div>
-</div>
-<br>
-<span class='play_now'><a href='{{URL::to("game")}}'>PLAY NOW!</a></span>
+    </div>
+    <br>
+    <span class='play_now'><a href='{{URL::to("game")}}'>PLAY NOW!</a></span>
+    </div>
 @stop

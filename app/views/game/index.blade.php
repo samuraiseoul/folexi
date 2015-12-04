@@ -595,6 +595,7 @@
 
 
 @section('content')
+<div class=wrapper-game-index>
 <span class="error left">
     @if(!Auth::check())
     Log in to save your progress across machines or save progress on more than one language!<br>
@@ -633,5 +634,6 @@
             <div class='word_col' id='col_1'></div>
         </div>
     </div>
+</div>
 </div>
 @stop
