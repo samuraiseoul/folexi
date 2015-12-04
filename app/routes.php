@@ -73,6 +73,9 @@ Route::any('/game/tutorial', function(){
 Route::any('/game',function(){
     return View::make('game.index');
 });
+Route::any('/gamenew',function(){
+    return View::make('game.new.index');
+});
 Route::any('/user/{action}',function($action){
     if(!Auth::check()){
         if(View::exists('user.'.$action)){
