@@ -7,5 +7,5 @@
 @stop
 
 @section('content')
-
+    <canvas width="800" height="400"></canvas>
 @stop

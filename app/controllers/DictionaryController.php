@@ -250,12 +250,13 @@ class DictionaryController extends Controller{
     }
     
     public function postGetKnownWords(){
+        error_log("HERE!!! IN1: ".Input::get('lang1')." IN2: ".Input::get('langs'));
         $lang1 = Input::get('lang1');
         $lang2 = Input::get('lang2');
         if (Auth::check()) {
-            $this->retrieveUserWords($lang1, $lang2);
+            return $this->retrieveUserWords($lang1, $lang2);
         } else {
-            $this->retrieveWordsFromCookie($lang1, $lang2);
+            return $this->retrieveWordsFromCookie($lang1, $lang2);
         }
     }
     
@@ -274,7 +275,7 @@ class DictionaryController extends Controller{
             for($i = 0 ; $i < count($tmp); $i++){
                 array_push($synonyms, $tmp[$i]['word'][$lang1]);
             }
-            array_push($dic, array("lang1" => $key[$lang1], "lang2" => $key[$lang2], "id" => $key['id'], "right" => 0, "synonyms" => $synonyms));
+            array_push($dic, array("lang1" => $key[$lang1], "lang2" => $key[$lang2], "id" => $key['id'], "synonyms" => $synonyms));
         }
         return Response::json(array("status" => "OK", "data" => array("dic" => $dic, "lang" => $lang2)));
     }

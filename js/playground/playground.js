@@ -5892,7 +5892,7 @@ PLAYGROUND.LoadingScreen = {
     this.logo.src = this.logoRaw;
 
     this.background = "#272822";
-    this.app.container.style.background = "#272822";
+    // this.app.container.style.background = "#272822";
 
     if (window.getComputedStyle) {
       // this.background = window.getComputedStyle(document.body).backgroundColor || "#000";
