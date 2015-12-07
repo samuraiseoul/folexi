@@ -3,21 +3,33 @@ $('document').ready(function(){
     const CANVAS_HEIGHT_PERCENTAGE = 0.6;
     const ANTIALIASING = true;
     const TRANSPARENT = true;
+    const MAX_LIVES = 4;
         
     var dic = null;
     var levels = [];
     var knownWords = null;
     var wave = [];
+    var life = [];
     var turret = null;
     var doneInitializing = false;
     var canvas = $("#game-canvas");
     var typingArea = $("#typing-area");
     var stage = new PIXI.Container();
     var renderer = null;
+    var lost = false;
+    var win = false;
+    var lastUpdated = null;
+    var timeElapsed = null;
     
     var lang1 = 'en';
     var lang2 = 'ko';
     var wordLevel = 1;
+    
+    function initializeLife() {
+        for(var i = 0; i < MAX_LIVES; i++) {
+            life.push(new Life(stage, renderer, i));
+        }
+    }
     
     function initializeGameBoard() {
         canvas.height(canvas.width() * CANVAS_HEIGHT_PERCENTAGE);
@@ -28,6 +40,8 @@ $('document').ready(function(){
             TRANSPARENT,
             ANTIALIASING
         );
+        initializeLife();
+        
         renderer.backgroundColor = 0xFFFFFF;
         renderer.render(stage);
     }
@@ -38,6 +52,28 @@ $('document').ready(function(){
         }
     }
     
+    function checkForLoss() {
+        for(var i = 0; i < wave.length; i++) {
+            if(!wave[i].killed && wave[i].detectHit(turret.turretBase)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    function checkForWin() {
+        var killed = 0;
+        for(var i = 0; i < wave.length; i++) {
+            if(wave[i].killed) {
+                killed++;
+            }
+        }
+        if(killed == wave.length) {
+            return true;
+        }
+        return false;
+    }
+    
     function checkWordCorrect() {
         for(var i = 0; i < wave.length; i++) {
             if(wave[i].wordMatch(typingArea.val())) {
@@ -46,9 +82,56 @@ $('document').ready(function(){
         }
     }
     
+    function showWords() {
+        for(var i = 0; i < wave.length; i++) {
+            wave[i].showWord = true;
+        }
+    }
+    
+    function restartLevel() {
+        lost = false;
+        timeElapsed = null;
+        lastUpdated = null;
+        for(var i = 0; i < wave.length; i++) {
+            wave[i].reset();
+        }
+    }
+    
+    function loseLife() {
+        var lives = 0;
+        for(var i = 0; i < life.length; i++) {
+            if(!life[i].lifeLost) {
+                lives++;
+            }
+        }
+        life[lives - 1].loseLife();
+    }
+    
+    var oneTime = false;
     function update() {
-        updateEnemies();
-        checkWordCorrect();
+        if(lost) {
+            if(!oneTime) {
+                loseLife();
+                showWords();
+                oneTime = true;
+                if(lastUpdated == null){ lastUpdated = Date.now(); }
+            }
+            timeElapsed = (Date.now() - lastUpdated) / 1000;
+            console.log(timeElapsed);
+            if(timeElapsed >= 5) {
+                restartLevel();
+                oneTime = false;
+                typingArea.val("");
+            }
+        } else {
+            updateEnemies();
+            checkWordCorrect();
+            lost = checkForLoss();
+            win = checkForWin();
+            if(win) {
+                console.log("WIN");
+            }
+        }
     }
     
     function drawEnemies() {
@@ -57,16 +140,33 @@ $('document').ready(function(){
         }
     }
     
+    function drawLives() {
+        for(var i = 0; i < life.length; i++) {
+            life[i].draw();
+        }
+    }
+    
     function draw() {
         turret.draw();
         drawEnemies();
+        drawLives();
+        renderer.render(stage);
     }
     
     function gameLoop() {
         update();
         draw();
-        renderer.render(stage);
         requestAnimationFrame(gameLoop);
+    }
+    
+    function focusOnTypingArea() {
+        typingArea.focus();
+        typingArea.keypress(function(event) {
+            // prevent Enter (code = 13)
+            if (event.keyCode === 13) {
+                event.preventDefault();
+            }
+        });
     }
     
     function start() {
@@ -75,6 +175,7 @@ $('document').ready(function(){
         turret = new Turret(stage, renderer);
         createWave(turret);
 
+        focusOnTypingArea();
         gameLoop();
     }
         
@@ -166,7 +267,7 @@ $('document').ready(function(){
         if((knownWords - completedKnownWords()) <= 21) {
             wave = convertWordsToEnemies(levels[knownWords / WORDS_PER_LEVEL], turret);
         } else {
-            wave = randomKnownWords(turret); 
+        wave = randomKnownWords(turret); 
         }
     }
     

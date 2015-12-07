@@ -1,6 +1,6 @@
-const LINE_COLOR = 0x000000;
-const FILL_COLOR = 0xFFFFFF;
-const LINE_WIDTH = 2;
+const TURRET_LINE_COLOR = 0x000000;
+const TURRET_FILL_COLOR = 0xFFFFFF;
+const TURRET_LINE_WIDTH = 2;
 const TURRET_WIDTH_MODIFIER = 0.05;
 const TURRET_X_OFFSET = 0.075;
 
@@ -17,9 +17,8 @@ function Turret(drawingStage, renderer){
 
 Turret.prototype.inializeTurretBase = function() {
     this.turretBase = new PIXI.Graphics();
-    this.turretBase.lineStyle(LINE_WIDTH, LINE_COLOR); //has to come before fill
-    this.turretBase.beginFill(FILL_COLOR); 
-    //Remove magic numbers. Calculate or make constants
+    this.turretBase.lineStyle(TURRET_LINE_WIDTH, TURRET_LINE_COLOR); //has to come before fill
+    this.turretBase.beginFill(TURRET_FILL_COLOR); 
     this.turretBase.drawCircle(this.x, this.y, this.radius); // drawCircle(x, y, radius)
     this.turretBase.endFill();    
 };

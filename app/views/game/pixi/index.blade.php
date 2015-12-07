@@ -9,6 +9,7 @@
     
     <script type="text/javascript" src="{{URL::asset('js/pixi/pixi.min.js')}}"></script>
     <script type="text/javascript" src="{{URL::asset('js/pixi/turret.js')}}"></script>
+    <script type="text/javascript" src="{{URL::asset('js/pixi/life.js')}}"></script>
     <script type="text/javascript" src="{{URL::asset('js/pixi/laser.js')}}"></script>
     <script type="text/javascript" src="{{URL::asset('js/pixi/enemy.js')}}"></script>
     <script type="text/javascript" src="{{URL::asset('js/pixi/main.js')}}"></script>
@@ -18,6 +19,7 @@
             width:100%;
             border: solid;
         }
+        
     </style>
 @stop
 

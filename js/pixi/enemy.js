@@ -1,5 +1,4 @@
 const ENEMY_LINE_COLOR = 0x000000;
-const ENEMY_FILL_COLOR = 0xFFFFFF;
 const ENEMY_LINE_WIDTH = 2;
 const ENEMY_SPEED = 1;
 
@@ -13,9 +12,26 @@ function Enemy(drawingStage, renderer, turret, lang1, lang2, word_id, offset) {
     this.turret = turret;
     this.laser = null;
     this.killed = false;
+    this.showWord = false;
     
     this.initializeEnemy();
 };
+
+Enemy.prototype.detectHit = function(graphic) {
+    var enemyX = this.enemyCircle.graphicsData[0].shape.x + this.enemyCircle.x;
+    var enemyY = this.enemyCircle.graphicsData[0].shape.y + this.enemyCircle.y;
+    var enemyR = this.enemyCircle.graphicsData[0].shape.radius;
+    var graphicX = graphic.graphicsData[0].shape.x + graphic.x;
+    var graphicY = graphic.graphicsData[0].shape.y + graphic.y;
+    var graphicR = graphic.graphicsData[0].shape.radius;
+    
+    // (((x1 - x2) ^ 2) + ((y1 - y2) ^ 2)) <= ((r1 + r2) ^ 2)
+    // MAth.pow() becasue ^ is bitwise only in js
+    if((Math.pow((enemyX - graphicX), 2) + Math.pow((enemyY - graphicY), 2)) < Math.pow((enemyR + graphicR), 2)) {
+        return true
+    }
+    return false;
+}
 
 Enemy.prototype.calculateCoordinates = function() {
     this.radius = this.text.getBounds()['width'];
@@ -24,7 +40,8 @@ Enemy.prototype.calculateCoordinates = function() {
 }
 
 Enemy.prototype.wordMatch = function(word) {
-    if(word == this.lang1) {
+    //toUpper removes case sensitivity
+    if(word.toUpperCase() == this.lang1.toUpperCase()) {
         this.laser = new Laser(this.drawingStage, this.renderer, this.turret);
         this.laser.calculateYSpeed(this);
         return true;
@@ -32,31 +49,52 @@ Enemy.prototype.wordMatch = function(word) {
     return false;
 }
 
-Enemy.prototype.inializeEnemyCircle = function() {
+Enemy.prototype.initializeEnemyCircle = function() {
     this.enemyCircle = new PIXI.Graphics();
     this.enemyCircle.lineStyle(ENEMY_LINE_WIDTH, ENEMY_LINE_COLOR); //has to come before fill
-    this.enemyCircle.beginFill(ENEMY_FILL_COLOR);
     this.enemyCircle.drawCircle(this.x, this.y, this.radius); // drawCircle(x, y, radius)
     this.enemyCircle.endFill();    
 };
 
-Enemy.prototype.inializeEnemyText = function() {
+Enemy.prototype.initializeEnemyText = function() {
     this.text = new PIXI.Text(this.lang2);
     this.calculateCoordinates();
     this.text.x = this.x - (this.text.getBounds()['width'] / 2);
     this.text.y = this.y - (this.text.getBounds()['height'] / 2);
 };
 
+Enemy.prototype.initializeCorrectWord = function() {
+    this.correctWord = new PIXI.Text(this.lang1, {font : "14px"});
+    this.correctWord.x = this.x - (this.correctWord.getBounds()['width'] / 2);
+    this.correctWord.y = this.y - (this.text.getBounds()['height'] / 2) + this.text.getBounds()['height'];
+};
+
 Enemy.prototype.initializeEnemy = function() {
-    this.inializeEnemyText();
-    this.inializeEnemyCircle();
+    this.initializeEnemyText();
+    this.initializeEnemyCircle();
+    this.initializeCorrectWord();
     this.calculateYSpeed();
 };
+
+Enemy.prototype.reset = function() {
+    if(!this.killed){
+        this.removeFromStage();
+        this.destroyGraphics();
+    }
+    this.killed = false;
+    this.showWord = false;
+    this.laser = null;
+    //must come at end
+    this.initializeEnemy();
+}
 
 Enemy.prototype.draw = function() {
     if(!this.killed) {
         this.drawingStage.addChild(this.enemyCircle);
         this.drawingStage.addChild(this.text);
+        if(this.showWord) {
+            this.drawingStage.addChild(this.correctWord);
+        }
         if(this.laser != null) {
             this.laser.draw();
         }
@@ -66,13 +104,15 @@ Enemy.prototype.draw = function() {
 Enemy.prototype.removeFromStage = function() {
     this.drawingStage.removeChild(this.enemyCircle);
     this.drawingStage.removeChild(this.text);
-    this.drawingStage.removeChild(this.laser.laser);
+    if(this.laser != null) { this.drawingStage.removeChild(this.laser.laser); }
+    this.drawingStage.removeChild(this.correctWord);
 }
 
 Enemy.prototype.destroyGraphics = function() {
-    this.laser.laser.destroy();
+    if(this.laser != null) { this.laser.laser.destroy(); }
     this.enemyCircle.destroy();
     this.text.destroy();
+    this.correctWord.destroy();
 }
 
 Enemy.prototype.kill = function() {
@@ -95,11 +135,13 @@ Enemy.prototype.update = function() {
     if(!this.killed) {
         this.enemyCircle.x -= ENEMY_SPEED;
         this.text.x -= ENEMY_SPEED;
+        this.correctWord.x -= ENEMY_SPEED;
         this.enemyCircle.y -= this.ySpeed;
         this.text.y -= this.ySpeed;
+        this.correctWord.y -= this.ySpeed;
         if(this.laser != null) {
             this.laser.update();
-            if(this.laser.detectHit(this)) {
+            if(this.detectHit(this.laser.laser)) {
                 this.kill();
             }
         }
