@@ -20,7 +20,7 @@ function Enemy(drawingStage, renderer, turret, lang1, lang2, word_id, offset) {
 Enemy.prototype.calculateCoordinates = function() {
     this.radius = this.text.getBounds()['width'];
     this.x = (this.renderer.width + this.radius) + (this.offset * 100);
-    this.y = (this.renderer.height / 2);
+    this.y = (this.renderer.height / 2) + ((this.offset%2 == 0) ? this.offset * 100 : this.offset * -100);
 }
 
 Enemy.prototype.wordMatch = function(word) {
@@ -50,6 +50,7 @@ Enemy.prototype.inializeEnemyText = function() {
 Enemy.prototype.initializeEnemy = function() {
     this.inializeEnemyText();
     this.inializeEnemyCircle();
+    this.calculateYSpeed();
 };
 
 Enemy.prototype.draw = function() {
@@ -80,10 +81,22 @@ Enemy.prototype.kill = function() {
     this.killed = true;
 }
 
+Enemy.prototype.calculateYSpeed = function() {
+    var enemyX = this.enemyCircle.graphicsData[0].shape.x + this.enemyCircle.x;
+    var enemyY = this.enemyCircle.graphicsData[0].shape.y + this.enemyCircle.y;
+    
+    var distanceX = enemyX - this.turret.x;
+    var turnsToTarget = distanceX / ENEMY_SPEED;
+    var distanceY = enemyY - this.turret.y;
+    this.ySpeed = distanceY / turnsToTarget;
+}
+
 Enemy.prototype.update = function() {
     if(!this.killed) {
         this.enemyCircle.x -= ENEMY_SPEED;
         this.text.x -= ENEMY_SPEED;
+        this.enemyCircle.y -= this.ySpeed;
+        this.text.y -= this.ySpeed;
         if(this.laser != null) {
             this.laser.update();
             if(this.laser.detectHit(this)) {

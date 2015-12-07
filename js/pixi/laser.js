@@ -42,11 +42,6 @@ Laser.prototype.detectHit = function(enemy) {
     var enemyY = enemy.enemyCircle.graphicsData[0].shape.y + enemy.enemyCircle.y;
     var enemyR = enemy.enemyCircle.graphicsData[0].shape.radius;
     
-    console.log("lx: " + laserX + " ex: " + enemyX);
-    
-    console.log("left: " + (Math.pow((laserX - enemyX), 2) + Math.pow((laserY - enemyY), 2)));
-    console.log("right: " + Math.pow((laserR + enemyR), 2));
-    
     // (((x1 - x2) ^ 2) + ((y1 - y2) ^ 2)) <= ((r1 + r2) ^ 2)
     // MAth.pow() becasue ^ is bitwise only in js
     if((Math.pow((laserX - enemyX), 2) + Math.pow((laserY - enemyY), 2)) < Math.pow((laserR + enemyR), 2)) {
