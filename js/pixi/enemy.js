@@ -2,19 +2,16 @@ const ENEMY_LINE_COLOR = 0x000000;
 const ENEMY_LINE_WIDTH = 2;
 const ENEMY_SPEED = 1;
 
-function Enemy(drawingStage, renderer, turret, lang1, lang2, word_id, offset) {
+function Enemy(drawingStage, renderer, turret, speedMultiplier, word) {
     this.drawingStage = drawingStage;
     this.renderer = renderer;
-    this.lang1 = lang1;
-    this.lang2 = lang2;
-    this.word_id = word_id;
-    this.offset = offset;
+    this.speedMultiplier = speedMultiplier;
+    this.word = word;
     this.turret = turret;
     this.laser = null;
     this.killed = false;
     this.showWord = false;
-    
-    this.initializeEnemy();
+    this.laserFired = false;
 };
 
 Enemy.prototype.detectHit = function(graphic) {
@@ -35,15 +32,16 @@ Enemy.prototype.detectHit = function(graphic) {
 
 Enemy.prototype.calculateCoordinates = function() {
     this.radius = this.text.getBounds()['width'];
-    this.x = (this.renderer.width + this.radius) + (this.offset * 100);
-    this.y = (this.renderer.height / 2) + ((this.offset%2 == 0) ? this.offset * 100 : this.offset * -100);
+    this.x = (this.renderer.width + this.radius) + this.xOffset;
+    this.y = this.yOffset;
 }
 
 Enemy.prototype.wordMatch = function(word) {
     //toUpper removes case sensitivity
-    if(word.toUpperCase() == this.lang1.toUpperCase()) {
+    if(word.toUpperCase() == this.word['word'][this.word['lang1']].toUpperCase()) {
         this.laser = new Laser(this.drawingStage, this.renderer, this.turret);
         this.laser.calculateYSpeed(this);
+        this.laserFired = true;
         return true;
     }
     return false;
@@ -57,19 +55,19 @@ Enemy.prototype.initializeEnemyCircle = function() {
 };
 
 Enemy.prototype.initializeEnemyText = function() {
-    this.text = new PIXI.Text(this.lang2);
+    this.text = new PIXI.Text(this.word['word'][this.word['lang2']]);
     this.calculateCoordinates();
     this.text.x = this.x - (this.text.getBounds()['width'] / 2);
     this.text.y = this.y - (this.text.getBounds()['height'] / 2);
 };
 
 Enemy.prototype.initializeCorrectWord = function() {
-    this.correctWord = new PIXI.Text(this.lang1, {font : "14px"});
+    this.correctWord = new PIXI.Text(this.word['word'][this.word['lang1']], {font : "14px"});
     this.correctWord.x = this.x - (this.correctWord.getBounds()['width'] / 2);
     this.correctWord.y = this.y - (this.text.getBounds()['height'] / 2) + this.text.getBounds()['height'];
 };
 
-Enemy.prototype.initializeEnemy = function() {
+Enemy.prototype.initialize = function() {
     this.initializeEnemyText();
     this.initializeEnemyCircle();
     this.initializeCorrectWord();
@@ -83,9 +81,10 @@ Enemy.prototype.reset = function() {
     }
     this.killed = false;
     this.showWord = false;
+    this.laserFired = false;
     this.laser = null;
     //must come at end
-    this.initializeEnemy();
+    this.initialize();
 }
 
 Enemy.prototype.draw = function() {
@@ -126,16 +125,16 @@ Enemy.prototype.calculateYSpeed = function() {
     var enemyY = this.enemyCircle.graphicsData[0].shape.y + this.enemyCircle.y;
     
     var distanceX = enemyX - this.turret.x;
-    var turnsToTarget = distanceX / ENEMY_SPEED;
+    var turnsToTarget = distanceX / (ENEMY_SPEED * this.speedMultiplier);
     var distanceY = enemyY - this.turret.y;
     this.ySpeed = distanceY / turnsToTarget;
 }
 
 Enemy.prototype.update = function() {
     if(!this.killed) {
-        this.enemyCircle.x -= ENEMY_SPEED;
-        this.text.x -= ENEMY_SPEED;
-        this.correctWord.x -= ENEMY_SPEED;
+        this.enemyCircle.x -= (ENEMY_SPEED * this.speedMultiplier);
+        this.text.x -= (ENEMY_SPEED * this.speedMultiplier);
+        this.correctWord.x -= (ENEMY_SPEED * this.speedMultiplier);
         this.enemyCircle.y -= this.ySpeed;
         this.text.y -= this.ySpeed;
         this.correctWord.y -= this.ySpeed;
@@ -147,3 +146,11 @@ Enemy.prototype.update = function() {
         }
     } 
 };
+
+Enemy.prototype.setXOffset = function(second, fps) {
+    this.xOffset = second * fps * this.speedMultiplier * ENEMY_SPEED;
+}
+
+Enemy.prototype.setYOffset = function(offset) {
+    this.yOffset = offset;
+}
