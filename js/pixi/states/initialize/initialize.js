@@ -1,12 +1,14 @@
-function Initialize(stateManager) {
+function Initialize(drawingStage, renderer, stateManager) {
+    this.drawingStage = drawingStage;
+    this.renderer = renderer;
     this.stateManager = stateManager;
     this.initializationStarted = false;
 }
     
 Initialize.prototype.start = function() {
     this.stateManager.states[GAME].initialize();
-    this.stateManager.states[START_MENU].hide();
     this.stateManager.state = GAME;
+    this.hide();
     this.initializationStarted = false;
 }
         
@@ -57,10 +59,28 @@ Initialize.prototype.getKnownWords = function() {
         dataType: "json"
     });
 }
+
+Initialize.prototype.initializeLoadingText = function() {
+    this.loadingText = new PIXI.Text("LOADING...", {font : "bold 8em Ariel Black, sans-serif"});
+    this.loadingText.x = (this.renderer.width / 2) - (this.loadingText.getBounds()['width'] / 2);
+    this.loadingText.y = (this.renderer.height / 2) - (this.loadingText.getBounds()['height'] / 2);
+}
+
+Initialize.prototype.hide = function() {
+    this.drawingStage.removeChild(this.loadingText);
+    this.loadingText.destroy();
+}
+
+Initialize.prototype.draw = function() {
+    this.drawingStage.addChild(this.loadingText);
+    this.renderer.render(this.drawingStage);
+}
     
 Initialize.prototype.initialize = function() {
     if(!this.initializationStarted) {
         this.initializationStarted = true;
+        this.initializeLoadingText();
+        this.stateManager.states[START_MENU].hide();
         this.getWords(this.getKnownWords);
     }
 }

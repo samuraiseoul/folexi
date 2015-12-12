@@ -1,6 +1,6 @@
 const ENEMY_LINE_COLOR = 0x000000;
 const ENEMY_LINE_WIDTH = 2;
-const ENEMY_SPEED = 1;
+const ENEMY_SPEED = 10;
 
 function Enemy(drawingStage, renderer, turret, speedMultiplier, word) {
     this.drawingStage = drawingStage;
@@ -153,4 +153,13 @@ Enemy.prototype.setXOffset = function(second, fps) {
 
 Enemy.prototype.setYOffset = function(offset) {
     this.yOffset = offset;
+}
+
+Enemy.prototype.hide = function() {
+    if(this.laser != null) {
+        this.laser.hide();
+    }
+    this.drawingStage.removeChild(this.enemyCircle);
+    this.drawingStage.removeChild(this.text);
+    this.drawingStage.removeChild(this.correctWord);
 }

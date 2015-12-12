@@ -88,6 +88,7 @@ Game.prototype.checkWordCorrect = function() {
 }
     
 Game.prototype.initializeLife = function() {
+    this.life = [];
     for(var i = 0; i < MAX_LIVES; i++) {
         this.life.push(new Life(this.drawingStage, this.renderer, i));
     }
@@ -199,4 +200,15 @@ Game.prototype.loseLife = function() {
     if((lives - 1) == 0) {
         this.stateManager.gameOver = true;
     }
+}
+
+Game.prototype.hide = function() {
+    for(var i = 0; i < this.stateManager.wave.length; i++) {
+        this.stateManager.wave[i].hide();
+    }
+    for(var i = 0; i < this.life.length; i++) {
+        this.life[i].hide();
+    }
+    this.turret.hide();
+    this.renderer.render(this.drawingStage);
 }

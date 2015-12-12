@@ -25,6 +25,7 @@ StateManager.prototype.doState = function() {
             break;
         case INITIALIZE:
             this.states[INITIALIZE].initialize();
+            this.states[INITIALIZE].draw();
             break;
         case GAME:
             this.states[GAME].updateGame();
@@ -52,7 +53,7 @@ StateManager.prototype.doState = function() {
 
 StateManager.prototype.initializeStates = function(stage, renderer, startingState) {
     this.states[START_MENU] = new StartMenu(stage, renderer, this);
-    this.states[INITIALIZE] = new Initialize(this);
+    this.states[INITIALIZE] = new Initialize(stage, renderer, this);
     this.states[GAME] = new Game(stage, renderer, this);
     this.states[WIN] = new Win(this);
     this.states[LOSE] = new Lose(this);

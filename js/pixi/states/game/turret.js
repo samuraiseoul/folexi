@@ -30,3 +30,7 @@ Turret.prototype.initializeTurret = function() {
 Turret.prototype.draw = function() {
     this.drawingStage.addChild(this.turretBase);  
 };
+
+Turret.prototype.hide = function() {
+    this.drawingStage.removeChild(this.turretBase);
+}

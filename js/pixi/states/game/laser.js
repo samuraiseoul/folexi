@@ -32,3 +32,7 @@ Laser.prototype.update = function() {
 Laser.prototype.draw = function() {
     this.drawingStage.addChild(this.laser);  
 };
+
+Laser.prototype.hide = function() {
+    this.drawingStage.removeChild(this.laser);
+}

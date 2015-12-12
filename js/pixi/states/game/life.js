@@ -43,3 +43,7 @@ Life.prototype.loseLife = function() {
     this.life.drawCircle(this.x + (this.xOffset * (3 * this.radius)), this.y, this.radius); // drawCircle(x, y, radius)
     this.life.endFill();    
 }
+
+Life.prototype.hide = function() {
+    this.drawingStage.removeChild(this.life);
+}

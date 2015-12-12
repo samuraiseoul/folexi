@@ -14,11 +14,14 @@ Lose.prototype.updateLose = function() {
         if(this.lastUpdated == null){ this.lastUpdated = Date.now(); }
     }
     this.timeElapsed = (Date.now() - this.lastUpdated) / 1000;
-    if(this.timeElapsed >= 5) {
+    if(this.timeElapsed >= 1) {
         this.stateManager.states[GAME].restartLevel();
         this.oneTime = false;
         this.timeElapsed = null;
         this.lastUpdated = null;
         this.stateManager.state = ((this.stateManager.gameOver) ? GAME_OVER : GAME);
+        if(this.stateManager.gameOver){
+            this.stateManager.states[GAME].hide();
+        }
     }
 }
