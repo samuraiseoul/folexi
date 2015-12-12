@@ -19,6 +19,6 @@ Lose.prototype.updateLose = function() {
         this.oneTime = false;
         this.timeElapsed = null;
         this.lastUpdated = null;
-        this.stateManager.state = GAME;
+        this.stateManager.state = ((this.stateManager.gameOver) ? GAME_OVER : GAME);
     }
 }

@@ -20,7 +20,6 @@ Pause.prototype.initializeContainer = function() {
     this.container.lineStyle(PAUSE_MENU_CONTAINER_LINE_WIDTH, PAUSE_MENU_CONTAINER_LINE_COLOR);
     this.container.drawRoundedRect(this.x, this.y, this.width, this.height, 15);
     this.container.endFill();
-    this.drawingStage.addChild(this.container);
 }
 
 Pause.prototype.initializeRestartLevel = function() {
@@ -28,7 +27,7 @@ Pause.prototype.initializeRestartLevel = function() {
     this.restartLevel = new PIXI.cocoontext.CocoonText("RESTART LEVEL", {font: "bold 4em Ariel Black, sans-serif"});
     this.restartLevel.x = (this.x + (this.width / 2) - (this.restartLevel.getBounds()['width'] / 2));
     this.restartLevel.y = (this.y + (this.container.height * .25) - (this.restartLevel.getBounds()['height'] / 2));
-    //cocoon text doesn't know of this object so give it a referencethis.restartLevel.parentState = this;
+    //cocoon text doesn't know of this object so give it a reference
     this.restartLevel.parentState = this;
     this.restartLevel.interactive = true;
     this.restartLevel.click = function() {
@@ -54,7 +53,6 @@ Pause.prototype.initializeMenu = function() {
     this.initializeContainer();
     this.initializeRestartLevel();
     this.initializeTutorial();
-    this.hide();
 };
 
 Pause.prototype.draw = function() {

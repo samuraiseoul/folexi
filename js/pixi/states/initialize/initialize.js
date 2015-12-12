@@ -7,6 +7,7 @@ Initialize.prototype.start = function() {
     this.stateManager.states[GAME].initialize();
     this.stateManager.states[START_MENU].hide();
     this.stateManager.state = GAME;
+    this.initializationStarted = false;
 }
         
 Initialize.prototype.getWords = function() {

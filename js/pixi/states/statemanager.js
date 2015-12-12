@@ -11,10 +11,11 @@ function StateManager() {
     this.wave = [];
     this.wavesCompleted = 0;
     
-    this.lang1 = 'en';
-    this.lang2 = 'ko';
+    this.lang1 = '';
+    this.lang2 = '';
     this.wordLevel = 1;
     this.addedLevel = false;
+    this.gameOver = false;
 }
 
 StateManager.prototype.doState = function() {
@@ -36,7 +37,7 @@ StateManager.prototype.doState = function() {
             this.states[LOSE].updateLose();
             break;
         case GAME_OVER:
-            gameOver();
+            this.states[GAME_OVER].draw();
             break;
         case WIN:
             this.states[WIN].win();
@@ -56,7 +57,7 @@ StateManager.prototype.initializeStates = function(stage, renderer, startingStat
     this.states[WIN] = new Win(this);
     this.states[LOSE] = new Lose(this);
     this.states[GAME_OVER] = new GameOver(stage, renderer, this);
-    this.states[PAUSE] = new Pause(stage, renderer,this);
+    this.states[PAUSE] = new Pause(stage, renderer, this);
     this.states[TUTORIAL] = new Tutorial(stage, renderer, this);
     
     this.state = startingState;

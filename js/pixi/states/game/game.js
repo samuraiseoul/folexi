@@ -196,4 +196,7 @@ Game.prototype.loseLife = function() {
         }
     }
     this.life[lives - 1].loseLife();
+    if((lives - 1) == 0) {
+        this.stateManager.gameOver = true;
+    }
 }
