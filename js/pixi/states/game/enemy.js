@@ -1,6 +1,6 @@
 const ENEMY_LINE_COLOR = 0x000000;
 const ENEMY_LINE_WIDTH = 2;
-const ENEMY_SPEED = 10;
+const ENEMY_SPEED = 1;
 
 function Enemy(drawingStage, renderer, turret, speedMultiplier, word) {
     this.drawingStage = drawingStage;

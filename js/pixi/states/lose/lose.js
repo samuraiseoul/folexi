@@ -14,7 +14,7 @@ Lose.prototype.updateLose = function() {
         if(this.lastUpdated == null){ this.lastUpdated = Date.now(); }
     }
     this.timeElapsed = (Date.now() - this.lastUpdated) / 1000;
-    if(this.timeElapsed >= 1) {
+    if(this.timeElapsed >= 5) {
         this.stateManager.states[GAME].restartLevel();
         this.oneTime = false;
         this.timeElapsed = null;
