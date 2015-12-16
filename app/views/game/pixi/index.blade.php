@@ -30,7 +30,10 @@
             width:100%;
             border: solid;
         }
-        
+        textarea {
+            resize: none;
+            text-align: center;
+        }
     </style>
 @stop
 
@@ -38,8 +41,13 @@
     <div class="row">
         <div class="offset col_1"></div>
         <div class="offset col_10">
-            <textarea id="typing-area"></textarea>
+            <textarea id="typing-area" rows="1" cols="20"></textarea>
+            <p>NEW WORDS</p>
+            <p id="new_area"></p>
             <canvas id="game-canvas"></canvas>
+            <p>OLD WORDS</p>
+            <hr>
+            <p id="old_area"></p>
         </div>
         <div class="offset col_1 last"></div>
     </div>

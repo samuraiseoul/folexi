@@ -109,6 +109,7 @@ Game.prototype.addLevelToWave = function() {
         for(var i = 0; i < this.stateManager.levels[this.stateManager.level].length; i++) {
             this.stateManager.wave.push(this.createEnemy(this.stateManager.levels[this.stateManager.level][i]));
         }
+        this.stateManager.addNewWordsToArea();
         this.stateManager.addedLevel = true;
     } else {
         this.extraWords += WORDS_PER_LEVEL;

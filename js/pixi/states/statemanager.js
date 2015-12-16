@@ -16,6 +16,8 @@ function StateManager() {
     this.wordLevel = 1;
     this.addedLevel = false;
     this.gameOver = false;
+    this.oldArea = $('#old_area');
+    this.newArea = $('#new_area');
 }
 
 StateManager.prototype.doState = function() {
@@ -62,4 +64,27 @@ StateManager.prototype.initializeStates = function(stage, renderer, startingStat
     this.states[TUTORIAL] = new Tutorial(stage, renderer, this);
     
     this.state = startingState;
+}
+
+
+
+StateManager.prototype.addActiveWordsToArea = function() {
+    this.oldArea.html("");
+    for(var i = 0; i < this.activeKnownWords.length; i++) {
+        this.oldArea.append("<div class='col_3'>" + this.activeKnownWords[i]['word'][this.lang1] + "</div>");
+    }
+    for(var i = 0; i < $('#old_area div.col_3').length; i+=4) {
+        $('#old_area div.col_3').slice(i, i+4).wrapAll("<div class='row'></div>");    
+    }
+}
+
+StateManager.prototype.clearNewWords = function() {
+    this.newArea.html("");
+}
+
+StateManager.prototype.addNewWordsToArea = function() {
+    this.clearNewWords();
+    for(var i = 0; i < this.levels[this.level].length; i++) {
+        this.newArea.append(this.levels[this.level][i]['word'][this.lang1] + " ");
+    }
 }

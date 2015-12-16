@@ -1,6 +1,7 @@
 const ENEMY_LINE_COLOR = 0x000000;
 const ENEMY_LINE_WIDTH = 2;
 const ENEMY_SPEED = 1;
+const ENEMY_DEATH_SPEED = 24;
 
 function Enemy(drawingStage, renderer, turret, speedMultiplier, word) {
     this.drawingStage = drawingStage;
@@ -9,6 +10,7 @@ function Enemy(drawingStage, renderer, turret, speedMultiplier, word) {
     this.word = word;
     this.turret = turret;
     this.laser = null;
+    this.dying = false;
     this.killed = false;
     this.showWord = false;
     this.laserFired = false;
@@ -79,6 +81,7 @@ Enemy.prototype.reset = function() {
         this.removeFromStage();
         this.destroyGraphics();
     }
+    this.dying = false;
     this.killed = false;
     this.showWord = false;
     this.laserFired = false;
@@ -87,37 +90,64 @@ Enemy.prototype.reset = function() {
     this.initialize();
 }
 
+Enemy.prototype.drawNotDying = function() {
+    this.drawingStage.addChild(this.text);
+    if(this.showWord) {
+        this.drawingStage.addChild(this.correctWord);
+    }
+    if(this.laser != null) {
+        this.laser.draw();
+    }
+}
+
 Enemy.prototype.draw = function() {
     if(!this.killed) {
         this.drawingStage.addChild(this.enemyCircle);
-        this.drawingStage.addChild(this.text);
-        if(this.showWord) {
-            this.drawingStage.addChild(this.correctWord);
-        }
-        if(this.laser != null) {
-            this.laser.draw();
+        if(!this.dying) {
+            this.drawNotDying();
         }
     }
 };
 
-Enemy.prototype.removeFromStage = function() {
+Enemy.prototype.removeEnemyCircleFromStage = function() {
     this.drawingStage.removeChild(this.enemyCircle);
+}
+
+Enemy.prototype.removeFromStage = function() {
+    this.removeTextAndLaserFromStage();
+    this.removeEnemyCircleFromStage();
+}
+
+Enemy.prototype.destroyEnemyCircleGraphics = function() {
+    this.enemyCircle.destroy();
+}
+
+Enemy.prototype.destroyGraphics = function() {
+    this.destroyEnemyCircleGraphics();
+    this.removeTextAndLaserFromStage();
+}
+
+Enemy.prototype.removeTextAndLaserFromStage = function() {
     this.drawingStage.removeChild(this.text);
     if(this.laser != null) { this.drawingStage.removeChild(this.laser.laser); }
     this.drawingStage.removeChild(this.correctWord);
 }
 
-Enemy.prototype.destroyGraphics = function() {
+Enemy.prototype.destroyTextAndLaserGraphics = function() {
     if(this.laser != null) { this.laser.laser.destroy(); }
-    this.enemyCircle.destroy();
     this.text.destroy();
     this.correctWord.destroy();
 }
 
+Enemy.prototype.calculateRSpeed = function() {
+    this.rSpeed = (this.enemyCircle.graphicsData[0].shape.radius / ENEMY_DEATH_SPEED);
+}
+
 Enemy.prototype.kill = function() {
-    this.removeFromStage();
-    this.destroyGraphics();
-    this.killed = true;
+    this.dying = true;
+    this.removeTextAndLaserFromStage()
+    this.destroyTextAndLaserGraphics();
+    this.calculateRSpeed();
 }
 
 Enemy.prototype.calculateYSpeed = function() {
@@ -130,19 +160,36 @@ Enemy.prototype.calculateYSpeed = function() {
     this.ySpeed = distanceY / turnsToTarget;
 }
 
+Enemy.prototype.updateDying = function() {
+    this.enemyCircle.graphicsData[0].shape.radius -= this.rSpeed;
+    if(this.enemyCircle.graphicsData[0].shape.radius <= 0) {
+        this.killed = true;
+        this.removeEnemyCircleFromStage();
+        this.destroyEnemyCircleGraphics();
+    }
+}
+
+Enemy.prototype.updateNotDying = function() {
+    this.text.x -= (ENEMY_SPEED * this.speedMultiplier);
+    this.correctWord.x -= (ENEMY_SPEED * this.speedMultiplier);
+    this.text.y -= this.ySpeed;
+    this.correctWord.y -= this.ySpeed;
+    if(this.laser != null) {
+        this.laser.update();
+        if(this.detectHit(this.laser.laser)) {
+            this.kill();
+        }
+    }
+}
+
 Enemy.prototype.update = function() {
     if(!this.killed) {
         this.enemyCircle.x -= (ENEMY_SPEED * this.speedMultiplier);
-        this.text.x -= (ENEMY_SPEED * this.speedMultiplier);
-        this.correctWord.x -= (ENEMY_SPEED * this.speedMultiplier);
         this.enemyCircle.y -= this.ySpeed;
-        this.text.y -= this.ySpeed;
-        this.correctWord.y -= this.ySpeed;
-        if(this.laser != null) {
-            this.laser.update();
-            if(this.detectHit(this.laser.laser)) {
-                this.kill();
-            }
+        if(this.dying) {
+            this.updateDying();
+        } else {
+            this.updateNotDying();
         }
     } 
 };

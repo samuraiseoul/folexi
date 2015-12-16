@@ -49,6 +49,8 @@ Win.prototype.win = function() {
     this.addLevelToKnownWords();
     this.incrementWordsRight();
     this.sendWords();
+    this.stateManager.addActiveWordsToArea();
+    this.stateManager.clearNewWords();
     this.stateManager.wavesCompleted++;
     this.stateManager.states[GAME].createWave();
     this.stateManager.state = GAME;

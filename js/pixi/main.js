@@ -65,6 +65,7 @@ $('document').ready(function(){
                 stateManager.states[PAUSE].hide();
                 stateManager.state = GAME;
             } else if(stateManager.state == GAME) {
+                stateManager.states[GAME].hide();
                 stateManager.state = PAUSE;
             }
         }
