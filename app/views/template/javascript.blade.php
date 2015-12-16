@@ -1,6 +1,6 @@
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
-<script type="text/javascript" src="{{URL::asset('js/form_helper.js')}}"></script>
-<script type="text/javascript" src="{{URL::asset('js/jquery.validate.min.js')}}"></script>
+<script type="text/javascript" src="{{URL::asset('js/vendor/form_helper.min.js')}}"></script>
+<script type="text/javascript" src="{{URL::asset('js/vendor/jquery.validate.min.js')}}"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

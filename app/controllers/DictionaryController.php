@@ -168,7 +168,7 @@ class DictionaryController extends Controller{
         for ($i = 0; $i < count($words); $i++) {
             try {
                 $user_word = UserWord::where("user_id", "=", Auth::user()->id)
-                ->where('lang1', "=", $lang1)->where('lang2', "=", $lang2)->where("word_id", "=", $words[$i]['id'])->first();
+                ->where('lang1', "=", $lang1)->where('lang2', "=", $lang2)->where("word_id", "=", $words[$i]['word']['id'])->first();
                 if ($user_word != null) {
                     $user_word['right'] = $words[$i]['right'];
                     $user_word->save();
@@ -177,33 +177,34 @@ class DictionaryController extends Controller{
                     $user_word->user_id = Auth::user()->id;
                     $user_word->lang1 = $lang1;
                     $user_word->lang2 = $lang2;
-                    $user_word->word_id = $words[$i]['id'];
+                    $user_word->word_id = $words[$i]['word']['id'];
                     $user_word->right = $words[$i]['right'];
                     $user_word->save();
                 }
             } catch (Exception $e) {
+                error_log(print_r($e, true));
                 return Response::json(array('status' => "FAIL", "msg" => "Failed to update the database!"));
             }
         }
         return Response::json(array('status' => "OK", "msg" => "All good! Saved to DB!"));
     }
     
-    private function wordsToCookie($lang1, $lang2, $words) {
-        //can only track one language at a time if not logged in
-        if (Cookie::has('lang1') && Cookie::has('lang2')) {
-            $cookieLang1 = Cookie::get('lang1');
-            $cookieLang2 = Cookie::get('lang2');
-            if ($cookieLang1 != $lang1 || $cookieLang2 != $lang2) {
-                Cookie::forget('knownWords');
-            }
-        }
-        //save to cookie
-        $wordCook = Cookie::forever('knownWords', serialize($words));
-        $langCook1 = Cookie::forever('lang1', $lang1);
-        $langCook2 = Cookie::forever('lang2', $lang2);
-        return Response::json(array('status' => "OK", "msg" => "Info stored in cookie!"))
-                        ->withCookie($wordCook)->withCookie($langCook1)->withCookie($langCook2);
-    }
+    // private function wordsToCookie($lang1, $lang2, $words) {
+    //     //can only track one language at a time if not logged in
+    //     if (Cookie::has('lang1') && Cookie::has('lang2')) {
+    //         $cookieLang1 = Cookie::get('lang1');
+    //         $cookieLang2 = Cookie::get('lang2');
+    //         if ($cookieLang1 != $lang1 || $cookieLang2 != $lang2) {
+    //             Cookie::forget('knownWords');
+    //         }
+    //     }
+    //     //save to cookie
+    //     $wordCook = Cookie::forever('knownWords', serialize($words));
+    //     $langCook1 = Cookie::forever('lang1', $lang1);
+    //     $langCook2 = Cookie::forever('lang2', $lang2);
+    //     return Response::json(array('status' => "OK", "msg" => "Info stored in cookie!"))
+    //                     ->withCookie($wordCook)->withCookie($langCook1)->withCookie($langCook2);
+    // }
     
     public function postAddWords(){
         $lang1 = Input::get('lang1');
@@ -212,9 +213,10 @@ class DictionaryController extends Controller{
         
         if (Auth::check()) {
             return $this->wordsToUserWords($lang1, $lang2, $words);
-        } else {
-            return $this->wordsToCookie($lang1, $lang2, $words);
         }
+        // else {
+        //     return $this->wordsToCookie($lang1, $lang2, $words);
+        // }
     }
     
     private function retrieveUserWords($lang1, $lang2) {
@@ -230,33 +232,34 @@ class DictionaryController extends Controller{
         return Response::json(array('status' => "OK", "data" => $words));
     }
     
-    private function retrieveWordsFromCookie($lang1, $lang2) {
-        $words = array();
-        if (Cookie::has('lang1') && Cookie::has('lang2')) { // sees if langauge changed, if so, reset cookies
-            $langCook1 = Cookie::get('lang1');
-            $langCook2 = Cookie::get('lang2');
-            if ($langCook1 != $lang1 || $lang2 != $langCook2) {
-                return Response::json(array('status' => "OK",
-                            "msg" => "Not logged in! Cookie info attached.",
-                            "data" => $words))->withCookie(Cookie::forget('knownWords'));
-            }
-        }
-        if (Cookie::has('knownWords')) {
-            $words = unserialize(Cookie::get('knownWords'));
-        }
-        return Response::json(array('status' => "OK",
-                    "msg" => "Not logged in! Cookie info attached.",
-                    "data" => $words));
-    }
+    // private function retrieveWordsFromCookie($lang1, $lang2) {
+    //     $words = array();
+    //     if (Cookie::has('lang1') && Cookie::has('lang2')) { // sees if langauge changed, if so, reset cookies
+    //         $langCook1 = Cookie::get('lang1');
+    //         $langCook2 = Cookie::get('lang2');
+    //         if ($langCook1 != $lang1 || $lang2 != $langCook2) {
+    //             return Response::json(array('status' => "OK",
+    //                         "msg" => "Not logged in! Cookie info attached.",
+    //                         "data" => $words))->withCookie(Cookie::forget('knownWords'));
+    //         }
+    //     }
+    //     if (Cookie::has('knownWords')) {
+    //         $words = unserialize(Cookie::get('knownWords'));
+    //     }
+    //     return Response::json(array('status' => "OK",
+    //                 "msg" => "Not logged in! Cookie info attached.",
+    //                 "data" => $words));
+    // }
     
     public function postGetKnownWords(){
         $lang1 = Input::get('lang1');
         $lang2 = Input::get('lang2');
         if (Auth::check()) {
-            $this->retrieveUserWords($lang1, $lang2);
-        } else {
-            $this->retrieveWordsFromCookie($lang1, $lang2);
-        }
+            return $this->retrieveUserWords($lang1, $lang2);
+        } 
+        // else {
+        //     return $this->retrieveWordsFromCookie($lang1, $lang2);
+        // }
     }
     
     public function postGet(){
@@ -266,17 +269,12 @@ class DictionaryController extends Controller{
         $lang1 = Input::get('lang1');
         $lang2 = Input::get('lang2');
         $level = Input::get('level');
-        $words = Word::where('diff_lvl', $level)->with('synonyms')->get();
+        $words = Word::where('diff_lvl', $level)->get();
         $dic = array();
         foreach($words as $key){
-            $synonyms = array();
-            $tmp = $key['synonyms'];
-            for($i = 0 ; $i < count($tmp); $i++){
-                array_push($synonyms, $tmp[$i]['word'][$lang1]);
-            }
-            array_push($dic, array("lang1" => $key[$lang1], "lang2" => $key[$lang2], "id" => $key['id'], "right" => 0, "synonyms" => $synonyms));
+            array_push($dic, array("lang1" => $lang1, "lang2" => $lang2, "word" => $key->toArray()));
         }
-        return Response::json(array("status" => "OK", "data" => array("dic" => $dic, "lang" => $lang2)));
+        return Response::json(array("status" => "OK", "data" => array("dic" => $dic)));
     }
 }
 
