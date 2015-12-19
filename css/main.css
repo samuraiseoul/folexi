@@ -134,6 +134,16 @@ article .about_container p{
     padding: 1em;
 }
 
+/* 404 PAGE */
+.error_page .text_container{    
+    font-family: Arial Black, Helvetica, Verdana, sans-serif;
+    margin: auto;
+    border-radius: 15px;
+    border: solid;
+    padding: .5em;
+    text-align: center;
+}
+
 /* ADMIN */
 
 
@@ -225,216 +235,7 @@ article .about_container p{
     GAME AND INDEX CSS 
     TO BE REDONE NEXT RELEASE    
 */
-.game_container{
-    display: block;
-    width: 100%;
-}
-#game{
-    border : black;
-    border-style: solid;
-    width: 100%;
-    float: left;
-}
-.round_solid{
-    border: solid;
-    border-radius: 15px;
-}
-.menu{
-    width: 100%;
-    position: absolute;
-    background-color: white;
-    z-index: 10;
-    opacity: 1; 
-    margin-left: 3px;
-    margin-top: 28px;
-}
-.menu .center{
-    border : black;
-    border-style: solid;
-    border-radius: 10px;
-    width: auto;
-    height: auto;
-    position: absolute;
-    left: 31%;
-    top: 31%;
-    padding: 1em;
-    float: left;
-}
-.menu .center .lang{
-    font-family: Arial Black, Helvetica, Verdana, sans-serif;
-    padding-bottom: .5em;
-}
-.menu .center .lang select{
-    border-radius: 3px;
-    font-family: Arial Black, Helvetica, Verdana, sans-serif;
-    font-size: 1.5em;
-    height: 1.6em;
-    width: 5.5em;
-}
-.menu .button{
-    font-size: 40px;
-        
-}
-.wrapper-game-index .left{
-    float: left;
-    width: 80%;
-}
-.wrapper-game-index.right{
-    float: left;
-    width: 18%;
-    font-family: Arial Black, Helvetica, Verdana, sans-serif;
-    margin-left: 2%;
-}
-.input_area{
-    float: left;
-    height: 25px;
-    width: 325px;
-    font-family: Arial Black, Helvetica, Verdana, sans-serif;
-}
-.ui_top{
-    width: 100%;
-    height: 25px;
-    float: left;
-}
-.input_area .label{
-    float: left;
-    margin-bottom: 50%;
-    font-family: Arial Black, Helvetica, Verdana, sans-serif;
-}
-#defense-code{
-    margin-left: .5em;
-    float: left;
-    resize: none;
-    border-radius: 5px;
-}
-.word_area{
-    margin-left: 6px;
-    height: 25px;
-    float: right;
-}
-.word_area .label{
-    float: left;
-    margin-bottom: 50%;    
-    font-family: Arial Black, Helvetica, Verdana, sans-serif;
-}
-.new_word_list{
-    margin-left: .5em;
-    float: left;
-    height: 25px;
-    font-family: Arial Black, Helvetica, Verdana, sans-serif;
-}
-.old_word_list{
-    float: left;
-    width: 100%;
-    margin-left: .5em;
-}
-.old_word_list .ghost{
-    float: left;
-    height: 1px;
-    width: 15%;
-}
-.old_word_list .label{
-    margin: 1.5em auto 0;
-    margin-left: auto;
-    border-bottom: solid;
-    border-radius: 5px;
-    float: left;
-    width: 70%;
-    text-align: center;
-}
-.right .cols{
-    width: 100%;
-    float: left;
-    margin: .5em 0 0;
-}
-.right .cols .word_col{
-    width: 45%;
-    margin: 0 2.5%;
-    float: left;
-    text-align: center;
-}
-.tutorial{
-    margin-top: 10%;
-    height: 330px;
-    width: 90%;
-    margin-left: 05%;
-    height: auto;
-    float: left;    
-}
-.tutorial .exit{
-    text-align: right;
-    margin-right: .5em;
-}
 
-.menu{
-    width: 100%;
-    position: absolute;
-    background-color: white;
-    z-index: 10;
-    opacity: 1; 
-    margin-left: 3px;
-    margin-top: 28px;
-}
-.menu #pausemenu .center{
-    border : black;
-    border-style: solid;
-    border-radius: 10px;
-    width: auto;
-    height: auto;
-    position: absolute;
-    left: 28%;
-    top: 30%;
-    padding: 1em;
-    float: left;
-}
-.menu #lose_menu .text{
-    position: absolute;
-    text-align: center;
-    font-family: Arial Black, Helvetica, Verdana, sans-serif;
-    font-size: 2.5em;
-    top: 15%;
-    left: 35.5%;
-    float: left;
-    height: 1.5em;
-    width: auto;
-}
-.menu #lose_menu .center{
-    border : black;
-    border-style: solid;
-    border-radius: 10px;
-    width: auto;
-    height: auto;
-    position: absolute;
-    left: 25%;
-    top: 30%;
-    padding: 1em;
-    float: left;
-}
-.menu .button{
-    font-size: 40px;        
-}
-
-.index_error{
-    width: 100%;
-    float: left;
-}
-.word_list{
-    width: 100%;
-    height: auto;
-    float: left;
-}
-.word_list .entry{
-    width: 33.3%;
-    float: left;
-    height: auto;
-    
-}
-#life-area{
-    margin: 20px 0 0 5px;
-}
-.tag{
-    width: 300px;
-}
 .showcase{
     margin-left: 35px;
     position: relative;
@@ -459,11 +260,4 @@ article .about_container p{
 .wrapper-game-index{
     width: 100%;
     min-height : 500px;
-}
-.content{
-    font-family:  Arial Black, Helvetica, Verdana, sans-serif;
-    text-align: center;
-    margin: 1em auto 0;
-    width: 80%;
-    min-height: 500px;
 }
