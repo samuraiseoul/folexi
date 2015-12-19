@@ -9,7 +9,9 @@ array(
  "es" => "Spanish",
  "fr" => "French",
  "de" => "German",
- "ar" => "Arabic"
+ "ar" => "Arabic",
+ "hi" => "Hindi",
+ "ne" => "Nepali"
  ),
 null,
 array( 'id' => $lang)
