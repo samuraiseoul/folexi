@@ -80,7 +80,7 @@ Game.prototype.checkForWin = function() {
 Game.prototype.checkWordCorrect = function() {
     for(var i = 0; i < this.stateManager.wave.length; i++) {
         //laserFired check must come first to short circuit
-        if(!this.stateManager.wave[i].laserFired && this.stateManager.wave[i].wordMatch(this.typingArea.val())) {
+        if(!this.stateManager.wave[i].laserFired && this.stateManager.wave[i].wordMatch(this.typingArea.val().trim())) {
             this.typingArea.val("");
             return;
         }
