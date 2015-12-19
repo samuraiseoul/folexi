@@ -134,6 +134,16 @@ article .about_container p{
     padding: 1em;
 }
 
+/* 404 PAGE */
+.error_page .text_container{    
+    font-family: Arial Black, Helvetica, Verdana, sans-serif;
+    margin: auto;
+    border-radius: 15px;
+    border: solid;
+    padding: .5em;
+    text-align: center;
+}
+
 /* ADMIN */
 
 
