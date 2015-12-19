@@ -27,7 +27,9 @@ const LANGUAGE_OPTIONS = {
         'es' : 'Spanish',
         'fr' : 'French',
         'de' : 'German',
-        'ar' : 'Arabic'
+        'ar' : 'Arabic',
+        'hi' : 'Hindi',
+        'ne' : 'Nepali'
     };
 const LEVEL_OPTIONS = {
         '1' : 'One',
