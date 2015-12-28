@@ -34,10 +34,23 @@
             resize: none;
             text-align: center;
         }
+        .login_msg {
+            background-color: #ff5112;
+            padding: 2em 0;
+        }
     </style>
 @stop
 
 @section('content')
+    @if(!Auth::check())
+    <div class="row">
+        <div class="offset col_1"></div>
+        <div class="offset col_10 login_msg no_margin">
+            REMEMBER TO LOGIN TO SAVE PROGRESS!
+        </div>
+        <div class="offset col_1"></div>
+    </div>
+    @endif
     <div class="row">
         <div class="offset col_1"></div>
         <div class="offset col_10">

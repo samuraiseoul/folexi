@@ -53,7 +53,7 @@ class UserController extends Controller{
         $user = $user->save();
 		
         if ($user) {
-            return $this->login($email, $password, true);
+            return $this->login($email, $password);
         } else {
             return Response::json(array('user' => $user));
         }
@@ -70,44 +70,9 @@ class UserController extends Controller{
         return $this->login($email, $password);
     }
     
-    private function addCookiesToDb() {
-        if(Cookie::has('knownWords')){
-            $words = unserialize(Cookie::get('knownWords'));
-            $lang1 = Cookie::get('lang1');
-            $lang2 = Cookie::geT('lang2');
-            for ($i = 0; $i < count($words); $i++) {
-                try {
-                    $user_word = UserWord::where("user_id", "=", Auth::user()->id)
-                                    ->where("lang1", "=", $lang1)
-                                    ->where("lang2", "=", $lang2)
-                                    ->where("word_id", "=", $words[$i]['id'])->first();
-                    if ($user_word != null) {
-                        $user_word['right'] = $words[$i]['right'];
-                        $user_word->save();
-                    } else {
-                        $user_word = new UserWord();
-                        $user_word->user_id = Auth::user()->id;
-                        $user_word->lang1 = $lang1;
-                        $user_word->lang2 = $lang2;
-                        $user_word->word_id = $words[$i]['id'];
-                        $user_word->right = $words[$i]['right'];
-                        $user_word->save();
-                    }
-                } catch (Exception $e) {
-                    return Response::json(array('status' => "FAIL",
-                                "msg" => "Failed to update the database!"));
-                }
-            }
-        }
-        return Response::json(array('status' => 'OK'));
-    }
-    
-    private function login($email, $password, $register = false) {
+    private function login($email, $password) {
         $credentials = array('email' => $email, 'password' => $password);
         if (Auth::attempt($credentials)) {
-            if($register){
-                // return $this->addCookiesToDb();
-            }
             return Response::json(array('status' => 'OK'));
         } else {
             return Response::json(array('status' => 'FAIL'));
