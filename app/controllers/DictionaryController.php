@@ -221,7 +221,7 @@ class DictionaryController extends Controller{
     
     private function retrieveUserWords($lang1, $lang2) {
         try {
-            $words = UserWord::where("user_id", Auth::user()->id)->where("lang1", $lang1)->where("lang2", $lang2)->get();
+            $words = UserWord::where("user_id", Auth::user()->id)->where("lang1", $lang1)->where("lang2", $lang2)->orderBy("id", "asc")->get();
 			$words = $words->toArray();
 			foreach ($words as $num => $word) { //get actual word with known words
 				$words[$num]['word'] = Word::find($words[$num]['word_id'])->toArray();				
@@ -269,7 +269,7 @@ class DictionaryController extends Controller{
         $lang1 = Input::get('lang1');
         $lang2 = Input::get('lang2');
         $level = Input::get('level');
-        $words = Word::where('diff_lvl', $level)->get();
+        $words = Word::where('diff_lvl', $level)->orderBy("id", "asc")->get();
         $dic = array();
         foreach($words as $key){
             array_push($dic, array("lang1" => $lang1, "lang2" => $lang2, "word" => $key->toArray()));
