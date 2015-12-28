@@ -1,53 +1,13 @@
-/*
-body{
-    width: 100%;
-    margin: 0;    
-    float: left;
-    font-weight: 900;
-}
-div{
-    margin: 0;
-    padding: 0;
-}
-.error{
-    color : red;
-    font-size: 1em;
-}
-.left{
-    float:left;
-    text-align: left;
-}
-a{
-    margin: 0;
-}
-.clickable{
-    cursor: pointer;
-}
-
-
-
-.wrapper{
-    width: 100%;
-    min-height : 500px;
-}
-.content{
-    font-family:  Arial Black, Helvetica, Verdana, sans-serif;
-    text-align: center;
-    margin: 1em auto 0;
-    width: 80%;
-    min-height: 500px;
-}
-
-
-
-*/
-
 /* GLOBAL */
 #content{
     /*Ensure footer stays bottom*/
     min-height: 750px;
     font-family:  Arial Black, Helvetica, Verdana, sans-serif;
     text-align: center;
+}
+
+.no_margin{
+    margin: 0 !important;
 }
 
 /* HEADER */
@@ -232,9 +192,20 @@ article .about_container p{
 }
 
 /* 
-    GAME AND INDEX CSS 
-    TO BE REDONE NEXT RELEASE    
+    GAME AND INDEX CSS  
 */
+#game-canvas{
+    width:100%;
+    border: solid;
+}
+textarea {
+    resize: none;
+    text-align: center;
+}
+.login_msg {
+    background-color: #ff5112;
+    padding: 2em 0;
+}
 
 .showcase{
     margin-left: 35px;
