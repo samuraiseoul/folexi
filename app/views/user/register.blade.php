@@ -163,7 +163,7 @@
                     {{ Form::Label('last', 'LAST NAME') }}
                 </div>
                 <div class="col_6">
-                    {{ Form::text('last') }}
+                    {{ Form::text('first') }}
                 </div>
                 <!--<div class="offset col_1 last"></div>-->
             </div>

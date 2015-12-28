@@ -106,7 +106,7 @@ class UserController extends Controller{
         $credentials = array('email' => $email, 'password' => $password);
         if (Auth::attempt($credentials)) {
             if($register){
-                return $this->addCookiesToDb();
+                // return $this->addCookiesToDb();
             }
             return Response::json(array('status' => 'OK'));
         } else {
