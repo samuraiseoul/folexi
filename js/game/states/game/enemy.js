@@ -43,6 +43,7 @@ Enemy.prototype.wordMatch = function(word) {
     if(word.toUpperCase() == this.word['word'][this.word['lang1']].toUpperCase()) {
         this.laser = new Laser(this.drawingStage, this.renderer, this.turret);
         this.laser.calculateYSpeed(this);
+        this.turret.pulse();
         this.laserFired = true;
         return true;
     }

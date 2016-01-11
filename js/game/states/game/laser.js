@@ -13,7 +13,7 @@ function Laser(drawingStage, renderer, turret){
 Laser.prototype.initializeLaser = function() {
     this.laser = new PIXI.Graphics();
     this.laser.beginFill(LASER_COLOR); 
-    this.laser.drawCircle(this.turret.x, this.turret.y, LASER_SIZE); // drawCircle(x, y, radius)
+    this.laser.drawCircle(this.turret.x + this.turret.maximumRadius, this.turret.y, LASER_SIZE); // drawCircle(x, y, radius)
     this.laser.endFill();    
 };
 
@@ -25,12 +25,16 @@ Laser.prototype.calculateYSpeed = function(enemy) {
 }
 
 Laser.prototype.update = function() {
-    this.laser.x += LASER_SPEED;
-    this.laser.y += this.ySpeed;
+    if(!this.turret.isPulsing) {
+        this.laser.x += LASER_SPEED;
+        this.laser.y += this.ySpeed;
+    }
 }
 
 Laser.prototype.draw = function() {
-    this.drawingStage.addChild(this.laser);  
+    if(!this.turret.isPulsing) {
+        this.drawingStage.addChild(this.laser);  
+    }
 };
 
 Laser.prototype.hide = function() {
