@@ -35,7 +35,7 @@ Win.prototype.sendWords = function() {
     $.ajax({
         type: "POST",
         url: PUBLIC_URL + 'dic/add-words',
-        data: {lang1: this.stateManagerlang1,
+        data: {lang1: this.stateManager.lang1,
             lang2: this.stateManager.lang2,
             words: this.stateManager.activeKnownWords},
         success: function(json) {
