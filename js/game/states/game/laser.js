@@ -1,5 +1,5 @@
 const LASER_SPEED = 7.5;
-const LASER_COLOR = 0xFF0000;
+const LASER_COLOR = 0X0040ff;
 const LASER_SIZE = 10;
 
 function Laser(drawingStage, renderer, turret){
@@ -13,7 +13,7 @@ function Laser(drawingStage, renderer, turret){
 Laser.prototype.initializeLaser = function() {
     this.laser = new PIXI.Graphics();
     this.laser.beginFill(LASER_COLOR); 
-    this.laser.drawCircle(this.turret.x + this.turret.maximumRadius, this.turret.y, LASER_SIZE); // drawCircle(x, y, radius)
+    this.laser.drawCircle((this.turret.x + this.turret.maximumRadius - (LASER_SIZE / 2)), this.turret.y, LASER_SIZE); // drawCircle(x, y, radius)
     this.laser.endFill();    
 };
 

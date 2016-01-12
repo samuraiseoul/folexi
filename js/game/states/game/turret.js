@@ -1,4 +1,5 @@
 const TURRET_LINE_COLOR = 0x000000;
+const PULSING_TURRET_LINE_COLOR = 0x0040FF;
 const TURRET_FILL_COLOR = 0xFFFFFF;
 const TURRET_LINE_WIDTH = 2;
 const TURRET_WIDTH_MODIFIER = 0.05;
@@ -25,6 +26,15 @@ Turret.prototype.inializeTurretBase = function() {
     this.turretBase.endFill();    
 };
 
+
+Turret.prototype.inializePulsingTurretBase = function() {
+    this.turretBase = new PIXI.Graphics();
+    this.turretBase.lineStyle(TURRET_LINE_WIDTH, PULSING_TURRET_LINE_COLOR); //has to come before fill
+    this.turretBase.beginFill(TURRET_FILL_COLOR); 
+    this.turretBase.drawCircle(this.x, this.y, this.radius); // drawCircle(x, y, radius)
+    this.turretBase.endFill();    
+};
+
 Turret.prototype.initializeTurret = function() {
     this.inializeTurretBase();
     this.initializePulseData();
@@ -45,6 +55,8 @@ Turret.prototype.hide = function() {
 
 Turret.prototype.pulse = function() {
     this.isPulsing = true;
+    this.drawingStage.removeChild(this.turretBase);
+    this.inializePulsingTurretBase();
 };
 
 Turret.prototype.update = function() {
@@ -59,6 +71,8 @@ Turret.prototype.update = function() {
       this.turretBase.graphicsData[0].shape.radius -= this.rSpeed;
       if(this.turretBase.graphicsData[0].shape.radius <= this.radius) {
           this.isDonePulsing = false;
+          this.drawingStage.removeChild(this.turretBase);
+          this.inializeTurretBase();
       }
   }
 };
