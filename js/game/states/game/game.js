@@ -32,6 +32,7 @@ Game.prototype.focusOnTypingArea = function() {
     
 Game.prototype.updateGame = function() {
     this.updateEnemies();
+    this.turret.update();
     this.checkWordCorrect();
     this.checkForLoss();
     this.checkForWin();
