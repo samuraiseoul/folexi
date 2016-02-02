@@ -33,6 +33,7 @@
             @endif
             <a href="{{URL::to('info/faq')}}">FAQ</a> 
             <a href="{{URL::to('info/about')}}">ABOUT</a>
+            <a href="{{URL::to('info/explanation')}}">EXPLANATION</a>
             @if(Auth::check())
                 <span id='logout' class='clickable'>LOGOUT</span>
             @endif
