@@ -53,15 +53,15 @@ StateManager.prototype.doState = function() {
     }
 }
 
-StateManager.prototype.initializeStates = function(stage, renderer, startingState) {
-    this.states[START_MENU] = new StartMenu(stage, renderer, this);
-    this.states[INITIALIZE] = new Initialize(stage, renderer, this);
-    this.states[GAME] = new Game(stage, renderer, this);
+StateManager.prototype.initializeStates = function(canvas, startingState) {
+    this.states[START_MENU] = new StartMenu(canvas, this);
+    this.states[INITIALIZE] = new Initialize(canvas, this);
+    this.states[GAME] = new Game(canvas, this);
     this.states[WIN] = new Win(this);
     this.states[LOSE] = new Lose(this);
-    this.states[GAME_OVER] = new GameOver(stage, renderer, this);
-    this.states[PAUSE] = new Pause(stage, renderer, this);
-    this.states[TUTORIAL] = new Tutorial(stage, renderer, this);
+    this.states[GAME_OVER] = new GameOver(canvas, this);
+    this.states[PAUSE] = new Pause(canvas, this);
+    this.states[TUTORIAL] = new Tutorial(canvas, this);
     
     this.state = startingState;
 }

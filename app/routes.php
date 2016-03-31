@@ -100,3 +100,5 @@ Route::any('/info/{action}', function($action){
             App::abort(404, 'Page not found');
         }
 });
+
+Route::get('fabric', function(){return View::make('game.fabric');});

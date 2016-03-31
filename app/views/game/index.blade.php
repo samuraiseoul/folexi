@@ -7,8 +7,7 @@
         const PUBLIC_URL = "{{URL::to('')}}" + "/";
     </script>
     
-    <script type="text/javascript" src="{{URL::asset('js/game/pixi.min.js')}}"></script>
-    <script type="text/javascript" src="{{URL::asset('js/game/pixi-cocoontext.js')}}"></script>
+    <script type="text/javascript" src="{{URL::asset('js/game/fabric.min.js')}}"></script>
     <script type="text/javascript" src="{{URL::asset('js/game/states/startmenu/startmenu.js')}}"></script>
     <script type="text/javascript" src="{{URL::asset('js/game/states/startmenu/select.js')}}"></script>
     <script type="text/javascript" src="{{URL::asset('js/game/states/initialize/initialize.js')}}"></script>

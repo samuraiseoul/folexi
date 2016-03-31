@@ -3,9 +3,8 @@ const ENEMY_LINE_WIDTH = 2;
 const ENEMY_SPEED = 1;
 const ENEMY_DEATH_SPEED = 24;
 
-function Enemy(drawingStage, renderer, turret, speedMultiplier, word) {
-    this.drawingStage = drawingStage;
-    this.renderer = renderer;
+function Enemy(canvas, turret, speedMultiplier, word) {
+    this.canvas = canvas
     this.speedMultiplier = speedMultiplier;
     this.word = word;
     this.turret = turret;
@@ -51,23 +50,45 @@ Enemy.prototype.wordMatch = function(word) {
 }
 
 Enemy.prototype.initializeEnemyCircle = function() {
-    this.enemyCircle = new PIXI.Graphics();
-    this.enemyCircle.lineStyle(ENEMY_LINE_WIDTH, ENEMY_LINE_COLOR); //has to come before fill
-    this.enemyCircle.drawCircle(this.x, this.y, this.radius); // drawCircle(x, y, radius)
-    this.enemyCircle.endFill();    
+    this.enemyCircle = new fabric.Circle({
+        radius: this.radius,
+        top: this.y,
+        left: this.x,
+        originX: 'center',
+        originY: "center",
+        stroke: ENEMY_LINE_COLOR,
+        strokeWidth: ENEMY_LINE_WIDTH,
+        selectable: false 
+    });
 };
 
 Enemy.prototype.initializeEnemyText = function() {
-    this.text = new PIXI.Text(this.word['word'][this.word['lang2']]);
     this.calculateCoordinates();
-    this.text.x = this.x - (this.text.getBounds()['width'] / 2);
-    this.text.y = this.y - (this.text.getBounds()['height'] / 2);
+    this.text = new fabric.Text(this.word['word'][this.word['lang2']] ,{
+        left: this.x,
+        top: this.y,
+        originX: 'center', 
+        originY: 'center',
+        selectable: false,
+        fontFamily: 'Ariel Black sans-serif',
+        fontSize: '20px',
+        fontWeight: 'bold',
+        parentContext: this
+    });
 };
 
 Enemy.prototype.initializeCorrectWord = function() {
-    this.correctWord = new PIXI.Text(this.word['word'][this.word['lang1']], {font : "14px"});
-    this.correctWord.x = this.x - (this.correctWord.getBounds()['width'] / 2);
-    this.correctWord.y = this.y - (this.text.getBounds()['height'] / 2) + this.text.getBounds()['height'];
+    this.correctWord = new fabric.Text(this.word['word'][this.word['lang1']] ,{
+        left: this.x,
+        top: (this.y - (this.text.getBoundingRectHeight() / 2) + this.text.getBoundingRectHeight()),
+        originX: 'center', 
+        originY: 'center',
+        selectable: false,
+        fontFamily: 'Ariel Black sans-serif',
+        fontSize: '14px',
+        fontWeight: 'bold',
+        parentContext: this
+    });
 };
 
 Enemy.prototype.initialize = function() {

@@ -2,19 +2,23 @@ const LASER_SPEED = 7.5;
 const LASER_COLOR = 0X0040ff;
 const LASER_SIZE = 10;
 
-function Laser(drawingStage, renderer, turret){
-    this.drawingStage = drawingStage;
-    this.renderer = renderer;
+function Laser(canvas, turret){
+    this.canvas = canvas;
     this.turret = turret;
     
     this.initializeLaser();
 };
 
 Laser.prototype.initializeLaser = function() {
-    this.laser = new PIXI.Graphics();
-    this.laser.beginFill(LASER_COLOR); 
-    this.laser.drawCircle((this.turret.x + this.turret.maximumRadius - (LASER_SIZE / 2)), this.turret.y, LASER_SIZE); // drawCircle(x, y, radius)
-    this.laser.endFill();    
+    this.laser = new fabric.Circle({
+                radius: LASER_SIZE,
+                top: this.turret.y,
+                originX: 'center',
+                originY: "center",
+                left: (this.turret.x + this.turret.maximumRadius - (LASER_SIZE / 2)),
+                fill: LASER_COLOR,
+                selectable: false
+    });
 };
 
 Laser.prototype.calculateYSpeed = function(enemy) {

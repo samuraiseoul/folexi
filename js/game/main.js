@@ -23,11 +23,19 @@ const WIN = "win";
 const TUTORIAL = "tutorial";
     
 $('document').ready(function(){
-
     
-    var canvas = $("#game-canvas");
-    var stage = new PIXI.Container();
-    var renderer = null;
+    var canvas = new fabric.Canvas("game-canvas", {
+        width: ($('#game-canvas').width()), 
+        height: ($('#game-canvas').width() * CANVAS_HEIGHT_PERCENTAGE)
+    });
+    
+    //extend fabric.Canvas
+    canvas.removeAll = function() {
+        this.forEachObject(function(obj) {
+			canvas.remove(obj);
+		});
+    }
+    
     var stateManager = new StateManager();
 
     function gameLoop() {
@@ -35,24 +43,8 @@ $('document').ready(function(){
         requestAnimationFrame(gameLoop);
     }
     
-    function initializeGameBoard() {
-        canvas.height(canvas.width() * CANVAS_HEIGHT_PERCENTAGE);
-        renderer = PIXI.autoDetectRenderer(
-            canvas.width(),
-            canvas.height(),
-            {view:document.getElementById("game-canvas")},
-            TRANSPARENT,
-            ANTIALIASING
-        );
-        // initializeLife();
-        
-        renderer.backgroundColor = 0xFFFFFF;
-        renderer.render(stage);
-    }
-    
     function callhook() {
-        initializeGameBoard();
-        stateManager.initializeStates(stage, renderer, START_MENU);
+        stateManager.initializeStates(canvas, START_MENU);
         gameLoop();
     }
     
