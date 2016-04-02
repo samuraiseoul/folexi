@@ -3,37 +3,39 @@ const SELECT_LINE_WIDTH = 2;
 const SELECT_CORNER_ROUNDNESS = 10;
 const SELECT_MENU_FILL_COLOR = 'white';
 
-function Select(canvas, options, parentContainer) {
+function Select(canvas, options, parentContainer, stateManager) {
     this.canvas = canvas;
     this.options = options;
     this.setOptionsSize();
     this.parentContainer = parentContainer;
     this.menuOpened = false;
+    this.stateManager = stateManager;
     
     this.value = "";
 }
 
 Select.prototype.intializeContainer = function(x, y, width, height) {
     this.container = new fabric.Rect({
-                    left: x,
-                    top: y,
-                    width: width,
-                    height: height,
-                    rx: SELECT_CORNER_ROUNDNESS,
-                    ry: SELECT_CORNER_ROUNDNESS,
-                    hasControls: false,
-                    hasBorders: false,
-                    hoverCursor: 'pointer',
-                    lockMovementX: true,
-                    lockMovementY: true,
-                    parentContext: this,
-                    fill: 'white',
-                    strokeWidth: SELECT_LINE_WIDTH,
-                    stroke: SELECT_LINE_COLOR,
-                    parentContext: this
+        left: x,
+        top: y,
+        width: width,
+        height: height,
+        rx: SELECT_CORNER_ROUNDNESS,
+        ry: SELECT_CORNER_ROUNDNESS,
+        hasControls: false,
+        hasBorders: false,
+        hoverCursor: 'pointer',
+        lockMovementX: true,
+        lockMovementY: true,
+        parentContext: this,
+        fill: 'white',
+        strokeWidth: SELECT_LINE_WIDTH,
+        stroke: SELECT_LINE_COLOR,
+        parentContext: this
     });
     
     this.container.on('selected', function(ev) {
+        this.parentContext.stateManager.menuOpened = true;
         this.parentContext.openMenu();
     });
 }
@@ -56,23 +58,24 @@ Select.prototype.initializeText = function(x, y, width, height, startingOption) 
     });
     
     this.text.on('selected', function(ev) {
+        this.parentContext.stateManager.menuOpened = true;
         this.parentContext.openMenu();
     });
 }
 
 Select.prototype.initializeSelectMenu = function() {
     this.selectMenu = new fabric.Rect({
-                  left: this.parentContainer.getLeft(),
-                  top: this.parentContainer.getTop(),
-                  width: this.parentContainer.getWidth(),
-                  height: this.parentContainer.getHeight(),
-                  rx: SELECT_CORNER_ROUNDNESS,
-                  ry: SELECT_CORNER_ROUNDNESS,
-                  fill: 'white',
-                  strokeWidth: SELECT_LINE_WIDTH,
-                  stroke: SELECT_LINE_COLOR,
-                  selectable: false
-                });
+        left: this.parentContainer.getLeft(),
+        top: this.parentContainer.getTop(),
+        width: this.parentContainer.getWidth(),
+        height: this.parentContainer.getHeight(),
+        rx: SELECT_CORNER_ROUNDNESS,
+        ry: SELECT_CORNER_ROUNDNESS,
+        fill: 'white',
+        strokeWidth: SELECT_LINE_WIDTH,
+        stroke: SELECT_LINE_COLOR,
+        selectable: false
+    });
 }
 
 Select.prototype.setOptionsSize = function() {
@@ -91,13 +94,14 @@ Select.prototype.initializeOptionTexts = function() {
     var selectMenuY = this.selectMenu.getTop();
     for(var key in this.options) {
         var tmp = new fabric.Text(this.options[key], {
-            left: (selectMenuWidth * ((i < (this.optionsSize / 2)) ? .25 : .75)) + selectMenuX,
-            top: ((((i < (this.optionsSize / 2)) ? i : (i - (this.optionsSize / 0))) + 1) * (selectMenuHeight / (this.optionsSize / 2))) - (selectMenuHeight / (this.optionsSize)) + selectMenuY,
+            left: ((selectMenuWidth * ((i < (this.optionsSize / 2)) ? .25 : .75)) + selectMenuX),
+            top: ((((i < (this.optionsSize / 2)) ? i : (i - (this.optionsSize / 2))) + 1) * (selectMenuHeight / (this.optionsSize / 2))) 
+            - (selectMenuHeight / (this.optionsSize)) + selectMenuY,
             originX: 'center', 
             originY: 'center',
             selectable: 'false',
             fontFamily: 'Ariel Black, sans-serif',
-            fontSize: '64',
+            fontSize: '40',
             fontWeight: 'bold',
             hasControls: false,
             hasBorders: false,
@@ -110,7 +114,7 @@ Select.prototype.initializeOptionTexts = function() {
         tmp.on('selected', function() {
             this.parentContext.value = this.optionValue;
             this.parentContext.updateSelectText();
-            // this.parentContext.hideMenu();
+            this.parentContext.stateManager.menuOpened = false;
             this.parentContext.menuOpened = false;
         });
         this.optionTexts.push(tmp);
@@ -134,26 +138,14 @@ Select.prototype.openMenu = function() {
     this.menuOpened = true;
 }
 
-// Select.prototype.hideMenu = function() {
-//     this.drawingStage.removeChild(this.selectMenu);
-//     for(var i = 0; i < this.optionTexts.length; i++) {
-//         this.drawingStage.removeChild(this.optionTexts[i]);
-//     }
-// }
-
 Select.prototype.addAllToCanvas = function() {
     if(this.menuOpened) {
         this.canvas.add(this.selectMenu);
         for(var i = 0; i < this.optionTexts.length; i++) {
             this.canvas.add(this.optionTexts[i]);
         }
-    } else {
+    } else if(!this.stateManager.menuOpened){
         this.canvas.add(this.container);
         this.canvas.add(this.text);
     }
 }
-
-// Select.prototype.hide = function() {
-//     this.drawingStage.removeChild(this.container);
-//     this.drawingStage.removeChild(this.text);
-// }

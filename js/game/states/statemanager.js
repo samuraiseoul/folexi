@@ -13,6 +13,7 @@ function StateManager() {
     
     this.lang1 = '';
     this.lang2 = '';
+    this.menuOpened = false;
     this.wordLevel = 1;
     this.addedLevel = false;
     this.gameOver = false;
@@ -30,14 +31,14 @@ StateManager.prototype.doState = function() {
             this.states[INITIALIZE].draw();
             break;
         case GAME:
-            this.states[GAME].updateGame();
-            this.states[GAME].drawGame();
+            this.states[GAME].update();
+            this.states[GAME].draw();
             break;
         case PAUSE:
             this.states[PAUSE].draw();
             break;
         case LOSE:
-            this.states[LOSE].updateLose();
+            this.states[LOSE].update();
             break;
         case GAME_OVER:
             this.states[GAME_OVER].draw();

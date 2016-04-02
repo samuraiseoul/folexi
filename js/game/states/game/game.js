@@ -1,6 +1,5 @@
-function Game(drawingStage, renderer, stateManager) {
-    this.drawingStage = drawingStage;
-    this.renderer = renderer;
+function Game(canvas, stateManager) {
+    this.canvas = canvas;
     this.typingArea = $("#typing-area");
     this.stateManager = stateManager;
     
@@ -14,10 +13,11 @@ function Game(drawingStage, renderer, stateManager) {
 }
 
 Game.prototype.initialize = function() {
-    this.turret = new Turret(this.drawingStage, this.renderer);
+    this.turret = new Turret(this.canvas);
     this.initializeLife();
     this.createWave();
     this.focusOnTypingArea();
+    this.draw();
 }
 
 Game.prototype.focusOnTypingArea = function() {
@@ -30,9 +30,8 @@ Game.prototype.focusOnTypingArea = function() {
     });
 }
     
-Game.prototype.updateGame = function() {
+Game.prototype.update = function() {
     this.updateEnemies();
-    this.turret.update();
     this.checkWordCorrect();
     this.checkForLoss();
     this.checkForWin();
@@ -40,21 +39,21 @@ Game.prototype.updateGame = function() {
     
 Game.prototype.drawEnemies = function() {
     for(var i = 0; i < this.stateManager.wave.length; i++) {
-        this.stateManager.wave[i].draw();
+        this.stateManager.wave[i].addAllToCanvas();
     }
 }
     
 Game.prototype.drawLives = function() {
     for(var i = 0; i < this.life.length; i++) {
-        this.life[i].draw();
+        this.life[i].addToCanvas();
     }
 }
     
-Game.prototype.drawGame = function() {
-    this.turret.draw();
+Game.prototype.draw = function() {
+    this.canvas.removeAll();
+    this.turret.addToCanvas();
     this.drawEnemies();
     this.drawLives();
-    this.renderer.render(this.drawingStage);
 }
     
     
@@ -91,7 +90,7 @@ Game.prototype.checkWordCorrect = function() {
 Game.prototype.initializeLife = function() {
     this.life = [];
     for(var i = 0; i < MAX_LIVES; i++) {
-        this.life.push(new Life(this.drawingStage, this.renderer, i));
+        this.life.push(new Life(this.canvas, i));
     }
 }
     
@@ -102,7 +101,7 @@ Game.prototype.updateEnemies = function() {
 }
 
 Game.prototype.createEnemy = function(word) {
-    return new Enemy(this.drawingStage, this.renderer, this.turret, this.speedMultiplier, word);
+    return new Enemy(this.canvas, this.turret, this.speedMultiplier, word);
 }
     
 Game.prototype.addLevelToWave = function() {
@@ -124,7 +123,7 @@ Game.prototype.addExtraWordsToWave = function() {
 }
     
 Game.prototype.calculateYOffsets = function() {
-    var quadrantHeight = this.renderer.height / NUMBER_OF_QUADRANTS;
+    var quadrantHeight = this.canvas.getHeight() / NUMBER_OF_QUADRANTS;
     var subSectionHeight = quadrantHeight / NUMBER_OF_SUBSECTIONS;
     for(var i = 0; i < this.stateManager.wave.length; i++) {
         var quadrant = Math.floor(Math.random() * NUMBER_OF_QUADRANTS);
@@ -183,6 +182,7 @@ Game.prototype.restartLevel = function() {
         this.stateManager.wave[i].reset();
     }
     this.typingArea.val("");
+    this.draw();
 }
 
 Game.prototype.showWords = function() {

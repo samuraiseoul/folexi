@@ -1,4 +1,4 @@
-const ENEMY_LINE_COLOR = 0x000000;
+const ENEMY_LINE_COLOR = "black";
 const ENEMY_LINE_WIDTH = 2;
 const ENEMY_SPEED = 1;
 const ENEMY_DEATH_SPEED = 24;
@@ -12,38 +12,25 @@ function Enemy(canvas, turret, speedMultiplier, word) {
     this.dying = false;
     this.killed = false;
     this.showWord = false;
-    this.laserFired = false;
 };
 
 Enemy.prototype.detectHit = function(graphic) {
-    var enemyX = this.enemyCircle.graphicsData[0].shape.x + this.enemyCircle.x;
-    var enemyY = this.enemyCircle.graphicsData[0].shape.y + this.enemyCircle.y;
-    var enemyR = this.enemyCircle.graphicsData[0].shape.radius;
-    var graphicX = graphic.graphicsData[0].shape.x + graphic.x;
-    var graphicY = graphic.graphicsData[0].shape.y + graphic.y;
-    var graphicR = graphic.graphicsData[0].shape.radius;
-    
-    // (((x1 - x2) ^ 2) + ((y1 - y2) ^ 2)) <= ((r1 + r2) ^ 2)
-    // MAth.pow() becasue ^ is bitwise only in js
-    if((Math.pow((enemyX - graphicX), 2) + Math.pow((enemyY - graphicY), 2)) < Math.pow((enemyR + graphicR), 2)) {
-        return true
-    }
-    return false;
+    return this.enemyCircle.intersectsWithObject(graphic);
 }
 
 Enemy.prototype.calculateCoordinates = function() {
-    this.radius = this.text.getBounds()['width'];
-    this.x = (this.renderer.width + this.radius) + this.xOffset;
+    this.radius = this.text.getWidth();
+    this.x = (this.canvas.getWidth() + this.radius) + this.xOffset;
     this.y = this.yOffset;
 }
 
 Enemy.prototype.wordMatch = function(word) {
     //toUpper removes case sensitivity
     if(word.toUpperCase() == this.word['word'][this.word['lang1']].toUpperCase()) {
-        this.laser = new Laser(this.drawingStage, this.renderer, this.turret);
+        this.laser = new Laser(this.canvas, this.turret);
         this.laser.calculateYSpeed(this);
-        this.turret.pulse();
-        this.laserFired = true;
+        this.turret.pulse(this.laser);
+        // this.laserFired = true;
         return true;
     }
     return false;
@@ -56,6 +43,7 @@ Enemy.prototype.initializeEnemyCircle = function() {
         left: this.x,
         originX: 'center',
         originY: "center",
+        fill: 'white',
         stroke: ENEMY_LINE_COLOR,
         strokeWidth: ENEMY_LINE_WIDTH,
         selectable: false 
@@ -63,7 +51,6 @@ Enemy.prototype.initializeEnemyCircle = function() {
 };
 
 Enemy.prototype.initializeEnemyText = function() {
-    this.calculateCoordinates();
     this.text = new fabric.Text(this.word['word'][this.word['lang2']] ,{
         left: this.x,
         top: this.y,
@@ -71,21 +58,23 @@ Enemy.prototype.initializeEnemyText = function() {
         originY: 'center',
         selectable: false,
         fontFamily: 'Ariel Black sans-serif',
-        fontSize: '20px',
+        fontSize: '20',
         fontWeight: 'bold',
         parentContext: this
     });
+    this.calculateCoordinates();
+    this.text.set({left: this.x, top: this.y});
 };
 
 Enemy.prototype.initializeCorrectWord = function() {
     this.correctWord = new fabric.Text(this.word['word'][this.word['lang1']] ,{
         left: this.x,
-        top: (this.y - (this.text.getBoundingRectHeight() / 2) + this.text.getBoundingRectHeight()),
+        top: (this.y - (this.text.getHeight() / 2) + this.text.getHeight()),
         originX: 'center', 
         originY: 'center',
         selectable: false,
         fontFamily: 'Ariel Black sans-serif',
-        fontSize: '14px',
+        fontSize: '14',
         fontWeight: 'bold',
         parentContext: this
     });
@@ -99,82 +88,46 @@ Enemy.prototype.initialize = function() {
 };
 
 Enemy.prototype.reset = function() {
-    if(!this.killed){
-        this.removeFromStage();
-        this.destroyGraphics();
-    }
     this.dying = false;
     this.killed = false;
     this.showWord = false;
-    this.laserFired = false;
     this.laser = null;
     //must come at end
     this.initialize();
 }
 
 Enemy.prototype.drawNotDying = function() {
-    this.drawingStage.addChild(this.text);
+    this.canvas.add(this.text);
     if(this.showWord) {
-        this.drawingStage.addChild(this.correctWord);
+        this.canvas.add(this.correctWord);
     }
     if(this.laser != null) {
-        this.laser.draw();
+        this.laser.addToCanvas();
     }
 }
 
-Enemy.prototype.draw = function() {
+Enemy.prototype.addAllToCanvas = function() {
     if(!this.killed) {
-        this.drawingStage.addChild(this.enemyCircle);
+        this.canvas.add(this.enemyCircle);
         if(!this.dying) {
             this.drawNotDying();
         }
     }
 };
 
-Enemy.prototype.removeEnemyCircleFromStage = function() {
-    this.drawingStage.removeChild(this.enemyCircle);
-}
-
-Enemy.prototype.removeFromStage = function() {
-    this.removeTextAndLaserFromStage();
-    this.removeEnemyCircleFromStage();
-}
-
-Enemy.prototype.destroyEnemyCircleGraphics = function() {
-    this.enemyCircle.destroy();
-}
-
-Enemy.prototype.destroyGraphics = function() {
-    this.destroyEnemyCircleGraphics();
-    this.removeTextAndLaserFromStage();
-}
-
-Enemy.prototype.removeTextAndLaserFromStage = function() {
-    this.drawingStage.removeChild(this.text);
-    if(this.laser != null) { this.drawingStage.removeChild(this.laser.laser); }
-    this.drawingStage.removeChild(this.correctWord);
-}
-
-Enemy.prototype.destroyTextAndLaserGraphics = function() {
-    if(this.laser != null) { this.laser.laser.destroy(); }
-    this.text.destroy();
-    this.correctWord.destroy();
-}
-
-Enemy.prototype.calculateRSpeed = function() {
-    this.rSpeed = (this.enemyCircle.graphicsData[0].shape.radius / ENEMY_DEATH_SPEED);
+Enemy.prototype.animateDeath = function() {
+    this.enemyCircle.animate({'radius':0, 'opacity':0}, {onChange: this.canvas.renderAll.bind(this.canvas), duration: 1000, enemy: this, onComplete: function(){this.enemy.killed = true;}});
+    this.text.animate('opacity', '0', {onChange: this.canvas.renderAll.bind(this.canvas), duration: 250});
 }
 
 Enemy.prototype.kill = function() {
-    this.dying = true;
-    this.removeTextAndLaserFromStage()
-    this.destroyTextAndLaserGraphics();
-    this.calculateRSpeed();
+    this.laser = null;
+    this.animateDeath();
 }
 
 Enemy.prototype.calculateYSpeed = function() {
-    var enemyX = this.enemyCircle.graphicsData[0].shape.x + this.enemyCircle.x;
-    var enemyY = this.enemyCircle.graphicsData[0].shape.y + this.enemyCircle.y;
+    var enemyX = this.enemyCircle.getLeft();
+    var enemyY = this.enemyCircle.getTop();
     
     var distanceX = enemyX - this.turret.x;
     var turnsToTarget = distanceX / (ENEMY_SPEED * this.speedMultiplier);
@@ -182,21 +135,14 @@ Enemy.prototype.calculateYSpeed = function() {
     this.ySpeed = distanceY / turnsToTarget;
 }
 
-Enemy.prototype.updateDying = function() {
-    this.enemyCircle.graphicsData[0].shape.radius -= this.rSpeed;
-    if(this.enemyCircle.graphicsData[0].shape.radius <= 0) {
-        this.killed = true;
-        this.removeEnemyCircleFromStage();
-        this.destroyEnemyCircleGraphics();
-    }
-}
-
-Enemy.prototype.updateNotDying = function() {
-    this.text.x -= (ENEMY_SPEED * this.speedMultiplier);
-    this.correctWord.x -= (ENEMY_SPEED * this.speedMultiplier);
-    this.text.y -= this.ySpeed;
-    this.correctWord.y -= this.ySpeed;
-    if(this.laser != null) {
+Enemy.prototype.updateObjects = function() {
+    this.enemyCircle.left -= (ENEMY_SPEED * this.speedMultiplier);
+    this.enemyCircle.top -= this.ySpeed;
+    this.text.left -= (ENEMY_SPEED * this.speedMultiplier);
+    this.correctWord.left -= (ENEMY_SPEED * this.speedMultiplier);
+    this.text.top -= this.ySpeed;
+    this.correctWord.top -= this.ySpeed;
+    if(this.laser != null && !this.laser.preparingToFire) {
         this.laser.update();
         if(this.detectHit(this.laser.laser)) {
             this.kill();
@@ -206,13 +152,7 @@ Enemy.prototype.updateNotDying = function() {
 
 Enemy.prototype.update = function() {
     if(!this.killed) {
-        this.enemyCircle.x -= (ENEMY_SPEED * this.speedMultiplier);
-        this.enemyCircle.y -= this.ySpeed;
-        if(this.dying) {
-            this.updateDying();
-        } else {
-            this.updateNotDying();
-        }
+        this.updateObjects();
     } 
 };
 
@@ -222,13 +162,4 @@ Enemy.prototype.setXOffset = function(second, fps) {
 
 Enemy.prototype.setYOffset = function(offset) {
     this.yOffset = offset;
-}
-
-Enemy.prototype.hide = function() {
-    if(this.laser != null) {
-        this.laser.hide();
-    }
-    this.drawingStage.removeChild(this.enemyCircle);
-    this.drawingStage.removeChild(this.text);
-    this.drawingStage.removeChild(this.correctWord);
 }

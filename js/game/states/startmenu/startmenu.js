@@ -70,7 +70,7 @@ StartMenu.prototype.initializeContainer = function() {
 }
 
 StartMenu.prototype.initializeLang1Select = function() {    
-    this.lang1Select = new Select(this.canvas, LANGUAGE_OPTIONS, this.container);
+    this.lang1Select = new Select(this.canvas, LANGUAGE_OPTIONS, this.container, this.stateManager);
     this.lang1Select.initialize(
         (this.x + (this.width * LANG_1_SELECT_X_OFFSET_PERCENTAGE)),
         (this.y + (this.height * LANG_1_SELECT_Y_OFFSET_PERCENTAGE)),
@@ -81,7 +81,7 @@ StartMenu.prototype.initializeLang1Select = function() {
 }
 
 StartMenu.prototype.initializeLang2Select = function() {
-    this.lang2Select = new Select(this.canvas, LANGUAGE_OPTIONS, this.container);
+    this.lang2Select = new Select(this.canvas, LANGUAGE_OPTIONS, this.container, this.stateManager);
     this.lang2Select.initialize(
         (this.x + (this.width * LANG_2_SELECT_X_OFFSET_PERCENTAGE)),
         (this.y + (this.height * LANG_2_SELECT_Y_OFFSET_PERCENTAGE)),
@@ -92,7 +92,7 @@ StartMenu.prototype.initializeLang2Select = function() {
 }
 
 StartMenu.prototype.initializeLevelSelect = function() {
-    this.levelSelect = new Select(this.canvas, LEVEL_OPTIONS, this.container);
+    this.levelSelect = new Select(this.canvas, LEVEL_OPTIONS, this.container, this.stateManager);
     this.levelSelect.initialize(
         (this.x + ((this.width * LEVEL_SELECT_X_OFFSET_PERCENTAGE))),
         (this.y + (this.height * LEVEL_SELECT_Y_OFFSET_PERCENTAGE)),
@@ -170,40 +170,4 @@ StartMenu.prototype.draw = function() {
     this.lang1Select.addAllToCanvas();
     this.lang2Select.addAllToCanvas();
     this.levelSelect.addAllToCanvas();
-    
-    true;
-    // if(this.levelSelect.menuOpened) {
-    //     this.hide();
-    //     this.levelSelect.draw();
-    //     this.renderer.render(this.drawingStage);
-    //     return;
-    // }
-    // if(this.lang1Select.menuOpened) {
-    //     this.hide();
-    //     this.lang1Select.draw();
-    //     this.renderer.render(this.drawingStage);
-    //     return;
-    // }
-    // if(this.lang2Select.menuOpened) {
-    //     this.hide();
-    //     this.lang2Select.draw();
-    //     this.renderer.render(this.drawingStage);
-    //     return;
-    // }
-    // this.drawingStage.addChild(this.container);
-    // this.lang1Select.draw();
-    // this.lang2Select.draw();
-    // this.levelSelect.draw();
-    // this.drawingStage.addChild(this.start);
-    // this.drawingStage.addChild(this.tutorial);
-    // this.renderer.render(this.drawingStage);
 };
-
-// StartMenu.prototype.hide = function() {
-//     this.drawingStage.removeChild(this.start);
-//     this.drawingStage.removeChild(this.tutorial);
-//     this.drawingStage.removeChild(this.container);
-//     this.lang1Select.hide();
-//     this.lang2Select.hide();
-//     this.levelSelect.hide();
-// }

@@ -7,7 +7,6 @@ function Initialize(canvas, stateManager) {
 Initialize.prototype.start = function() {
     this.stateManager.states[GAME].initialize();
     this.stateManager.state = GAME;
-    this.hide();
     this.initializationStarted = false;
 }
         
@@ -65,29 +64,22 @@ Initialize.prototype.initializeLoadingText = function() {
         top: (this.canvas.getHeight() / 2),
         originX: 'center', 
         originY: 'center',
-        selectable: false,
-        fontFamily: 'Ariel Black sans-serif',
-        fontSize: '8em',
+        fontFamily: 'Ariel Black, sans-serif',
+        fontSize: '128',
         fontWeight: 'bold',
         selectable: false
     });
 }
 
-Initialize.prototype.hide = function() {
-    this.drawingStage.removeChild(this.loadingText);
-    this.loadingText.destroy();
-}
-
 Initialize.prototype.draw = function() {
-    this.drawingStage.addChild(this.loadingText);
-    this.renderer.render(this.drawingStage);
+    this.canvas.removeAll();
+    this.canvas.add(this.loadingText);
 }
     
 Initialize.prototype.initialize = function() {
     if(!this.initializationStarted) {
         this.initializationStarted = true;
         this.initializeLoadingText();
-        this.stateManager.states[START_MENU].hide();
         this.getWords(this.getKnownWords);
     }
 }

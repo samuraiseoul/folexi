@@ -53,5 +53,6 @@ Win.prototype.win = function() {
     this.stateManager.clearNewWords();
     this.stateManager.wavesCompleted++;
     this.stateManager.states[GAME].createWave();
+    this.stateManager.states[GAME].draw();
     this.stateManager.state = GAME;
 }
