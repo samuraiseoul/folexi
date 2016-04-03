@@ -21,13 +21,41 @@ const LOSE = "lose";
 const GAME_OVER = "over";
 const WIN = "win";
 const TUTORIAL = "tutorial";
+
+const DEFAULT = {
+    originX: 'center', 
+    originY: 'center',
+    selectable: false
+}
+
+const INTERACTABLE = {
+    hasControls: false,
+    hasBorders:false,
+    hoverCursor: 'pointer',
+    lockMovementX: true,
+    lockMovementY: true,
+    selectable: true
+}
+
+const FONT_STYLE = {
+    fontFamily: 'Ariel Black, sans-serif',
+    fontWeight: 'bold'
+}
     
 $('document').ready(function(){
-
     
-    var canvas = $("#game-canvas");
-    var stage = new PIXI.Container();
-    var renderer = null;
+    var canvas = new fabric.Canvas("game-canvas", {
+        width: ($('#game-canvas').width()), 
+        height: ($('#game-canvas').width() * CANVAS_HEIGHT_PERCENTAGE)
+    });
+    
+    //extend fabric.Canvas
+    canvas.removeAll = function() {
+        this.forEachObject(function(obj) {
+			canvas.remove(obj);
+		});
+    }
+    
     var stateManager = new StateManager();
 
     function gameLoop() {
@@ -35,24 +63,8 @@ $('document').ready(function(){
         requestAnimationFrame(gameLoop);
     }
     
-    function initializeGameBoard() {
-        canvas.height(canvas.width() * CANVAS_HEIGHT_PERCENTAGE);
-        renderer = PIXI.autoDetectRenderer(
-            canvas.width(),
-            canvas.height(),
-            {view:document.getElementById("game-canvas")},
-            TRANSPARENT,
-            ANTIALIASING
-        );
-        // initializeLife();
-        
-        renderer.backgroundColor = 0xFFFFFF;
-        renderer.render(stage);
-    }
-    
     function callhook() {
-        initializeGameBoard();
-        stateManager.initializeStates(stage, renderer, START_MENU);
+        stateManager.initializeStates(canvas, START_MENU);
         gameLoop();
     }
     
@@ -62,10 +74,8 @@ $('document').ready(function(){
     $(document).keyup(function(e){
         if(e.keyCode == 27 && (stateManager.state == PAUSE || stateManager.state == GAME)) {
             if(stateManager.state == PAUSE) {
-                stateManager.states[PAUSE].hide();
                 stateManager.state = GAME;
             } else if(stateManager.state == GAME) {
-                stateManager.states[GAME].hide();
                 stateManager.state = PAUSE;
             }
         }

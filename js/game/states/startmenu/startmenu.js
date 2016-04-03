@@ -1,24 +1,22 @@
-const MENU_CONTAINER_LINE_COLOR = 0x000000;
+const MENU_CONTAINER_LINE_COLOR = 'black';
 const MENU_CONTAINER_LINE_WIDTH = 2;
 const START_MENU_WIDTH_PERCENTAGE = .66;
 const START_MENU_HEIGHT_PERCENTAGE = .66;
-const START_MENU_X_OFFSET_PERCENTAGE = .165;
 const START_MENU_Y_OFFSET_PERCENTAGE = .165;
 const START_MENU_OUTLINE_ROUNDNESS = 15;
-const LANG_1_SELECT_X_OFFSET_PERCENTAGE = .0825;
-const LANG_1_SELECT_Y_OFFSET_PERCENTAGE = .0825;
+const LANG_1_SELECT_X_OFFSET_PERCENTAGE = .25;
+const LANG_1_SELECT_Y_OFFSET_PERCENTAGE = .3;
 const LANG_1_SELECT_WIDTH_PERCENTAGE = .33;
 const LANG_1_SELECT_HEIGHT_PERCENTAGE = .165;
-const LANG_2_SELECT_X_OFFSET_PERCENTAGE = .5775;
-const LANG_2_SELECT_Y_OFFSET_PERCENTAGE = .0825;
+const LANG_2_SELECT_X_OFFSET_PERCENTAGE = .25;
+const LANG_2_SELECT_Y_OFFSET_PERCENTAGE = .3;
 const LANG_2_SELECT_WIDTH_PERCENTAGE = .33;
 const LANG_2_SELECT_HEIGHT_PERCENTAGE = .165;
-const LEVEL_SELECT_X_OFFSET_PERCENTAGE = .33;
-const LEVEL_SELECT_Y_OFFSET_PERCENTAGE = .33;
 const LEVEL_SELECT_WIDTH_PERCENTAGE = .33;
 const LEVEL_SELECT_HEIGHT_PERCENTAGE = .165;
-const START_Y_OFFSET = .65;
-const TUTORIAL_Y_OFFSET = .8;
+const LEVEL_SELECT_Y_OFFSET_PERCENTAGE = .1;
+const START_Y_OFFSET = .1;
+const TUTORIAL_Y_OFFSET = .3;
 const LANGUAGE_OPTIONS = {
         'en' : 'English',
         'ko' : 'Korean',
@@ -40,33 +38,40 @@ const LEVEL_OPTIONS = {
         '6' : 'Six'
     };
 
-function StartMenu(drawingStage, renderer, stateManager){
-    this.drawingStage = drawingStage;
-    this.renderer = renderer;
+function StartMenu(canvas, stateManager){
+    this.canvas = canvas;
     this.stateManager = stateManager;
     
     this.initializeMenu();
 };
 
 StartMenu.prototype.calculateCoordsAndSize = function() {
-    this.x = this.renderer.width * START_MENU_X_OFFSET_PERCENTAGE;
-    this.y = this.renderer.height * START_MENU_Y_OFFSET_PERCENTAGE;
-    this.width = this.renderer.width * START_MENU_WIDTH_PERCENTAGE;
-    this.height = this.renderer.height * START_MENU_HEIGHT_PERCENTAGE; 
+    this.x = this.canvas.width / 2;
+    this.y = this.canvas.height / 2;
+    this.width = this.canvas.width * START_MENU_WIDTH_PERCENTAGE;
+    this.height = this.canvas.height * START_MENU_HEIGHT_PERCENTAGE; 
 }
 
-StartMenu.prototype.initializeContainer = function() {    
-    this.container = new PIXI.Graphics();
-    this.container.lineStyle(MENU_CONTAINER_LINE_WIDTH, MENU_CONTAINER_LINE_COLOR);
-    this.container.drawRoundedRect(this.x, this.y, this.width, this.height, START_MENU_OUTLINE_ROUNDNESS);
-    this.container.endFill();
+StartMenu.prototype.initializeContainer = function() {
+    this.container = new fabric.Rect({
+                  left: this.x,
+                  top: this.y,
+                  width: this.width,
+                  height: this.height,
+                  rx: START_MENU_OUTLINE_ROUNDNESS,
+                  ry: START_MENU_OUTLINE_ROUNDNESS,
+                  fill: 'white',
+                  strokeWidth: MENU_CONTAINER_LINE_WIDTH,
+                  stroke: MENU_CONTAINER_LINE_COLOR,
+                });
+    this.container.set(DEFAULT);
 }
 
 StartMenu.prototype.initializeLang1Select = function() {    
-    this.lang1Select = new Select(this.drawingStage, this.renderer, LANGUAGE_OPTIONS, this.container);
+    this.lang1Select = new Select(this.canvas, LANGUAGE_OPTIONS, this.container, this.stateManager);
     this.lang1Select.initialize(
-        (this.x + (this.width * LANG_1_SELECT_X_OFFSET_PERCENTAGE)),
-        (this.y + (this.height * LANG_1_SELECT_Y_OFFSET_PERCENTAGE)),
+        (this.x - (this.width * LANG_1_SELECT_X_OFFSET_PERCENTAGE)),
+        (this.y - (this.height * LANG_1_SELECT_Y_OFFSET_PERCENTAGE)),
         (this.width * LANG_1_SELECT_WIDTH_PERCENTAGE),
         (this.height * LANG_1_SELECT_HEIGHT_PERCENTAGE),
         'en'
@@ -74,10 +79,10 @@ StartMenu.prototype.initializeLang1Select = function() {
 }
 
 StartMenu.prototype.initializeLang2Select = function() {
-    this.lang2Select = new Select(this.drawingStage, this.renderer, LANGUAGE_OPTIONS, this.container);
+    this.lang2Select = new Select(this.canvas, LANGUAGE_OPTIONS, this.container, this.stateManager);
     this.lang2Select.initialize(
         (this.x + (this.width * LANG_2_SELECT_X_OFFSET_PERCENTAGE)),
-        (this.y + (this.height * LANG_2_SELECT_Y_OFFSET_PERCENTAGE)),
+        (this.y - (this.height * LANG_2_SELECT_Y_OFFSET_PERCENTAGE)),
         (this.width * LANG_2_SELECT_WIDTH_PERCENTAGE),
         (this.height * LANG_2_SELECT_HEIGHT_PERCENTAGE),
         'en'
@@ -85,10 +90,10 @@ StartMenu.prototype.initializeLang2Select = function() {
 }
 
 StartMenu.prototype.initializeLevelSelect = function() {
-    this.levelSelect = new Select(this.drawingStage, this.renderer, LEVEL_OPTIONS, this.container);
+    this.levelSelect = new Select(this.canvas, LEVEL_OPTIONS, this.container, this.stateManager);
     this.levelSelect.initialize(
-        (this.x + ((this.width * LEVEL_SELECT_X_OFFSET_PERCENTAGE))),
-        (this.y + (this.height * LEVEL_SELECT_Y_OFFSET_PERCENTAGE)),
+        this.x,
+        (this.y - (this.height * LEVEL_SELECT_Y_OFFSET_PERCENTAGE)),
         (this.width * LEVEL_SELECT_WIDTH_PERCENTAGE),
         (this.height * LEVEL_SELECT_HEIGHT_PERCENTAGE),
         '1'
@@ -96,29 +101,39 @@ StartMenu.prototype.initializeLevelSelect = function() {
 }
 
 StartMenu.prototype.initializeStart = function() {
-    //have to use cocoontext Pixi plugin for clickable text
-    this.start = new PIXI.cocoontext.CocoonText("START", {font: "bold 4em Ariel Black, sans-serif"});
-    this.start.x = (this.x + (this.width / 2) - (this.start.getBounds()['width'] / 2));
-    this.start.y = (this.y + (this.container.height * START_Y_OFFSET) - (this.start.getBounds()['height'] / 2));
-    //cocoon text doesn't know of this object so give it a reference
-    this.start.parentState = this;
-    this.start.interactive = true;
-    this.start.click = function() {
-        this.parentState.stateManager.lang1 = this.parentState.lang1Select.value;
-        this.parentState.stateManager.lang2 = this.parentState.lang2Select.value;
-        this.parentState.stateManager.wordLevel = this.parentState.levelSelect.value;
-        this.parentState.stateManager.state = INITIALIZE;
-    }
+    this.start = new fabric.Text("START", {
+        left: this.x,
+        top: (this.y + (this.container.height * START_Y_OFFSET)),
+        fontSize: '64',
+        parentContext: this
+    });
+    this.start.set(DEFAULT);
+    this.start.set(FONT_STYLE);
+    this.start.set(INTERACTABLE);
+    
+    //May need to give this.start, a pointer to this object
+    this.start.on("selected", function(){
+        this.parentContext.stateManager.lang1 = this.parentContext.lang1Select.value;
+        this.parentContext.stateManager.lang2 = this.parentContext.lang2Select.value;
+        this.parentContext.stateManager.wordLevel = this.parentContext.levelSelect.value;
+        this.parentContext.stateManager.state = INITIALIZE;
+    });
 }
 
 StartMenu.prototype.initializeTutorial = function() {
-    this.tutorial = new PIXI.cocoontext.CocoonText("TUTORIAL", {font: "bold 4em Ariel Black, sans-serif"});
-    this.tutorial.x = (this.x + (this.width / 2) - (this.tutorial.getBounds()['width'] / 2));
-    this.tutorial.y = (this.y + (this.container.height * TUTORIAL_Y_OFFSET) - (this.tutorial.getBounds()['height'] / 2));
-    this.tutorial.interactive = true;
-    this.tutorial.click = function(ev) {
-        console.log(ev);
-    }
+    this.tutorial = new fabric.Text("TUTORIAL", {
+        left: this.x,
+        top: (this.y + (this.container.height * TUTORIAL_Y_OFFSET)),
+        fontSize: '64',
+        parentContext: this
+    });
+    this.tutorial.set(DEFAULT);
+    this.tutorial.set(INTERACTABLE);
+    this.tutorial.set(FONT_STYLE);
+    
+    this.tutorial.on("selected", function(){
+        console.log("Tutorial clicked");
+    });
 }
 
 StartMenu.prototype.initializeMenu = function() {
@@ -132,38 +147,12 @@ StartMenu.prototype.initializeMenu = function() {
 };
 
 StartMenu.prototype.draw = function() {
-    if(this.levelSelect.menuOpened) {
-        this.hide();
-        this.levelSelect.draw();
-        this.renderer.render(this.drawingStage);
-        return;
-    }
-    if(this.lang1Select.menuOpened) {
-        this.hide();
-        this.lang1Select.draw();
-        this.renderer.render(this.drawingStage);
-        return;
-    }
-    if(this.lang2Select.menuOpened) {
-        this.hide();
-        this.lang2Select.draw();
-        this.renderer.render(this.drawingStage);
-        return;
-    }
-    this.drawingStage.addChild(this.container);
-    this.lang1Select.draw();
-    this.lang2Select.draw();
-    this.levelSelect.draw();
-    this.drawingStage.addChild(this.start);
-    this.drawingStage.addChild(this.tutorial);
-    this.renderer.render(this.drawingStage);
+    this.canvas.removeAll();
+    this.canvas.add(this.container);
+    this.canvas.add(this.start);
+    this.canvas.add(this.tutorial);
+    this.levelSelect.addAllToCanvas();
+    this.lang1Select.addAllToCanvas();
+    this.lang2Select.addAllToCanvas();
+    this.levelSelect.addAllToCanvas();
 };
-
-StartMenu.prototype.hide = function() {
-    this.drawingStage.removeChild(this.start);
-    this.drawingStage.removeChild(this.tutorial);
-    this.drawingStage.removeChild(this.container);
-    this.lang1Select.hide();
-    this.lang2Select.hide();
-    this.levelSelect.hide();
-}

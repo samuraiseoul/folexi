@@ -5,11 +5,11 @@ function Lose(stateManager) {
     this.oneTime = false;
 }
 
-Lose.prototype.updateLose = function() {
+Lose.prototype.update = function() {
     if(!this.oneTime) {
         this.stateManager.states[GAME].loseLife();
         this.stateManager.states[GAME].showWords();
-        this.stateManager.states[GAME].drawGame();
+        this.stateManager.states[GAME].draw();
         this.oneTime = true;
         if(this.lastUpdated == null){ this.lastUpdated = Date.now(); }
     }
@@ -20,8 +20,5 @@ Lose.prototype.updateLose = function() {
         this.timeElapsed = null;
         this.lastUpdated = null;
         this.stateManager.state = ((this.stateManager.gameOver) ? GAME_OVER : GAME);
-        if(this.stateManager.gameOver){
-            this.stateManager.states[GAME].hide();
-        }
     }
 }

@@ -1,6 +1,5 @@
-function Initialize(drawingStage, renderer, stateManager) {
-    this.drawingStage = drawingStage;
-    this.renderer = renderer;
+function Initialize(canvas, stateManager) {
+    this.canvas = canvas;
     this.stateManager = stateManager;
     this.initializationStarted = false;
 }
@@ -8,7 +7,6 @@ function Initialize(drawingStage, renderer, stateManager) {
 Initialize.prototype.start = function() {
     this.stateManager.states[GAME].initialize();
     this.stateManager.state = GAME;
-    this.hide();
     this.initializationStarted = false;
 }
         
@@ -61,26 +59,24 @@ Initialize.prototype.getKnownWords = function() {
 }
 
 Initialize.prototype.initializeLoadingText = function() {
-    this.loadingText = new PIXI.Text("LOADING...", {font : "bold 8em Ariel Black, sans-serif"});
-    this.loadingText.x = (this.renderer.width / 2) - (this.loadingText.getBounds()['width'] / 2);
-    this.loadingText.y = (this.renderer.height / 2) - (this.loadingText.getBounds()['height'] / 2);
-}
-
-Initialize.prototype.hide = function() {
-    this.drawingStage.removeChild(this.loadingText);
-    this.loadingText.destroy();
+    this.loadingText = new fabric.Text("LOADING...", {
+        left: (this.canvas.getWidth() / 2),
+        top: (this.canvas.getHeight() / 2),
+        fontSize: '128'
+    });
+    this.loadingText.set(DEFAULT);
+    this.loadingText.set(FONT_STYLE);
 }
 
 Initialize.prototype.draw = function() {
-    this.drawingStage.addChild(this.loadingText);
-    this.renderer.render(this.drawingStage);
+    this.canvas.removeAll();
+    this.canvas.add(this.loadingText);
 }
     
 Initialize.prototype.initialize = function() {
     if(!this.initializationStarted) {
         this.initializationStarted = true;
         this.initializeLoadingText();
-        this.stateManager.states[START_MENU].hide();
         this.getWords(this.getKnownWords);
     }
 }
