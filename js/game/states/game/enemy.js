@@ -29,7 +29,6 @@ Enemy.prototype.wordMatch = function(word) {
         this.laser = new Laser(this.canvas, this.turret);
         this.laser.calculateYSpeed(this);
         this.turret.pulse(this.laser);
-        // this.laserFired = true;
         return true;
     }
     return false;
