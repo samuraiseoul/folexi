@@ -10,8 +10,8 @@ function GameOver(canvas, stateManager){
 GameOver.prototype.calculateCoordsAndSize = function() {
     this.width = this.canvas.getWidth() * .5;
     this.height = this.canvas.getHeight() * .33; 
-    this.x = this.canvas.getWidth() / 4;
-    this.y = this.canvas.getHeight() / 3;
+    this.x = this.canvas.getWidth() / 2;
+    this.y = this.canvas.getHeight() / 2;
 }
 
 GameOver.prototype.initializeContainer = function() {
@@ -24,40 +24,31 @@ GameOver.prototype.initializeContainer = function() {
         ry: 15,
         fill: 'white',
         strokeWidth: GAMEOVER_MENU_CONTAINER_LINE_WIDTH,
-        stroke: GAMEOVER_MENU_CONTAINER_LINE_COLOR,
-        selectable: false 
+        stroke: GAMEOVER_MENU_CONTAINER_LINE_COLOR
     });
+    this.container.set(DEFAULT);
 }
 
 GameOver.prototype.initializeGameOver = function() {
     this.gameOver = new fabric.Text("GAME OVER!", {
-        left: (this.x + (this.width / 2)),
+        left: this.x,
         top: (this.canvas.getHeight() * .17),
-        originX: 'center', 
-        originY: 'center',
-        selectable: false,
-        fontFamily: 'Ariel Black, sans-serif',
         fontSize: '86',
-        fontWeight: 'bold'
     });
+    this.gameOver.set(DEFAULT);
+    this.gameOver.set(FONT_STYLE);
 }
 
 GameOver.prototype.initializeMainMenu = function() {
     this.mainMenu = new fabric.Text("MAIN MENU", {
-        left: (this.x + (this.width / 2)),
-        top: (this.y + (this.container.height * .25)),
-        originX: 'center', 
-        originY: 'center',
-        hasControls: false,
-        hasBorders:false,
-        hoverCursor: 'pointer',
-        lockMovementX: true,
-        lockMovementY: true,
-        fontFamily: 'Ariel Black, sans-serif',
+        left: this.x,
+        top: (this.y - (this.container.height * .25)),
         fontSize: '40',
-        fontWeight: 'bold',
         parentContext: this
     });
+    this.mainMenu.set(DEFAULT);
+    this.mainMenu.set(FONT_STYLE);
+    this.mainMenu.set(INTERACTABLE);
     
     this.mainMenu.on("selected", function(){
         // this.parentContext.hide();
@@ -68,20 +59,14 @@ GameOver.prototype.initializeMainMenu = function() {
 
 GameOver.prototype.initializeTutorial = function() {
     this.tutorial = new fabric.Text("TUTORIAL", {
-        left: (this.x + (this.width / 2)),
-        top: (this.y + (this.container.height * .75)),
-        originX: 'center', 
-        originY: 'center',
-        hasControls: false,
-        hasBorders:false,
-        hoverCursor: 'pointer',
-        lockMovementX: true,
-        lockMovementY: true,
-        fontFamily: 'Ariel Black, sans-serif',
+        left: this.x,
+        top: (this.y + (this.container.height * .25)),
         fontSize: '40',
-        fontWeight: 'bold',
         parentContext: this
     });
+    this.tutorial.set(DEFAULT);
+    this.tutorial.set(FONT_STYLE);
+    this.tutorial.set(INTERACTABLE);
     
     this.tutorial.on("selected", function(){
         console.log("Tutorial clicked");

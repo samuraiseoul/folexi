@@ -20,14 +20,12 @@ Turret.prototype.inializeTurretBase = function() {
     this.turretBase = new fabric.Circle({
         radius: this.radius,
         top: this.y,
-        originX: 'center',
-        originY: "center",
         left: this.x,
         fill: "white",
         stroke: TURRET_LINE_COLOR,
         strokeWidth: TURRET_LINE_WIDTH,
-        selectable: false
     });   
+    this.turretBase.set(DEFAULT);
 };
 
 Turret.prototype.radiusMax = function() {

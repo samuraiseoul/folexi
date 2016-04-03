@@ -9,7 +9,6 @@ function Enemy(canvas, turret, speedMultiplier, word) {
     this.word = word;
     this.turret = turret;
     this.laser = null;
-    this.dying = false;
     this.killed = false;
     this.showWord = false;
 };
@@ -41,27 +40,22 @@ Enemy.prototype.initializeEnemyCircle = function() {
         radius: this.radius,
         top: this.y,
         left: this.x,
-        originX: 'center',
-        originY: "center",
         fill: 'white',
         stroke: ENEMY_LINE_COLOR,
-        strokeWidth: ENEMY_LINE_WIDTH,
-        selectable: false 
+        strokeWidth: ENEMY_LINE_WIDTH
     });
+    this.enemyCircle.set(DEFAULT);
 };
 
 Enemy.prototype.initializeEnemyText = function() {
     this.text = new fabric.Text(this.word['word'][this.word['lang2']] ,{
         left: this.x,
         top: this.y,
-        originX: 'center', 
-        originY: 'center',
-        selectable: false,
-        fontFamily: 'Ariel Black sans-serif',
         fontSize: '20',
-        fontWeight: 'bold',
         parentContext: this
     });
+    this.text.set(DEFAULT);
+    this.text.set(FONT_STYLE);
     this.calculateCoordinates();
     this.text.set({left: this.x, top: this.y});
 };
@@ -70,14 +64,11 @@ Enemy.prototype.initializeCorrectWord = function() {
     this.correctWord = new fabric.Text(this.word['word'][this.word['lang1']] ,{
         left: this.x,
         top: (this.y - (this.text.getHeight() / 2) + this.text.getHeight()),
-        originX: 'center', 
-        originY: 'center',
-        selectable: false,
-        fontFamily: 'Ariel Black sans-serif',
         fontSize: '14',
-        fontWeight: 'bold',
         parentContext: this
     });
+    this.correctWord.set(DEFAULT);
+    this.correctWord.set(FONT_STYLE);
 };
 
 Enemy.prototype.initialize = function() {
@@ -88,7 +79,6 @@ Enemy.prototype.initialize = function() {
 };
 
 Enemy.prototype.reset = function() {
-    this.dying = false;
     this.killed = false;
     this.showWord = false;
     this.laser = null;
@@ -96,21 +86,15 @@ Enemy.prototype.reset = function() {
     this.initialize();
 }
 
-Enemy.prototype.drawNotDying = function() {
-    this.canvas.add(this.text);
-    if(this.showWord) {
-        this.canvas.add(this.correctWord);
-    }
-    if(this.laser != null) {
-        this.laser.addToCanvas();
-    }
-}
-
 Enemy.prototype.addAllToCanvas = function() {
     if(!this.killed) {
         this.canvas.add(this.enemyCircle);
-        if(!this.dying) {
-            this.drawNotDying();
+        this.canvas.add(this.text);
+        if(this.showWord) {
+            this.canvas.add(this.correctWord);
+        }
+        if(this.laser != null) {
+            this.laser.addToCanvas();
         }
     }
 };

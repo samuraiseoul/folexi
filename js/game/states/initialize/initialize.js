@@ -62,13 +62,10 @@ Initialize.prototype.initializeLoadingText = function() {
     this.loadingText = new fabric.Text("LOADING...", {
         left: (this.canvas.getWidth() / 2),
         top: (this.canvas.getHeight() / 2),
-        originX: 'center', 
-        originY: 'center',
-        fontFamily: 'Ariel Black, sans-serif',
-        fontSize: '128',
-        fontWeight: 'bold',
-        selectable: false
+        fontSize: '128'
     });
+    this.loadingText.set(DEFAULT);
+    this.loadingText.set(FONT_STYLE);
 }
 
 Initialize.prototype.draw = function() {

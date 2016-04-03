@@ -2,23 +2,21 @@ const MENU_CONTAINER_LINE_COLOR = 'black';
 const MENU_CONTAINER_LINE_WIDTH = 2;
 const START_MENU_WIDTH_PERCENTAGE = .66;
 const START_MENU_HEIGHT_PERCENTAGE = .66;
-const START_MENU_X_OFFSET_PERCENTAGE = .165;
 const START_MENU_Y_OFFSET_PERCENTAGE = .165;
 const START_MENU_OUTLINE_ROUNDNESS = 15;
-const LANG_1_SELECT_X_OFFSET_PERCENTAGE = .0825;
-const LANG_1_SELECT_Y_OFFSET_PERCENTAGE = .0825;
+const LANG_1_SELECT_X_OFFSET_PERCENTAGE = .25;
+const LANG_1_SELECT_Y_OFFSET_PERCENTAGE = .3;
 const LANG_1_SELECT_WIDTH_PERCENTAGE = .33;
 const LANG_1_SELECT_HEIGHT_PERCENTAGE = .165;
-const LANG_2_SELECT_X_OFFSET_PERCENTAGE = .5775;
-const LANG_2_SELECT_Y_OFFSET_PERCENTAGE = .0825;
+const LANG_2_SELECT_X_OFFSET_PERCENTAGE = .25;
+const LANG_2_SELECT_Y_OFFSET_PERCENTAGE = .3;
 const LANG_2_SELECT_WIDTH_PERCENTAGE = .33;
 const LANG_2_SELECT_HEIGHT_PERCENTAGE = .165;
-const LEVEL_SELECT_X_OFFSET_PERCENTAGE = .33;
-const LEVEL_SELECT_Y_OFFSET_PERCENTAGE = .33;
 const LEVEL_SELECT_WIDTH_PERCENTAGE = .33;
 const LEVEL_SELECT_HEIGHT_PERCENTAGE = .165;
-const START_Y_OFFSET = .65;
-const TUTORIAL_Y_OFFSET = .8;
+const LEVEL_SELECT_Y_OFFSET_PERCENTAGE = .1;
+const START_Y_OFFSET = .1;
+const TUTORIAL_Y_OFFSET = .3;
 const LANGUAGE_OPTIONS = {
         'en' : 'English',
         'ko' : 'Korean',
@@ -48,8 +46,8 @@ function StartMenu(canvas, stateManager){
 };
 
 StartMenu.prototype.calculateCoordsAndSize = function() {
-    this.x = this.canvas.width * START_MENU_X_OFFSET_PERCENTAGE;
-    this.y = this.canvas.height * START_MENU_Y_OFFSET_PERCENTAGE;
+    this.x = this.canvas.width / 2;
+    this.y = this.canvas.height / 2;
     this.width = this.canvas.width * START_MENU_WIDTH_PERCENTAGE;
     this.height = this.canvas.height * START_MENU_HEIGHT_PERCENTAGE; 
 }
@@ -65,15 +63,15 @@ StartMenu.prototype.initializeContainer = function() {
                   fill: 'white',
                   strokeWidth: MENU_CONTAINER_LINE_WIDTH,
                   stroke: MENU_CONTAINER_LINE_COLOR,
-                  selectable: false,
                 });
+    this.container.set(DEFAULT);
 }
 
 StartMenu.prototype.initializeLang1Select = function() {    
     this.lang1Select = new Select(this.canvas, LANGUAGE_OPTIONS, this.container, this.stateManager);
     this.lang1Select.initialize(
-        (this.x + (this.width * LANG_1_SELECT_X_OFFSET_PERCENTAGE)),
-        (this.y + (this.height * LANG_1_SELECT_Y_OFFSET_PERCENTAGE)),
+        (this.x - (this.width * LANG_1_SELECT_X_OFFSET_PERCENTAGE)),
+        (this.y - (this.height * LANG_1_SELECT_Y_OFFSET_PERCENTAGE)),
         (this.width * LANG_1_SELECT_WIDTH_PERCENTAGE),
         (this.height * LANG_1_SELECT_HEIGHT_PERCENTAGE),
         'en'
@@ -84,7 +82,7 @@ StartMenu.prototype.initializeLang2Select = function() {
     this.lang2Select = new Select(this.canvas, LANGUAGE_OPTIONS, this.container, this.stateManager);
     this.lang2Select.initialize(
         (this.x + (this.width * LANG_2_SELECT_X_OFFSET_PERCENTAGE)),
-        (this.y + (this.height * LANG_2_SELECT_Y_OFFSET_PERCENTAGE)),
+        (this.y - (this.height * LANG_2_SELECT_Y_OFFSET_PERCENTAGE)),
         (this.width * LANG_2_SELECT_WIDTH_PERCENTAGE),
         (this.height * LANG_2_SELECT_HEIGHT_PERCENTAGE),
         'en'
@@ -94,8 +92,8 @@ StartMenu.prototype.initializeLang2Select = function() {
 StartMenu.prototype.initializeLevelSelect = function() {
     this.levelSelect = new Select(this.canvas, LEVEL_OPTIONS, this.container, this.stateManager);
     this.levelSelect.initialize(
-        (this.x + ((this.width * LEVEL_SELECT_X_OFFSET_PERCENTAGE))),
-        (this.y + (this.height * LEVEL_SELECT_Y_OFFSET_PERCENTAGE)),
+        this.x,
+        (this.y - (this.height * LEVEL_SELECT_Y_OFFSET_PERCENTAGE)),
         (this.width * LEVEL_SELECT_WIDTH_PERCENTAGE),
         (this.height * LEVEL_SELECT_HEIGHT_PERCENTAGE),
         '1'
@@ -104,21 +102,14 @@ StartMenu.prototype.initializeLevelSelect = function() {
 
 StartMenu.prototype.initializeStart = function() {
     this.start = new fabric.Text("START", {
-        left: (this.x + (this.width / 2)),
+        left: this.x,
         top: (this.y + (this.container.height * START_Y_OFFSET)),
-        originX: 'center', 
-        originY: 'center',
-        hasControls: false,
-        hasBorders:false,
-        hoverCursor: 'pointer',
-        lockMovementX: true,
-        lockMovementY: true,
-        fontFamily: 'Ariel Black, sans-serif',
         fontSize: '64',
-        fontWeight: 'bold',
         parentContext: this
     });
-    
+    this.start.set(DEFAULT);
+    this.start.set(FONT_STYLE);
+    this.start.set(INTERACTABLE);
     
     //May need to give this.start, a pointer to this object
     this.start.on("selected", function(){
@@ -131,20 +122,14 @@ StartMenu.prototype.initializeStart = function() {
 
 StartMenu.prototype.initializeTutorial = function() {
     this.tutorial = new fabric.Text("TUTORIAL", {
-        left: (this.x + (this.width / 2)),
+        left: this.x,
         top: (this.y + (this.container.height * TUTORIAL_Y_OFFSET)),
-        originX: 'center', 
-        originY: 'center',
-        hasControls: false,
-        hasBorders:false,
-        hoverCursor: 'pointer',
-        lockMovementX: true,
-        lockMovementY: true,
-        fontFamily: 'Ariel Black, sans-serif',
         fontSize: '64',
-        fontWeight: 'bold',
         parentContext: this
     });
+    this.tutorial.set(DEFAULT);
+    this.tutorial.set(INTERACTABLE);
+    this.tutorial.set(FONT_STYLE);
     
     this.tutorial.on("selected", function(){
         console.log("Tutorial clicked");

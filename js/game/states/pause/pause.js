@@ -10,8 +10,8 @@ function Pause(canvas, stateManager){
 Pause.prototype.calculateCoordsAndSize = function() {
     this.width = this.canvas.getWidth() * .5;
     this.height = this.canvas.getHeight() * .33; 
-    this.x = this.canvas.getWidth() / 4;
-    this.y = this.canvas.getHeight() / 3;
+    this.x = this.canvas.getWidth() / 2;
+    this.y = this.canvas.getHeight() / 2;
 }
 
 Pause.prototype.initializeContainer = function() {    
@@ -24,27 +24,21 @@ Pause.prototype.initializeContainer = function() {
                   ry: 15,
                   fill: 'white',
                   strokeWidth: PAUSE_MENU_CONTAINER_LINE_WIDTH,
-                  stroke: PAUSE_MENU_CONTAINER_LINE_COLOR,
-                  selectable: false 
+                  stroke: PAUSE_MENU_CONTAINER_LINE_COLOR
     });
+    this.container.set(DEFAULT);
 }
 
 Pause.prototype.initializeRestartLevel = function() {
     this.restartLevel = new fabric.Text("RESTART LEVEL", {
-        left: (this.x + (this.width / 2)),
-        top: (this.y + (this.container.height * .25)),
-        originX: 'center', 
-        originY: 'center',
-        hasControls: false,
-        hasBorders:false,
-        hoverCursor: 'pointer',
-        lockMovementX: true,
-        lockMovementY: true,
-        fontFamily: 'Ariel Black, sans-serif',
+        left: this.x,
+        top: (this.y - (this.container.height * .25)),
         fontSize: '40',
-        fontWeight: 'bold',
         parentContext: this
     });
+    this.restartLevel.set(DEFAULT);
+    this.restartLevel.set(INTERACTABLE);
+    this.restartLevel.set(FONT_STYLE);
     
     this.restartLevel.on("selected", function(){
         this.parentContext.stateManager.states[GAME].restartLevel();
@@ -54,20 +48,14 @@ Pause.prototype.initializeRestartLevel = function() {
 
 Pause.prototype.initializeTutorial = function() {
     this.tutorial = new fabric.Text("TUTORIAL", {
-        left: (this.x + (this.width / 2)),
-        top: (this.y + (this.container.height * .75)),
-        originX: 'center', 
-        originY: 'center',
-        hasControls: false,
-        hasBorders:false,
-        hoverCursor: 'pointer',
-        lockMovementX: true,
-        lockMovementY: true,
-        fontFamily: 'Ariel Black, sans-serif',
+        left: (this.x),
+        top: (this.y + (this.container.height * .25)),
         fontSize: '40',
-        fontWeight: 'bold',
         parentContext: this
     });
+    this.tutorial.set(DEFAULT);
+    this.tutorial.set(INTERACTABLE);
+    this.tutorial.set(FONT_STYLE);
     
     this.tutorial.on("selected", function(){
         console.log("Tutorial clicked");

@@ -21,6 +21,26 @@ const LOSE = "lose";
 const GAME_OVER = "over";
 const WIN = "win";
 const TUTORIAL = "tutorial";
+
+const DEFAULT = {
+    originX: 'center', 
+    originY: 'center',
+    selectable: false
+}
+
+const INTERACTABLE = {
+    hasControls: false,
+    hasBorders:false,
+    hoverCursor: 'pointer',
+    lockMovementX: true,
+    lockMovementY: true,
+    selectable: true
+}
+
+const FONT_STYLE = {
+    fontFamily: 'Ariel Black, sans-serif',
+    fontWeight: 'bold'
+}
     
 $('document').ready(function(){
     
@@ -54,10 +74,8 @@ $('document').ready(function(){
     $(document).keyup(function(e){
         if(e.keyCode == 27 && (stateManager.state == PAUSE || stateManager.state == GAME)) {
             if(stateManager.state == PAUSE) {
-                // stateManager.states[PAUSE].hide();
                 stateManager.state = GAME;
             } else if(stateManager.state == GAME) {
-                // stateManager.states[GAME].hide();
                 stateManager.state = PAUSE;
             }
         }

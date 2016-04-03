@@ -13,13 +13,10 @@ Laser.prototype.initializeLaser = function() {
     this.laser = new fabric.Circle({
                 radius: LASER_SIZE,
                 top: this.turret.turretBase.top,
-                originX: 'center',
-                originY: "center",
                 left: (this.turret.turretBase.left + this.turret.radiusMax() + LASER_SIZE),
-                fill: LASER_COLOR,
-                selectable: false
+                fill: LASER_COLOR
     });
-    true;
+    this.laser.set(DEFAULT);
 };
 
 Laser.prototype.calculateYSpeed = function(enemy) {

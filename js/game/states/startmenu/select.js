@@ -22,17 +22,13 @@ Select.prototype.intializeContainer = function(x, y, width, height) {
         height: height,
         rx: SELECT_CORNER_ROUNDNESS,
         ry: SELECT_CORNER_ROUNDNESS,
-        hasControls: false,
-        hasBorders: false,
-        hoverCursor: 'pointer',
-        lockMovementX: true,
-        lockMovementY: true,
-        parentContext: this,
         fill: 'white',
         strokeWidth: SELECT_LINE_WIDTH,
         stroke: SELECT_LINE_COLOR,
         parentContext: this
     });
+    this.container.set(DEFAULT);
+    this.container.set(INTERACTABLE);
     
     this.container.on('selected', function(ev) {
         this.parentContext.stateManager.menuOpened = true;
@@ -42,20 +38,14 @@ Select.prototype.intializeContainer = function(x, y, width, height) {
 
 Select.prototype.initializeText = function(x, y, width, height, startingOption) {
     this.text = new fabric.Text(this.options[startingOption], {
-        left: (x + (width / 2)),
-        top: (y + (height / 2)),
-        originX: 'center', 
-        originY: 'center',
-        hasControls: false,
-        hasBorders: false,
-        hoverCursor: 'pointer',
-        lockMovementX: true,
-        lockMovementY: true,
+        left: x,
+        top: y,
         parentContext: this,
-        fontFamily: 'Ariel Black, sans-serif',
-        fontSize: '40',
-        fontWeight: 'bold'
+        fontSize: '40'
     });
+    this.text.set(DEFAULT);
+    this.text.set(INTERACTABLE);
+    this.text.set(FONT_STYLE);
     
     this.text.on('selected', function(ev) {
         this.parentContext.stateManager.menuOpened = true;
@@ -73,9 +63,9 @@ Select.prototype.initializeSelectMenu = function() {
         ry: SELECT_CORNER_ROUNDNESS,
         fill: 'white',
         strokeWidth: SELECT_LINE_WIDTH,
-        stroke: SELECT_LINE_COLOR,
-        selectable: false
+        stroke: SELECT_LINE_COLOR
     });
+    this.selectMenu.set(DEFAULT);
 }
 
 Select.prototype.setOptionsSize = function() {
@@ -94,23 +84,16 @@ Select.prototype.initializeOptionTexts = function() {
     var selectMenuY = this.selectMenu.getTop();
     for(var key in this.options) {
         var tmp = new fabric.Text(this.options[key], {
-            left: ((selectMenuWidth * ((i < (this.optionsSize / 2)) ? .25 : .75)) + selectMenuX),
-            top: ((((i < (this.optionsSize / 2)) ? i : (i - (this.optionsSize / 2))) + 1) * (selectMenuHeight / (this.optionsSize / 2))) 
-            - (selectMenuHeight / (this.optionsSize)) + selectMenuY,
-            originX: 'center', 
-            originY: 'center',
-            selectable: 'false',
-            fontFamily: 'Ariel Black, sans-serif',
+            left: ((selectMenuWidth * ((i < (this.optionsSize / 2)) ? -0.25 : .25)) + selectMenuX),
+            top: (((((i < (this.optionsSize / 2)) ? i : (i - (this.optionsSize / 2))) + 1) * (selectMenuHeight / (this.optionsSize / 2))) 
+            - (selectMenuHeight / (this.optionsSize)) + selectMenuY) - (selectMenuHeight / 2),
             fontSize: '40',
-            fontWeight: 'bold',
-            hasControls: false,
-            hasBorders: false,
-            hoverCursor: 'pointer',
-            lockMovementX: true,
-            lockMovementY: true,
             parentContext: this,
             optionValue: key
         });
+        tmp.set(DEFAULT);
+        tmp.set(INTERACTABLE);
+        tmp.set(FONT_STYLE);
         tmp.on('selected', function() {
             this.parentContext.value = this.optionValue;
             this.parentContext.updateSelectText();

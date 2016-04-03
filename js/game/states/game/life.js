@@ -21,14 +21,12 @@ Life.prototype.inializeLifeBase = function() {
     this.life = new fabric.Circle({
         radius: this.radius,
         top: this.y,
-        originX: 'center',
-        originY: "center",
         left: (this.x + (this.xOffset * (3 * this.radius))),
         stroke: LIFE_LINE_COLOR,
         strokeWidth: LIFE_LINE_WIDTH,
         fill: LIFE_FILL_COLOR,
-        selectable: false
     });
+    this.life.set(DEFAULT);
 };
 
 Life.prototype.initializeLife = function() {
