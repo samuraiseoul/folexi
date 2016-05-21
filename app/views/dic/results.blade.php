@@ -26,9 +26,9 @@ $(document).ready(function(){
                 @endif
                 <div class="entry col_4">
                     <div class="label">
-                        {{$dic[$i][0]}}: 
+                        {{$dic[$i][0]}}
                     </div>
-                    <input class="word" type="textbox" name="{{$dic[$i][2]}}" value="{{$dic[$i][1]}}"/><br>
+                    <input class="word" type="text" name="{{$dic[$i][2]}}" value="{{$dic[$i][1]}}"/><br>
                 </div>
                 @if(($i+1) % 3 == 0)
                     </div>
